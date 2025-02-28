@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="space-y-4">
             <h3 className="text-xl font-bold tracking-tight">
-              TechNexus<span className="text-gray-400">AI</span>
+              TechNexus
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Enterprise-grade AI platform for loan management with configurable modules for every stage of the loan lifecycle.
@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} TechNexus AI. All rights reserved.
+            &copy; {new Date().getFullYear()} TechNexus. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             {["LinkedIn", "Twitter", "GitHub", "YouTube"].map((item) => (

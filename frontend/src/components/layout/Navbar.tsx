@@ -14,7 +14,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center py-5">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-bold tracking-tight">
-              TechNexus<span className="text-gray-400">AI</span>
+              TechNexus
             </Link>
           </div>
 
