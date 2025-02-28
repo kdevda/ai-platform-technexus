@@ -1,6 +1,14 @@
 import { User, Loan } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// Ensure the API URL has the correct format
+const API_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL}/api` : 'http://localhost:5000/api';
+
+// Debug utility to log API requests in production
+const logApiRequest = (method: string, endpoint: string, data?: any) => {
+  if (process.env.NODE_ENV === 'production') {
+    console.log(`API Request: ${method} ${API_URL}${endpoint}`, data ? { data } : '');
+  }
+};
 
 // Helper function to handle API errors
 const handleApiError = async (error: unknown, response?: Response): Promise<string> => {
@@ -47,8 +55,10 @@ const handleApiError = async (error: unknown, response?: Response): Promise<stri
 // Auth API calls
 export const loginUser = async (email: string, password: string): Promise<User> => {
   try {
-    console.log(`Making login request to: ${API_URL}/users/login`);
-    const response = await fetch(`${API_URL}/users/login`, {
+    const endpoint = '/users/login';
+    logApiRequest('POST', endpoint, { email });
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,8 +80,10 @@ export const loginUser = async (email: string, password: string): Promise<User> 
 
 export const registerUser = async (name: string, email: string, password: string): Promise<User> => {
   try {
-    console.log(`Making registration request to: ${API_URL}/users`);
-    const response = await fetch(`${API_URL}/users`, {
+    const endpoint = '/users';
+    logApiRequest('POST', endpoint, { name, email });
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +105,10 @@ export const registerUser = async (name: string, email: string, password: string
 
 export const getUserProfile = async (token: string): Promise<User> => {
   try {
-    const response = await fetch(`${API_URL}/users/profile`, {
+    const endpoint = '/users/profile';
+    logApiRequest('GET', endpoint);
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -102,13 +117,14 @@ export const getUserProfile = async (token: string): Promise<User> => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to get user profile');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 };
 
@@ -134,13 +150,14 @@ export const applyForLoan = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to apply for loan');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 };
 
@@ -159,13 +176,14 @@ export const createLoan = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to create loan');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 };
 
@@ -180,13 +198,14 @@ export const getLoans = async (token: string): Promise<Loan[]> => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to get loans');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 };
 
@@ -201,13 +220,14 @@ export const getLoanById = async (token: string, id: string): Promise<Loan> => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to get loan');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 };
 
@@ -229,12 +249,13 @@ export const updateLoanStatus = async (
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to update loan status');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 }; 
