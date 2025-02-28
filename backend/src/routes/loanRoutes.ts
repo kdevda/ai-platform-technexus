@@ -9,6 +9,7 @@ import { protect, admin } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
+// Define routes with proper middleware
 router.route('/')
   .post(protect, createLoan)
   .get(protect, getLoans);
