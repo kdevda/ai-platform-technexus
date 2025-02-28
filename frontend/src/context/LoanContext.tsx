@@ -121,8 +121,9 @@ export const LoanProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'LOAN_REQUEST' });
       const loans = await api.getLoans(authState.user.token);
       dispatch({ type: 'GET_LOANS_SUCCESS', payload: loans });
-    } catch (error: any) {
-      dispatch({ type: 'LOAN_FAIL', payload: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch({ type: 'LOAN_FAIL', payload: errorMessage });
     }
   };
 
@@ -134,8 +135,9 @@ export const LoanProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'LOAN_REQUEST' });
       const loan = await api.getLoanById(authState.user.token, id);
       dispatch({ type: 'GET_LOAN_SUCCESS', payload: loan });
-    } catch (error: any) {
-      dispatch({ type: 'LOAN_FAIL', payload: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch({ type: 'LOAN_FAIL', payload: errorMessage });
     }
   };
 
@@ -152,8 +154,9 @@ export const LoanProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'LOAN_REQUEST' });
       const loan = await api.createLoan(authState.user.token, loanData);
       dispatch({ type: 'CREATE_LOAN_SUCCESS', payload: loan });
-    } catch (error: any) {
-      dispatch({ type: 'LOAN_FAIL', payload: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch({ type: 'LOAN_FAIL', payload: errorMessage });
     }
   };
 
@@ -171,8 +174,9 @@ export const LoanProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'LOAN_REQUEST' });
       const loan = await api.applyForLoan(authState.user.token, loanData);
       dispatch({ type: 'CREATE_LOAN_SUCCESS', payload: loan });
-    } catch (error: any) {
-      dispatch({ type: 'LOAN_FAIL', payload: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch({ type: 'LOAN_FAIL', payload: errorMessage });
     }
   };
 
@@ -184,8 +188,9 @@ export const LoanProvider: React.FC<{ children: React.ReactNode }> = ({ children
       dispatch({ type: 'LOAN_REQUEST' });
       const loan = await api.updateLoanStatus(authState.user.token, id, status, startDate, endDate);
       dispatch({ type: 'UPDATE_LOAN_SUCCESS', payload: loan });
-    } catch (error: any) {
-      dispatch({ type: 'LOAN_FAIL', payload: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch({ type: 'LOAN_FAIL', payload: errorMessage });
     }
   };
 

@@ -1,14 +1,24 @@
-import { User, Loan, Payment } from '@/types';
+import { User, Loan } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Helper function to handle API errors
-const handleApiError = (error: any): string => {
+const handleApiError = (error: unknown): string => {
   console.error('API Error:', error);
-  if (error.response && error.response.data && error.response.data.message) {
-    return error.response.data.message;
+  if (
+    error && 
+    typeof error === 'object' && 
+    'response' in error && 
+    error.response && 
+    typeof error.response === 'object' && 
+    'data' in error.response && 
+    error.response.data && 
+    typeof error.response.data === 'object' && 
+    'message' in error.response.data
+  ) {
+    return error.response.data.message as string;
   }
-  return error.message || 'An unexpected error occurred';
+  return error instanceof Error ? error.message : 'An unexpected error occurred';
 };
 
 // Auth API calls

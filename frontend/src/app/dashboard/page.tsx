@@ -140,7 +140,7 @@ const Dashboard: React.FC = () => {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-500 mb-4">You don't have any loans yet.</p>
+              <p className="text-gray-500 mb-4">You don&apos;t have any loans yet.</p>
               <Link
                 href="/loans/apply"
                 className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"

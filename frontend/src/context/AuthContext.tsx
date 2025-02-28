@@ -112,8 +112,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const user = await loginUser(email, password);
       localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: 'LOGIN_SUCCESS', payload: user });
-    } catch (error: any) {
-      dispatch({ type: 'LOGIN_FAIL', payload: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch({ type: 'LOGIN_FAIL', payload: errorMessage });
     }
   };
 
@@ -124,8 +125,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const user = await registerUser(name, email, password);
       localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: 'REGISTER_SUCCESS', payload: user });
-    } catch (error: any) {
-      dispatch({ type: 'REGISTER_FAIL', payload: error.message });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      dispatch({ type: 'REGISTER_FAIL', payload: errorMessage });
     }
   };
 
