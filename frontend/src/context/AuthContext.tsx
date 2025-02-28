@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { User, AuthState } from '@/types';
 import { loginUser, registerUser, getUserProfile } from '@/utils/api';
