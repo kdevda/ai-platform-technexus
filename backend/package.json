@@ -3,17 +3,24 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node -r dotenv/config dist/index.js",
+    "prestart": "node scripts/check-env.js",
     "dev": "nodemon src/index.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "postinstall": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "prisma:init": "ts-node src/scripts/initPrisma.ts",
+    "check-env": "node scripts/check-env.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^5.10.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -28,6 +35,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.5",
     "nodemon": "^3.1.9",
+    "prisma": "^5.10.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
