@@ -5,103 +5,138 @@ export default function Home() {
   return (
     <div className="space-y-0 bg-white text-black">
       {/* Hero Section with AI Conversation Animation */}
-      <section className="py-20 md:py-28 bg-black text-white overflow-hidden">
+      <section className="py-20 md:py-28 bg-white text-black overflow-hidden">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-6xl font-bold leading-tight">
                 AI-Powered <br />
-                <span className="text-gray-300">Loan Management</span>
+                <span className="text-gray-700">Loan Management</span>
               </h1>
-              <p className="text-xl text-gray-400 max-w-lg">
+              <p className="text-xl text-gray-600 max-w-lg">
                 Enterprise-grade platform with configurable AI capabilities for every stage of the loan lifecycle.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Link
                   href="/register"
-                  className="bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-none font-medium text-lg transition-all"
+                  className="bg-black text-white hover:bg-gray-800 px-8 py-4 rounded-none font-medium text-lg transition-all"
                 >
                   Get Started
                 </Link>
                 <Link
                   href="/login"
-                  className="bg-transparent border border-white text-white hover:bg-white/10 px-8 py-4 rounded-none font-medium text-lg transition-all"
+                  className="bg-transparent border border-black text-black hover:bg-black/5 px-8 py-4 rounded-none font-medium text-lg transition-all"
                 >
                   Login
                 </Link>
               </div>
             </div>
             <div className="hidden md:block relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-900 to-transparent z-10"></div>
-              <div className="absolute top-0 left-0 w-full h-full bg-grid-white/[0.2] [mask-image:linear-gradient(to_bottom,transparent_40%,black)]"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-white to-transparent z-10"></div>
+              <div className="absolute top-0 left-0 w-full h-full bg-grid-black/[0.05] [mask-image:linear-gradient(to_bottom,transparent_40%,white)]"></div>
               
               {/* AI Conversation Animation */}
               <div className="relative h-[450px] w-full">
-                {/* AI Assistant Message */}
-                <div className="absolute left-0 top-0 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 w-[280px] animate-fadeIn opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-black border border-white/20 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
+                {/* Chat Header */}
+                <div className="absolute left-0 top-0 bg-gray-100 rounded-t-lg p-3 w-[350px] border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <div className="font-medium">TechNexus AI Assistant</div>
                     </div>
-                    <div>
-                      <div className="text-xs text-gray-400 mb-1">TechNexus AI</div>
-                      <div className="text-sm text-white">I've analyzed your loan portfolio and identified 15 high-risk accounts that need attention.</div>
+                    <div className="flex space-x-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
                     </div>
                   </div>
                 </div>
                 
-                {/* User Message */}
-                <div className="absolute right-0 top-[100px] bg-gray-800 backdrop-blur-sm border border-white/10 rounded-lg p-4 w-[260px] animate-fadeIn opacity-0" style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}>
-                  <div className="flex items-start gap-3">
-                    <div>
-                      <div className="text-xs text-gray-400 mb-1 text-right">Portfolio Manager</div>
-                      <div className="text-sm text-white">What actions do you recommend for these accounts?</div>
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-gray-700 border border-white/20 flex items-center justify-center flex-shrink-0">
+                {/* Chat Container */}
+                <div className="absolute left-0 top-[46px] bg-white border border-gray-200 border-t-0 rounded-b-lg p-4 w-[350px] h-[380px] overflow-hidden">
+                  {/* AI Assistant Message */}
+                  <div className="flex items-start gap-3 mb-4 animate-fadeIn opacity-0" style={{ animationDelay: '0.5s', animationFillMode: 'forwards' }}>
+                    <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center flex-shrink-0">
                       <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="bg-gray-100 rounded-lg p-3 max-w-[250px]">
+                      <div className="text-sm">Hello! I'm your AI loan assistant. How can I help you today?</div>
+                    </div>
+                  </div>
+                  
+                  {/* User Message */}
+                  <div className="flex items-start gap-3 mb-4 justify-end animate-fadeIn opacity-0" style={{ animationDelay: '1.5s', animationFillMode: 'forwards' }}>
+                    <div className="bg-black text-white rounded-lg p-3 max-w-[250px]">
+                      <div className="text-sm">I need to analyze my loan portfolio for high-risk accounts.</div>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                     </div>
                   </div>
-                </div>
-                
-                {/* AI Response with Recommendations */}
-                <div className="absolute left-0 top-[200px] bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 w-[320px] animate-fadeIn opacity-0" style={{ animationDelay: '2.5s', animationFillMode: 'forwards' }}>
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-black border border-white/20 flex items-center justify-center flex-shrink-0">
+                  
+                  {/* AI Response with Analysis */}
+                  <div className="flex items-start gap-3 mb-4 animate-fadeIn opacity-0" style={{ animationDelay: '2.5s', animationFillMode: 'forwards' }}>
+                    <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center flex-shrink-0">
                       <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <div>
-                      <div className="text-xs text-gray-400 mb-1">TechNexus AI</div>
-                      <div className="text-sm text-white">Based on behavioral analysis, I recommend:</div>
-                      <ul className="text-xs text-gray-300 mt-2 space-y-1 list-disc pl-4">
+                    <div className="bg-gray-100 rounded-lg p-3 max-w-[250px]">
+                      <div className="text-sm">I've analyzed your portfolio and identified 15 high-risk accounts that need attention.</div>
+                    </div>
+                  </div>
+                  
+                  {/* User Message */}
+                  <div className="flex items-start gap-3 mb-4 justify-end animate-fadeIn opacity-0" style={{ animationDelay: '3.5s', animationFillMode: 'forwards' }}>
+                    <div className="bg-black text-white rounded-lg p-3 max-w-[250px]">
+                      <div className="text-sm">What actions do you recommend for these accounts?</div>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                  </div>
+                  
+                  {/* AI Response with Recommendations */}
+                  <div className="flex items-start gap-3 mb-4 animate-fadeIn opacity-0" style={{ animationDelay: '4.5s', animationFillMode: 'forwards' }}>
+                    <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="bg-gray-100 rounded-lg p-3 max-w-[250px]">
+                      <div className="text-sm">Based on behavioral analysis, I recommend:</div>
+                      <ul className="text-xs text-gray-600 mt-2 space-y-1 list-disc pl-4">
                         <li>Personalized payment plans for 8 accounts</li>
                         <li>Early intervention for 5 accounts</li>
                         <li>Restructuring options for 2 accounts</li>
                       </ul>
-                      <div className="text-xs text-gray-400 mt-2">Projected recovery improvement: 27%</div>
+                      <div className="text-xs text-gray-500 mt-2">Projected recovery improvement: 27%</div>
                     </div>
                   </div>
-                </div>
-                
-                {/* Typing Indicator */}
-                <div className="absolute right-0 top-[320px] bg-gray-800 backdrop-blur-sm border border-white/10 rounded-lg p-3 w-[120px] animate-fadeIn opacity-0" style={{ animationDelay: '3.5s', animationFillMode: 'forwards' }}>
-                  <div className="flex items-center gap-1 justify-center">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                    <div className="text-xs text-gray-400 ml-1">Typing...</div>
+                  
+                  {/* Typing Indicator */}
+                  <div className="flex items-start gap-3 animate-fadeIn opacity-0" style={{ animationDelay: '5.5s', animationFillMode: 'forwards' }}>
+                    <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <div className="bg-gray-100 rounded-lg p-2 px-4">
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                
-                {/* AI Recommendation Card */}
-                <div className="absolute right-10 bottom-0 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 w-[300px]">
-                  <div className="text-sm text-gray-300 mb-2">AI Recommendation</div>
-                  <div className="text-lg font-medium">Optimize loan approval rates by 27% with our AI Originations module</div>
                 </div>
               </div>
             </div>
@@ -110,7 +145,7 @@ export default function Home() {
       </section>
 
       {/* AI Capabilities Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Enterprise AI Capabilities</h2>
@@ -152,7 +187,7 @@ export default function Home() {
                 icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
               },
             ].map((item, index) => (
-              <div key={index} className="border border-gray-200 p-8 hover:border-black transition-all">
+              <div key={index} className="border border-gray-200 p-8 hover:border-black transition-all bg-white">
                 <div className="w-12 h-12 bg-black rounded-none flex items-center justify-center mb-6">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -180,7 +215,7 @@ export default function Home() {
       </section>
 
       {/* Configurable Platform Section with Interactive UI */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -313,7 +348,7 @@ export default function Home() {
       </section>
 
       {/* AI Integrations Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Seamless AI Integrations</h2>
@@ -333,7 +368,7 @@ export default function Home() {
               "Accounting Software",
               "Business Intelligence"
             ].map((item, index) => (
-              <div key={index} className="border border-gray-200 p-6 text-center hover:border-black transition-all">
+              <div key={index} className="border border-gray-200 p-6 text-center hover:border-black transition-all bg-white">
                 <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
                   <svg className="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
