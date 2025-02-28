@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/User';
+import { userRepository } from '../repositories/userRepository';
 
 interface DecodedToken {
   id: string;
@@ -10,7 +10,12 @@ interface DecodedToken {
 declare global {
   namespace Express {
     interface Request {
-      user?: IUser;
+      user?: {
+        id: string;
+        name: string;
+        email: string;
+        role: string;
+      };
     }
   }
 }
@@ -37,24 +42,39 @@ export const protect = async (
         process.env.JWT_SECRET as string
       ) as DecodedToken;
 
-      // Get user from the token
-      req.user = await User.findById(decoded.id).select('-password');
+      // Get user from the token using Postgres repository
+      const user = await userRepository.findById(decoded.id);
+      
+      if (!user) {
+        res.status(401).json({ message: 'User not found' });
+        return;
+      }
+
+      // Add user to request object (excluding password)
+      req.user = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      };
 
       next();
     } catch (error) {
-      console.error(error);
+      console.error('Auth middleware error:', error);
       res.status(401).json({ message: 'Not authorized, token failed' });
+      return;
     }
   }
 
   if (!token) {
     res.status(401).json({ message: 'Not authorized, no token' });
+    return;
   }
 };
 
 // Admin middleware
 export const admin = (req: Request, res: Response, next: NextFunction) => {
-  if (req.user && req.user.role === 'admin') {
+  if (req.user && req.user.role === 'ADMIN') {
     next();
   } else {
     res.status(401).json({ message: 'Not authorized as an admin' });

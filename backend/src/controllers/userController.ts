@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import User, { IUser } from '../models/User';
+import { userRepository } from '../repositories/userRepository';
 import generateToken from '../utils/generateToken';
-import { Types } from 'mongoose';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -10,23 +9,31 @@ export const authUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email }) as IUser | null;
+    // Find user in Postgres using the repository
+    const user = await userRepository.findByEmail(email);
 
-    if (user && (await user.matchPassword(password))) {
-      const userId = user._id as Types.ObjectId;
-      
+    if (!user) {
+      res.status(401).json({ message: 'Invalid email or password' });
+      return;
+    }
+
+    // Verify password using the repository method
+    const isPasswordValid = await userRepository.verifyPassword(user, password);
+
+    if (isPasswordValid) {
       res.json({
-        _id: userId,
+        _id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
-        token: generateToken(userId.toString()),
+        token: generateToken(user.id),
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Server error during login' });
   }
 };
 
@@ -37,34 +44,36 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   const { name, email, password } = req.body;
 
   try {
-    const userExists = await User.findOne({ email });
+    // Check if user exists in Postgres
+    const userExists = await userRepository.findByEmail(email);
 
     if (userExists) {
       res.status(400).json({ message: 'User already exists' });
       return;
     }
 
-    const user = await User.create({
+    // Create user in Postgres using the repository
+    const user = await userRepository.create({
       name,
       email,
       password,
-    }) as IUser;
+      role: 'USER',
+    });
 
     if (user) {
-      const userId = user._id as Types.ObjectId;
-      
-      res.json({
-        _id: userId,
+      res.status(201).json({
+        _id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
-        token: generateToken(userId.toString()),
+        token: generateToken(user.id),
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Registration error:', error);
+    res.status(500).json({ message: 'Server error during registration' });
   }
 };
 
@@ -73,18 +82,17 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 // @access  Private
 export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user?._id) {
+    if (!req.user?.id) {
       res.status(404).json({ message: 'User not found' });
       return;
     }
     
-    const user = await User.findById(req.user._id) as IUser | null;
+    // Find user in Postgres using the repository
+    const user = await userRepository.findById(req.user.id);
 
     if (user) {
-      const userId = user._id as Types.ObjectId;
-      
       res.json({
-        _id: userId,
+        _id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -93,6 +101,7 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Get profile error:', error);
+    res.status(500).json({ message: 'Server error while fetching profile' });
   }
 }; 
