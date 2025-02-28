@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { userRepository } from '../repositories/userRepository';
 import { loanRepository } from '../repositories/loanRepository';
 import { paymentRepository } from '../repositories/paymentRepository';
-import User from '../models/userModel';
-import Loan from '../models/loanModel';
+import User, { IUser } from '../models/User';
+import Loan, { ILoan } from '../models/Loan';
 
 /**
  * Controller that demonstrates using both MongoDB and PostgreSQL
@@ -14,20 +14,22 @@ import Loan from '../models/loanModel';
  * @route   POST /api/migrate/user/:id
  * @access  Private/Admin
  */
-export const migrateUser = async (req: Request, res: Response) => {
+export const migrateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
     // Find user in MongoDB
-    const mongoUser = await User.findById(id);
+    const mongoUser = await User.findById(id) as IUser;
     if (!mongoUser) {
-      return res.status(404).json({ message: 'User not found in MongoDB' });
+      res.status(404).json({ message: 'User not found in MongoDB' });
+      return;
     }
 
     // Check if user already exists in PostgreSQL
     const existingUser = await userRepository.findByEmail(mongoUser.email);
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists in PostgreSQL' });
+      res.status(400).json({ message: 'User already exists in PostgreSQL' });
+      return;
     }
 
     // Create user in PostgreSQL
@@ -35,7 +37,7 @@ export const migrateUser = async (req: Request, res: Response) => {
       name: mongoUser.name,
       email: mongoUser.email,
       password: mongoUser.password, // Note: This assumes the password hash is compatible
-      role: mongoUser.isAdmin ? 'ADMIN' : 'USER',
+      role: mongoUser.role === 'admin' ? 'ADMIN' : 'USER',
     });
 
     res.status(201).json({
@@ -44,7 +46,7 @@ export const migrateUser = async (req: Request, res: Response) => {
         _id: mongoUser._id,
         name: mongoUser.name,
         email: mongoUser.email,
-        isAdmin: mongoUser.isAdmin,
+        role: mongoUser.role,
       },
       pgUser: {
         id: pgUser.id,
@@ -64,20 +66,29 @@ export const migrateUser = async (req: Request, res: Response) => {
  * @route   POST /api/migrate/loan/:id
  * @access  Private/Admin
  */
-export const migrateLoan = async (req: Request, res: Response) => {
+export const migrateLoan = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
 
-    // Find loan in MongoDB
+    // Find loan in MongoDB with populated user
     const mongoLoan = await Loan.findById(id).populate('user');
     if (!mongoLoan) {
-      return res.status(404).json({ message: 'Loan not found in MongoDB' });
+      res.status(404).json({ message: 'Loan not found in MongoDB' });
+      return;
+    }
+
+    // Ensure user is populated and has the expected fields
+    const populatedUser = mongoLoan.user as unknown as IUser;
+    if (!populatedUser || !populatedUser.email) {
+      res.status(400).json({ message: 'User information is incomplete in the loan document' });
+      return;
     }
 
     // Find user in PostgreSQL
-    const pgUser = await userRepository.findByEmail((mongoLoan.user as any).email);
+    const pgUser = await userRepository.findByEmail(populatedUser.email);
     if (!pgUser) {
-      return res.status(404).json({ message: 'User not found in PostgreSQL. Migrate the user first.' });
+      res.status(404).json({ message: 'User not found in PostgreSQL. Migrate the user first.' });
+      return;
     }
 
     // Create loan in PostgreSQL
@@ -87,8 +98,6 @@ export const migrateLoan = async (req: Request, res: Response) => {
       interestRate: mongoLoan.interestRate,
       term: mongoLoan.term,
       purpose: mongoLoan.purpose,
-      collateral: mongoLoan.collateral,
-      collateralValue: mongoLoan.collateralValue,
       status: mongoLoan.status.toUpperCase(),
       startDate: mongoLoan.startDate,
       endDate: mongoLoan.endDate,
@@ -101,8 +110,8 @@ export const migrateLoan = async (req: Request, res: Response) => {
         amount: mongoLoan.amount,
         status: mongoLoan.status,
         user: {
-          _id: (mongoLoan.user as any)._id,
-          name: (mongoLoan.user as any).name,
+          _id: populatedUser._id,
+          name: populatedUser.name,
         },
       },
       pgLoan: {
@@ -123,12 +132,12 @@ export const migrateLoan = async (req: Request, res: Response) => {
  * @route   GET /api/dual/user/:email
  * @access  Private
  */
-export const getUserFromBothDbs = async (req: Request, res: Response) => {
+export const getUserFromBothDbs = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email } = req.params;
 
     // Find user in MongoDB
-    const mongoUser = await User.findOne({ email });
+    const mongoUser = await User.findOne({ email }) as IUser | null;
     
     // Find user in PostgreSQL
     const pgUser = await userRepository.findByEmail(email);
@@ -139,7 +148,7 @@ export const getUserFromBothDbs = async (req: Request, res: Response) => {
         _id: mongoUser._id,
         name: mongoUser.name,
         email: mongoUser.email,
-        isAdmin: mongoUser.isAdmin,
+        role: mongoUser.role,
       } : null,
       pgUser: pgUser ? {
         id: pgUser.id,
