@@ -3,8 +3,30 @@ import { User, Loan } from '@/types';
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Helper function to handle API errors
-const handleApiError = (error: unknown): string => {
+const handleApiError = async (error: unknown, response?: Response): Promise<string> => {
   console.error('API Error:', error);
+  
+  // If we have a response object, try to get more detailed error information
+  if (response) {
+    try {
+      // Check if the response is JSON
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const errorData = await response.json();
+        return errorData.message || 'Server error with JSON response';
+      } else {
+        // If not JSON, get the text content for debugging
+        const textContent = await response.text();
+        console.error('Non-JSON response:', textContent.substring(0, 200) + '...');
+        return `Server returned non-JSON response (${response.status}): ${response.statusText}`;
+      }
+    } catch (parseError) {
+      console.error('Error parsing response:', parseError);
+      return `Failed to parse server response: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`;
+    }
+  }
+  
+  // Handle axios-style errors
   if (
     error && 
     typeof error === 'object' && 
@@ -18,12 +40,14 @@ const handleApiError = (error: unknown): string => {
   ) {
     return error.response.data.message as string;
   }
+  
   return error instanceof Error ? error.message : 'An unexpected error occurred';
 };
 
 // Auth API calls
 export const loginUser = async (email: string, password: string): Promise<User> => {
   try {
+    console.log(`Making login request to: ${API_URL}/users/login`);
     const response = await fetch(`${API_URL}/users/login`, {
       method: 'POST',
       headers: {
@@ -33,18 +57,20 @@ export const loginUser = async (email: string, password: string): Promise<User> 
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to login');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 };
 
 export const registerUser = async (name: string, email: string, password: string): Promise<User> => {
   try {
+    console.log(`Making registration request to: ${API_URL}/users`);
     const response = await fetch(`${API_URL}/users`, {
       method: 'POST',
       headers: {
@@ -54,13 +80,14 @@ export const registerUser = async (name: string, email: string, password: string
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to register');
+      const errorMessage = await handleApiError(null, response);
+      throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    throw new Error(handleApiError(error));
+    const errorMessage = await handleApiError(error);
+    throw new Error(errorMessage);
   }
 };
 
