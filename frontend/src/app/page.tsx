@@ -166,7 +166,7 @@ export default function Home() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Credit Score Threshold</label>
                     <div className="flex items-center">
                       <input type="text" value="680" readOnly className="w-16 border border-gray-300 rounded px-2 py-1 text-center" />
-                      <div className="ml-2 text-sm text-gray-600">Minimum</div>
+                      <div className="ml-2 text-sm text-black-600">Minimum</div>
                     </div>
                   </div>
                   
