@@ -1,33 +1,35 @@
 import { Request, Response } from 'express';
-import Loan from '../models/Loan';
-import { Types } from 'mongoose';
+import { loanRepository } from '../repositories/loanRepository';
 
 // @desc    Create a new loan application
 // @route   POST /api/loans
 // @access  Private
 export const createLoan = async (req: Request, res: Response): Promise<void> => {
-  const { amount, interestRate, term, purpose } = req.body;
+  const { amount, interestRate, term, purpose, collateral, collateralValue } = req.body;
 
   try {
-    if (!req.user?._id) {
+    if (!req.user?.id) {
       res.status(401).json({ message: 'User not authenticated' });
       return;
     }
 
-    const userId = req.user._id as Types.ObjectId;
+    const userId = req.user.id;
 
-    const loan = await Loan.create({
-      user: userId,
+    const loan = await loanRepository.create({
+      userId,
       amount,
       interestRate,
       term,
       purpose,
-      status: 'pending',
+      collateral,
+      collateralValue,
+      status: 'PENDING',
     });
 
     res.status(201).json(loan);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Create loan error:', error);
+    res.status(500).json({ message: 'Server error during loan creation' });
   }
 };
 
@@ -36,16 +38,17 @@ export const createLoan = async (req: Request, res: Response): Promise<void> => 
 // @access  Private
 export const getLoans = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user?._id) {
+    if (!req.user?.id) {
       res.status(401).json({ message: 'User not authenticated' });
       return;
     }
 
-    const userId = req.user._id as Types.ObjectId;
-    const loans = await Loan.find({ user: userId });
+    const userId = req.user.id;
+    const loans = await loanRepository.findByUserId(userId);
     res.json(loans);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Get loans error:', error);
+    res.status(500).json({ message: 'Server error while fetching loans' });
   }
 };
 
@@ -54,13 +57,13 @@ export const getLoans = async (req: Request, res: Response): Promise<void> => {
 // @access  Private
 export const getLoanById = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user?._id) {
+    if (!req.user?.id) {
       res.status(401).json({ message: 'User not authenticated' });
       return;
     }
 
-    const userId = req.user._id as Types.ObjectId;
-    const loan = await Loan.findById(req.params.id);
+    const userId = req.user.id;
+    const loan = await loanRepository.findById(req.params.id);
 
     if (!loan) {
       res.status(404).json({ message: 'Loan not found' });
@@ -68,14 +71,15 @@ export const getLoanById = async (req: Request, res: Response): Promise<void> =>
     }
 
     // Check if the loan belongs to the user or if the user is an admin
-    if (loan.user.toString() !== userId.toString() && req.user.role !== 'admin') {
+    if (loan.userId !== userId && req.user.role !== 'ADMIN') {
       res.status(401).json({ message: 'Not authorized' });
       return;
     }
 
     res.json(loan);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Get loan by ID error:', error);
+    res.status(500).json({ message: 'Server error while fetching loan' });
   }
 };
 
@@ -84,35 +88,37 @@ export const getLoanById = async (req: Request, res: Response): Promise<void> =>
 // @access  Private/Admin
 export const updateLoanStatus = async (req: Request, res: Response): Promise<void> => {
   try {
-    if (!req.user?._id) {
+    if (!req.user?.id) {
       res.status(401).json({ message: 'User not authenticated' });
       return;
     }
 
     const { status, startDate, endDate } = req.body;
 
-    const loan = await Loan.findById(req.params.id);
+    const loan = await loanRepository.findById(req.params.id);
 
     if (!loan) {
       res.status(404).json({ message: 'Loan not found' });
       return;
     }
 
-    loan.status = status || loan.status;
+    // Prepare update data
+    const updateData: any = { status: status || loan.status };
     
-    if (status === 'approved' || status === 'active') {
-      loan.startDate = startDate ? new Date(startDate) : new Date();
+    if (status === 'APPROVED' || status === 'ACTIVE') {
+      updateData.startDate = startDate ? new Date(startDate) : new Date();
       
       if (loan.term) {
-        const endDateValue = new Date(loan.startDate);
+        const endDateValue = new Date(updateData.startDate);
         endDateValue.setMonth(endDateValue.getMonth() + loan.term);
-        loan.endDate = endDate ? new Date(endDate) : endDateValue;
+        updateData.endDate = endDate ? new Date(endDate) : endDateValue;
       }
     }
 
-    const updatedLoan = await loan.save();
+    const updatedLoan = await loanRepository.update(req.params.id, updateData);
     res.json(updatedLoan);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Update loan status error:', error);
+    res.status(500).json({ message: 'Server error while updating loan status' });
   }
 }; 

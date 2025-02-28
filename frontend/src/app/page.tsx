@@ -13,7 +13,8 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                Enterprise Lending as a Service
+                Enterprise LaaS
+                <span className="block text-black">Lending as a Service</span>
                 <span className="block text-black">Powered by AI</span>
               </h1>
               <p className="text-gray-600 text-lg md:text-xl max-w-xl">
