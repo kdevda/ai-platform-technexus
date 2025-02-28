@@ -11,6 +11,7 @@ const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const { state, register, clearError } = useAuth();
   const { isAuthenticated, loading, error } = state;
@@ -22,15 +23,22 @@ const RegisterPage: React.FC = () => {
     }
   }, [isAuthenticated, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const validatePassword = () => {
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match');
-      return;
+      return false;
     }
-    
+    if (password.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      return false;
+    }
     setPasswordError('');
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validatePassword() || !agreeToTerms) return;
     await register(name, email, password);
   };
 
@@ -40,7 +48,7 @@ const RegisterPage: React.FC = () => {
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-xl border border-gray-200">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-black">Create an Account</h1>
-            <p className="text-gray-600 mt-2">Join TechNexus to manage your loans efficiently</p>
+            <p className="text-gray-600 mt-2">Join Technexus to streamline your loan operations</p>
           </div>
           
           {error && (
@@ -49,21 +57,6 @@ const RegisterPage: React.FC = () => {
                 <p>{error}</p>
                 <button
                   onClick={clearError}
-                  className="text-sm underline"
-                  aria-label="Close error message"
-                >
-                  Dismiss
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {passwordError && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
-              <div className="flex justify-between">
-                <p>{passwordError}</p>
-                <button
-                  onClick={() => setPasswordError('')}
                   className="text-sm underline"
                   aria-label="Close error message"
                 >
@@ -113,9 +106,7 @@ const RegisterPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                 required
-                minLength={6}
               />
-              <p className="mt-1 text-xs text-gray-500">Password must be at least 6 characters long</p>
             </div>
             
             <div>
@@ -129,8 +120,10 @@ const RegisterPage: React.FC = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                 required
-                minLength={6}
               />
+              {passwordError && (
+                <p className="mt-1 text-sm text-red-600">{passwordError}</p>
+              )}
             </div>
             
             <div className="flex items-center">
@@ -138,18 +131,27 @@ const RegisterPage: React.FC = () => {
                 id="terms"
                 name="terms"
                 type="checkbox"
+                checked={agreeToTerms}
+                onChange={(e) => setAgreeToTerms(e.target.checked)}
                 className="h-4 w-4 text-black border-gray-300 rounded"
                 required
               />
               <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-                I agree to the <Link href="/terms" className="text-black hover:underline">Terms of Service</Link> and <Link href="/privacy" className="text-black hover:underline">Privacy Policy</Link>
+                I agree to the{' '}
+                <Link href="/terms" className="text-black hover:underline">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-black hover:underline">
+                  Privacy Policy
+                </Link>
               </label>
             </div>
             
             <button
               type="submit"
-              className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 mt-6"
-              disabled={loading}
+              className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+              disabled={loading || !agreeToTerms}
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -169,7 +171,7 @@ const RegisterPage: React.FC = () => {
             <p className="text-gray-600">
               Already have an account?{' '}
               <Link href="/login" className="text-black font-medium hover:underline">
-                Sign in here
+                Sign in
               </Link>
             </p>
           </div>

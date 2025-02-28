@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
       <div className="flex items-center justify-center min-h-[70vh] bg-grid-black">
         <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-xl border border-gray-200">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-black">Login to TechNexus</h1>
+            <h1 className="text-3xl font-bold text-black">Login to Technexus</h1>
             <p className="text-gray-600 mt-2">Enter your credentials to access your account</p>
           </div>
           
