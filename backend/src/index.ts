@@ -19,7 +19,11 @@ const port = process.env.PORT || 5000;
 // CORS configuration
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL || 'https://loan-management-app.vercel.app'] 
+    ? [
+        process.env.FRONTEND_URL || 'https://loan-management-app.vercel.app',
+        'https://www.technexus.ca',
+        'https://technexus.ca'
+      ] 
     : 'http://localhost:3000',
   credentials: true,
 };
@@ -28,6 +32,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Handle OPTIONS requests for CORS preflight
+app.options('*', cors(corsOptions));
 
 // Health check route
 app.get('/health', (req: Request, res: Response) => {
