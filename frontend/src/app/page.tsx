@@ -3,8 +3,20 @@
 import Link from 'next/link';
 import Layout from '@/components/layout/Layout';
 import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const { state } = useAuth();
+  const { isAuthenticated } = state;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/platform/dashboard');
+    }
+  }, [isAuthenticated, router]);
+
   return (
     <Layout>
       {/* Hero Section with Professional Chat Interface */}

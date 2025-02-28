@@ -25,15 +25,32 @@ export const getPrismaClient = (): PrismaClient => {
 export const connectPostgres = async (): Promise<void> => {
   try {
     if (!process.env.POSTGRES_URI) {
+      console.error('POSTGRES_URI is not defined in environment variables');
       throw new Error('POSTGRES_URI is not defined in environment variables');
     }
     
+    console.log('Attempting to connect to PostgreSQL...');
+    
     const client = getPrismaClient();
     await client.$connect();
+    
+    // Test the connection with a simple query
+    const result = await client.$queryRaw`SELECT 1 as connected`;
+    console.log('PostgreSQL connection test result:', result);
+    
     console.log('PostgreSQL connected successfully');
   } catch (error) {
     console.error('PostgreSQL connection error:', error);
-    process.exit(1);
+    
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+      if ('stack' in error) {
+        console.error('Stack trace:', error.stack);
+      }
+    }
+    
+    // Don't exit the process, allow the application to continue with limited functionality
+    console.error('Application will continue with limited functionality due to database connection issues');
   }
 };
 

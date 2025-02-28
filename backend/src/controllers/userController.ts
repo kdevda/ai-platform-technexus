@@ -44,10 +44,19 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   const { name, email, password } = req.body;
 
   try {
+    console.log('Registration attempt for:', email);
+    
+    if (!name || !email || !password) {
+      console.log('Missing required fields:', { name: !!name, email: !!email, password: !!password });
+      res.status(400).json({ message: 'Please provide all required fields: name, email, and password' });
+      return;
+    }
+
     // Check if user exists in Postgres
     const userExists = await userRepository.findByEmail(email);
 
     if (userExists) {
+      console.log('User already exists:', email);
       res.status(400).json({ message: 'User already exists' });
       return;
     }
@@ -61,6 +70,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     });
 
     if (user) {
+      console.log('User created successfully:', user.id);
       res.status(201).json({
         _id: user.id,
         name: user.name,
@@ -69,11 +79,19 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         token: generateToken(user.id),
       });
     } else {
+      console.log('Failed to create user, returned null');
       res.status(400).json({ message: 'Invalid user data' });
     }
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error during registration' });
+    
+    // More detailed error message
+    let errorMessage = 'Server error during registration';
+    if (error instanceof Error) {
+      errorMessage += `: ${error.message}`;
+    }
+    
+    res.status(500).json({ message: errorMessage });
   }
 };
 

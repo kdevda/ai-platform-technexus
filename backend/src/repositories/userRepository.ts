@@ -41,16 +41,28 @@ export const userRepository = {
     password: string;
     role?: 'USER' | 'ADMIN';
   }): Promise<User> {
-    const prisma = getPrismaClient();
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-    
-    return prisma.user.create({
-      data: {
-        ...userData,
-        password: hashedPassword,
-        role: userData.role || 'USER',
-      },
-    });
+    try {
+      const prisma = getPrismaClient();
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      
+      console.log('Creating user with data:', { 
+        name: userData.name, 
+        email: userData.email, 
+        role: userData.role || 'USER' 
+      });
+      
+      return prisma.user.create({
+        data: {
+          name: userData.name,
+          email: userData.email,
+          password: hashedPassword,
+          role: userData.role || 'USER',
+        },
+      });
+    } catch (error) {
+      console.error('Error creating user in repository:', error);
+      throw error;
+    }
   },
 
   /**

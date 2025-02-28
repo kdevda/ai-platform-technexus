@@ -4,6 +4,8 @@ export interface User {
   email: string;
   role: 'user' | 'admin';
   token?: string;
+  phone?: string;
+  address?: string;
 }
 
 export interface Loan {
