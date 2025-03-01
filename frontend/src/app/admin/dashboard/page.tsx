@@ -19,7 +19,7 @@ const AdminDashboard: React.FC = () => {
     if (!authLoading && !isAuthenticated) {
       router.push('/login');
     } else if (!authLoading && isAuthenticated && user?.role !== 'admin') {
-      router.push('/dashboard');
+      router.push('/platform/dashboard');
     }
   }, [authLoading, isAuthenticated, router, user]);
 

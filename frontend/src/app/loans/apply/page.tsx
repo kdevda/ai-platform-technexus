@@ -81,7 +81,7 @@ const LoanApplicationPage: React.FC = () => {
         collateralValue: Number(formData.collateralValue),
       });
       
-      router.push('/dashboard');
+      router.push('/platform/dashboard');
     } catch (error) {
       console.error('Error applying for loan:', error);
       setErrors({ submit: 'Failed to submit loan application. Please try again.' });
@@ -215,7 +215,7 @@ const LoanApplicationPage: React.FC = () => {
             <div className="flex justify-end">
               <button
                 type="button"
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push('/platform/dashboard')}
                 className="px-6 py-2 mr-4 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
                 Cancel

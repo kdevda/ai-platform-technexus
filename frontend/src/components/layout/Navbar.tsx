@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
             
             {isAuthenticated ? (
               <>
-                <Link href="/dashboard" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
+                <Link href="/platform/dashboard" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
                   Dashboard
                 </Link>
                 <Link href="/loans" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
@@ -105,7 +105,7 @@ const Navbar: React.FC = () => {
             
             {isAuthenticated ? (
               <>
-                <Link href="/dashboard" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
+                <Link href="/platform/dashboard" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
                   Dashboard
                 </Link>
                 <Link href="/loans" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
