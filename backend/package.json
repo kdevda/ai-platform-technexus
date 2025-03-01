@@ -13,7 +13,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:init": "ts-node src/scripts/initPrisma.ts",
-    "check-env": "node scripts/check-env.js"
+    "check-env": "node scripts/check-env.js" 
   },
   "keywords": [],
   "author": "",
