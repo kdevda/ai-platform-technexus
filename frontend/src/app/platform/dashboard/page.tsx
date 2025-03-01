@@ -14,7 +14,7 @@ const AIChatWidget = () => {
   ]);
   const [input, setInput] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!input.trim()) return;
     
