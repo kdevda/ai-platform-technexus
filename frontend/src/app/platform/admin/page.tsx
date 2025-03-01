@@ -1,49 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
-import PlatformLayout from '@/components/platform/PlatformLayout';
+import React from 'react';
 import Link from 'next/link';
+import AdminLayout from '@/components/admin/AdminLayout';
 
 const AdminDashboard: React.FC = () => {
-  const { state } = useAuth();
-  const { user } = state;
-  const router = useRouter();
-
-  // Redirect if not admin
-  useEffect(() => {
-    if (user && user.role !== 'admin') {
-      router.push('/platform/dashboard');
-    }
-  }, [user, router]);
-
-  if (!user || user.role !== 'admin') {
-    return (
-      <PlatformLayout>
-        <div className="p-6">
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">
-                  You do not have permission to access this page.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </PlatformLayout>
-    );
-  }
-
   return (
-    <PlatformLayout>
-      <div className="p-6">
+    <AdminLayout>
+      <div>
         <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
         
         {/* Stats Overview */}
@@ -252,7 +216,7 @@ const AdminDashboard: React.FC = () => {
                     <p className="text-sm text-gray-800">
                       <span className="font-medium">Jane Smith</span> submitted a new loan application
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">6 hours ago</p>
+                    <p className="text-xs text-gray-500 mt-1">8 hours ago</p>
                   </div>
                 </div>
               </li>
@@ -260,7 +224,7 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-    </PlatformLayout>
+    </AdminLayout>
   );
 };
 

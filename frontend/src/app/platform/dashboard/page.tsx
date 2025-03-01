@@ -1,10 +1,94 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLoan } from '@/context/LoanContext';
 import PlatformLayout from '@/components/platform/PlatformLayout';
 import Link from 'next/link';
+
+// AI Chat Widget Component
+const AIChatWidget = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { sender: 'ai', text: 'How can I assist you today?' }
+  ]);
+  const [input, setInput] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    
+    // Add user message
+    setMessages([...messages, { sender: 'user', text: input }]);
+    setInput('');
+    
+    // Simulate AI response
+    setTimeout(() => {
+      setMessages(prev => [...prev, { 
+        sender: 'ai', 
+        text: "I'm your AI assistant. I'm here to help with any questions about your loans or the platform." 
+      }]);
+    }, 1000);
+  };
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50">
+      {isOpen ? (
+        <div className="bg-white rounded-lg shadow-xl w-80 md:w-96 flex flex-col overflow-hidden border border-gray-200">
+          <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
+            <h3 className="font-medium">AI Assistant</h3>
+            <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          
+          <div className="flex-1 p-4 overflow-y-auto max-h-80 bg-gray-50">
+            {messages.map((msg, index) => (
+              <div key={index} className={`mb-3 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`rounded-lg px-4 py-2 max-w-3/4 ${
+                  msg.sender === 'user' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'bg-gray-200 text-black'
+                }`}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4 flex">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button 
+              type="submit" 
+              className="bg-blue-600 text-white px-4 py-2 rounded-r-lg hover:bg-blue-700"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      ) : (
+        <button 
+          onClick={() => setIsOpen(true)}
+          className="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+};
 
 const PlatformDashboard: React.FC = () => {
   const { state: authState } = useAuth();
@@ -13,8 +97,10 @@ const PlatformDashboard: React.FC = () => {
   const { loans, loading: loanLoading } = loanState;
 
   useEffect(() => {
+    // Only fetch loans once when the component mounts
     getLoans();
-  }, [getLoans]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Calculate loan statistics
   const activeLoans = loans.filter((loan) => loan.status === 'active').length;
@@ -27,7 +113,7 @@ const PlatformDashboard: React.FC = () => {
   return (
     <PlatformLayout>
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-6 text-black">Dashboard</h1>
         
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -39,8 +125,8 @@ const PlatformDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Total Loan Amount</p>
-                <p className="text-2xl font-bold">${totalLoanAmount.toLocaleString()}</p>
+                <p className="text-black text-sm">Total Loan Amount</p>
+                <p className="text-2xl font-bold text-black">${totalLoanAmount.toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -53,8 +139,8 @@ const PlatformDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Active Loans</p>
-                <p className="text-2xl font-bold">{activeLoans}</p>
+                <p className="text-black text-sm">Active Loans</p>
+                <p className="text-2xl font-bold text-black">{activeLoans}</p>
               </div>
             </div>
           </div>
@@ -67,8 +153,8 @@ const PlatformDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Pending Loans</p>
-                <p className="text-2xl font-bold">{pendingLoans}</p>
+                <p className="text-black text-sm">Pending Loans</p>
+                <p className="text-2xl font-bold text-black">{pendingLoans}</p>
               </div>
             </div>
           </div>
@@ -81,8 +167,8 @@ const PlatformDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Approved Loans</p>
-                <p className="text-2xl font-bold">{approvedLoans}</p>
+                <p className="text-black text-sm">Approved Loans</p>
+                <p className="text-2xl font-bold text-black">{approvedLoans}</p>
               </div>
             </div>
           </div>
@@ -91,7 +177,7 @@ const PlatformDashboard: React.FC = () => {
         {/* Recent Loans */}
         <div className="bg-white rounded-lg shadow mb-8">
           <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Recent Loans</h2>
+            <h2 className="text-lg font-semibold text-black">Recent Loans</h2>
             <Link href="/platform/loans" className="text-blue-600 hover:text-blue-800 text-sm">
               View All
             </Link>
@@ -106,7 +192,7 @@ const PlatformDashboard: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="min-w-full">
                   <thead>
-                    <tr className="bg-gray-50 text-gray-600 text-sm leading-normal">
+                    <tr className="bg-gray-50 text-black text-sm leading-normal">
                       <th className="py-3 px-6 text-left">Amount</th>
                       <th className="py-3 px-6 text-left">Purpose</th>
                       <th className="py-3 px-6 text-left">Status</th>
@@ -115,7 +201,7 @@ const PlatformDashboard: React.FC = () => {
                       <th className="py-3 px-6 text-left">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="text-gray-600 text-sm">
+                  <tbody className="text-black text-sm">
                     {loans.slice(0, 5).map((loan) => (
                       <tr key={loan._id} className="border-b border-gray-200 hover:bg-gray-50">
                         <td className="py-3 px-6">
@@ -161,7 +247,7 @@ const PlatformDashboard: React.FC = () => {
               </div>
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-500 mb-4">You don&apos;t have any loans yet.</p>
+                <p className="text-black mb-4">You don&apos;t have any loans yet.</p>
                 <Link
                   href="/platform/loans/apply"
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
@@ -176,7 +262,7 @@ const PlatformDashboard: React.FC = () => {
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold">Quick Actions</h2>
+            <h2 className="text-lg font-semibold text-black">Quick Actions</h2>
           </div>
           <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link 
@@ -189,8 +275,8 @@ const PlatformDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="font-medium">Apply for Loan</p>
-                <p className="text-sm text-gray-500">Request a new loan</p>
+                <p className="font-medium text-black">Apply for Loan</p>
+                <p className="text-sm text-black">Request a new loan</p>
               </div>
             </Link>
             
@@ -204,8 +290,8 @@ const PlatformDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="font-medium">Make Payment</p>
-                <p className="text-sm text-gray-500">Pay your loan installment</p>
+                <p className="font-medium text-black">Make Payment</p>
+                <p className="text-sm text-black">Pay your loan installment</p>
               </div>
             </Link>
             
@@ -219,13 +305,16 @@ const PlatformDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="font-medium">Update Profile</p>
-                <p className="text-sm text-gray-500">Manage your account</p>
+                <p className="font-medium text-black">Update Profile</p>
+                <p className="text-sm text-black">Manage your account</p>
               </div>
             </Link>
           </div>
         </div>
       </div>
+      
+      {/* AI Chat Widget */}
+      <AIChatWidget />
     </PlatformLayout>
   );
 };
