@@ -55,7 +55,7 @@ const handleApiError = async (error: unknown, response?: Response): Promise<stri
 // Auth API calls
 export const loginUser = async (email: string, password: string): Promise<User> => {
   try {
-    const endpoint = '/users/login';
+    const endpoint = '/api/users/login';
     logApiRequest('POST', endpoint, { email });
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -80,7 +80,7 @@ export const loginUser = async (email: string, password: string): Promise<User> 
 
 export const registerUser = async (name: string, email: string, password: string): Promise<User> => {
   try {
-    const endpoint = '/users';
+    const endpoint = '/api/users';
     logApiRequest('POST', endpoint, { name, email });
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -105,7 +105,7 @@ export const registerUser = async (name: string, email: string, password: string
 
 export const getUserProfile = async (token: string): Promise<User> => {
   try {
-    const endpoint = '/users/profile';
+    const endpoint = '/api/users/profile';
     logApiRequest('GET', endpoint);
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -140,7 +140,10 @@ export const applyForLoan = async (
   }
 ): Promise<Loan> => {
   try {
-    const response = await fetch(`${API_URL}/loans/apply`, {
+    const endpoint = '/api/loans/apply';
+    logApiRequest('POST', endpoint, loanData);
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -166,7 +169,10 @@ export const createLoan = async (
   loanData: { amount: number; interestRate: number; term: number; purpose: string }
 ): Promise<Loan> => {
   try {
-    const response = await fetch(`${API_URL}/loans`, {
+    const endpoint = '/api/loans';
+    logApiRequest('POST', endpoint, loanData);
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -189,7 +195,10 @@ export const createLoan = async (
 
 export const getLoans = async (token: string): Promise<Loan[]> => {
   try {
-    const response = await fetch(`${API_URL}/loans`, {
+    const endpoint = '/api/loans';
+    logApiRequest('GET', endpoint);
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -211,7 +220,10 @@ export const getLoans = async (token: string): Promise<Loan[]> => {
 
 export const getLoanById = async (token: string, id: string): Promise<Loan> => {
   try {
-    const response = await fetch(`${API_URL}/loans/${id}`, {
+    const endpoint = `/api/loans/${id}`;
+    logApiRequest('GET', endpoint);
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -239,7 +251,10 @@ export const updateLoanStatus = async (
   endDate?: Date
 ): Promise<Loan> => {
   try {
-    const response = await fetch(`${API_URL}/loans/${id}`, {
+    const endpoint = `/api/loans/${id}`;
+    logApiRequest('PUT', endpoint, { status, startDate, endDate });
+    
+    const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
