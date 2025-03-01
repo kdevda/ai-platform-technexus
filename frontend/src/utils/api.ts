@@ -55,7 +55,7 @@ const handleApiError = async (error: unknown, response?: Response): Promise<stri
 // Auth API calls
 export const loginUser = async (email: string, password: string): Promise<User> => {
   try {
-    const endpoint = '/users/login';
+    const endpoint = '/api/users/login';
     logApiRequest('POST', endpoint, { email });
     
     const response = await fetch(`${API_URL}${endpoint}`, {
