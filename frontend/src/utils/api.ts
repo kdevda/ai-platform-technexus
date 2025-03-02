@@ -2,7 +2,7 @@ import { User, Loan } from '@/types';
 
 // Ensure the API URL has the correct format
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-console.log('API URL configured as:', API_URL);
+console.log('API URL configured as:', API_URL); 
 
 // Debug utility to log API requests in production
 const logApiRequest = (method: string, endpoint: string, data?: any) => {
