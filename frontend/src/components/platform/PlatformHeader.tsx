@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 const PlatformHeader: React.FC = () => {
-  const { state, logout } = useAuth();
+  const { state, logout, hasRole } = useAuth();
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -40,6 +40,9 @@ const PlatformHeader: React.FC = () => {
     
     return (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
   };
+
+  // Check if user has admin role
+  const isAdmin = hasRole('ADMIN');
 
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
@@ -77,7 +80,7 @@ const PlatformHeader: React.FC = () => {
                 My Profile
               </Link>
               
-              {state.user?.role === 'admin' && (
+              {isAdmin && (
                 <>
                   <Link 
                     href="/platform/admin" 

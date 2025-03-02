@@ -1,7 +1,8 @@
 import { User, Loan } from '@/types';
 
 // Ensure the API URL has the correct format
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+console.log('API URL configured as:', API_URL);
 
 // Debug utility to log API requests in production
 const logApiRequest = (method: string, endpoint: string, data?: any) => {
@@ -55,7 +56,7 @@ const handleApiError = async (error: unknown, response?: Response): Promise<stri
 // Auth API calls
 export const loginUser = async (email: string, password: string): Promise<User> => {
   try {
-    const endpoint = '/api/users/login';
+    const endpoint = '/users/login';
     logApiRequest('POST', endpoint, { email });
     
     const response = await fetch(`${API_URL}${endpoint}`, {

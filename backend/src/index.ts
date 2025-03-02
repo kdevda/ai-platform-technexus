@@ -4,6 +4,7 @@ import cors from 'cors';
 import userRoutes from './routes/userRoutes';
 import loanRoutes from './routes/loanRoutes';
 import dualDbRoutes from './routes/dualDbRoutes';
+import schemaRoutes from './routes/schemaRoutes';
 import { connectDatabases, checkDatabaseConnections } from './services/dbService';
 
 // Load environment variables
@@ -58,6 +59,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api/users', userRoutes);
 app.use('/api/loans', loanRoutes);
 app.use('/api/dual', dualDbRoutes);
+app.use('/api/schema', schemaRoutes);
 
 // Start server
 connectDatabases().then(() => {

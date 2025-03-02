@@ -15,6 +15,7 @@ declare global {
         name: string;
         email: string;
         role: string;
+        roles: string[];
       };
     }
   }
@@ -50,12 +51,16 @@ export const protect = async (
         return;
       }
 
+      // Get user roles
+      const userRoles = user.userRoles?.map(ur => ur.role.name) || [];
+
       // Add user to request object (excluding password)
       req.user = {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        roles: userRoles
       };
 
       next();
@@ -74,9 +79,23 @@ export const protect = async (
 
 // Admin middleware
 export const admin = (req: Request, res: Response, next: NextFunction) => {
-  if (req.user && req.user.role === 'ADMIN') {
+  if (req.user && (req.user.role === 'ADMIN' || req.user.roles.includes('ADMIN'))) {
     next();
   } else {
     res.status(401).json({ message: 'Not authorized as an admin' });
   }
+};
+
+// Role-based middleware
+export const hasRole = (role: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (
+      req.user && 
+      (req.user.role === role || req.user.roles.includes(role))
+    ) {
+      next();
+    } else {
+      res.status(401).json({ message: `Not authorized, requires ${role} role` });
+    }
+  };
 }; 

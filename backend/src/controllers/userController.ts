@@ -21,11 +21,15 @@ export const authUser = async (req: Request, res: Response): Promise<void> => {
     const isPasswordValid = await userRepository.verifyPassword(user, password);
 
     if (isPasswordValid) {
+      // Extract roles from userRoles
+      const roles = user.userRoles?.map(ur => ur.role.name) || [];
+      
       res.json({
         _id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
+        roles: roles,
         token: generateToken(user.id),
       });
     } else {
@@ -71,11 +75,17 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     if (user) {
       console.log('User created successfully:', user.id);
+      
+      // Get the user with roles
+      const userWithRoles = await userRepository.findById(user.id);
+      const roles = userWithRoles?.userRoles?.map(ur => ur.role.name) || [];
+      
       res.status(201).json({
         _id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
+        roles: roles,
         token: generateToken(user.id),
       });
     } else {
@@ -109,11 +119,15 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
     const user = await userRepository.findById(req.user.id);
 
     if (user) {
+      // Extract roles from userRoles
+      const roles = user.userRoles?.map(ur => ur.role.name) || [];
+      
       res.json({
         _id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
+        roles: roles,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -121,5 +135,98 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
   } catch (error) {
     console.error('Get profile error:', error);
     res.status(500).json({ message: 'Server error while fetching profile' });
+  }
+};
+
+// @desc    Assign a role to a user
+// @route   POST /api/users/:id/roles
+// @access  Admin
+export const assignRole = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    
+    if (!id || !role) {
+      res.status(400).json({ message: 'User ID and role are required' });
+      return;
+    }
+    
+    // Check if user exists
+    const user = await userRepository.findById(id);
+    
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    
+    // Assign the role
+    await userRepository.assignRole(id, role);
+    
+    // Get updated user with roles
+    const updatedUser = await userRepository.findById(id);
+    const roles = updatedUser?.userRoles?.map(ur => ur.role.name) || [];
+    
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      roles: roles,
+    });
+  } catch (error) {
+    console.error('Assign role error:', error);
+    
+    let errorMessage = 'Server error while assigning role';
+    if (error instanceof Error) {
+      errorMessage += `: ${error.message}`;
+    }
+    
+    res.status(500).json({ message: errorMessage });
+  }
+};
+
+// @desc    Remove a role from a user
+// @route   DELETE /api/users/:id/roles/:role
+// @access  Admin
+export const removeRole = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id, role } = req.params;
+    
+    if (!id || !role) {
+      res.status(400).json({ message: 'User ID and role are required' });
+      return;
+    }
+    
+    // Check if user exists
+    const user = await userRepository.findById(id);
+    
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+    
+    // Remove the role
+    await userRepository.removeRole(id, role);
+    
+    // Get updated user with roles
+    const updatedUser = await userRepository.findById(id);
+    const roles = updatedUser?.userRoles?.map(ur => ur.role.name) || [];
+    
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      roles: roles,
+    });
+  } catch (error) {
+    console.error('Remove role error:', error);
+    
+    let errorMessage = 'Server error while removing role';
+    if (error instanceof Error) {
+      errorMessage += `: ${error.message}`;
+    }
+    
+    res.status(500).json({ message: errorMessage });
   }
 }; 

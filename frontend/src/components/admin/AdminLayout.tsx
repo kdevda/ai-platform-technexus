@@ -8,16 +8,17 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-  const { state } = useAuth();
+  const { state, hasRole } = useAuth();
   const { user, loading } = state;
   const router = useRouter();
+  const isAdmin = hasRole('ADMIN');
 
   // Redirect if not admin
   useEffect(() => {
-    if (!loading && (!user || user.role !== 'admin')) {
+    if (!loading && (!user || !isAdmin)) {
       router.push('/platform/dashboard');
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, isAdmin]);
 
   if (loading) {
     return (
@@ -27,7 +28,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     );
   }
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !isAdmin) {
     return null; // Will redirect in useEffect
   }
 
@@ -37,7 +38,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <AdminSidebar />
       
       {/* Main Content */}
-      <div className="flex-1 ml-20 overflow-auto">
+      <div className="flex-1 ml-20 overflow-auto text-black">
         <main className="p-6">
           {children}
         </main>

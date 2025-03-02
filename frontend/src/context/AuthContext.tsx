@@ -30,12 +30,14 @@ const AuthContext = createContext<{
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+  hasRole: (role: string) => boolean;
 }>({
   state: initialState,
   login: async () => {},
   register: async () => {},
   logout: () => {},
   clearError: () => {},
+  hasRole: () => false,
 });
 
 // Reducer function
@@ -144,8 +146,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'CLEAR_ERROR' });
   };
 
+  // Check if user has a specific role
+  const hasRole = (role: string): boolean => {
+    if (!state.user) return false;
+    
+    // Check legacy role field
+    if (state.user.role.toLowerCase() === role.toLowerCase()) {
+      return true;
+    }
+    
+    // Check roles array
+    return !!state.user.roles?.some(r => r.toLowerCase() === role.toLowerCase());
+  };
+
   return (
-    <AuthContext.Provider value={{ state, login, register, logout, clearError }}>
+    <AuthContext.Provider value={{ state, login, register, logout, clearError, hasRole }}>
       {children}
     </AuthContext.Provider>
   );
