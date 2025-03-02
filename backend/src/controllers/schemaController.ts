@@ -114,6 +114,37 @@ export const createTable = async (req: Request, res: Response): Promise<void> =>
       return;
     }
     
+    // Validate model name - must start with uppercase letter and be alphanumeric
+    if (!/^[A-Z][a-zA-Z0-9]*$/.test(name)) {
+      res.status(400).json({ 
+        error: 'Invalid table name', 
+        message: 'Table name must start with an uppercase letter and contain only alphanumeric characters.'
+      });
+      return;
+    }
+    
+    // Validate fields - each field must have a name and type
+    for (const field of fields) {
+      if (!field.name || !field.type) {
+        res.status(400).json({ 
+          error: 'Invalid field definition', 
+          message: 'Each field must have a name and type.'
+        });
+        return;
+      }
+      
+      // Field names should be alphanumeric and start with lowercase
+      if (!/^[a-z][a-zA-Z0-9]*$/.test(field.name)) {
+        res.status(400).json({ 
+          error: 'Invalid field name', 
+          field: field.name,
+          message: 'Field names must start with a lowercase letter and contain only alphanumeric characters.'
+        });
+        return;
+      }
+    }
+    
+    console.log(`Creating new table '${name}' with ${fields.length} fields`);
     const schemaContent = fs.readFileSync(SCHEMA_PATH, 'utf8');
     const existingTables = parseModels(schemaContent);
     
@@ -124,6 +155,7 @@ export const createTable = async (req: Request, res: Response): Promise<void> =>
     
     // Generate the model definition
     const modelDefinition = generateModelDefinition(name, description, fields);
+    console.log('Generated model definition:', modelDefinition);
     
     // Add the new model to the schema
     const updatedSchema = `${schemaContent}\n${modelDefinition}`;
@@ -131,13 +163,41 @@ export const createTable = async (req: Request, res: Response): Promise<void> =>
     // Write the updated schema back to the file
     fs.writeFileSync(SCHEMA_PATH, updatedSchema);
     
-    // Apply the schema changes
-    await applySchemaChanges();
-    
-    res.status(201).json({ message: 'Table created successfully' });
+    try {
+      // Apply the schema changes
+      await applySchemaChanges();
+      
+      // Return successful response with table details
+      res.status(201).json({ 
+        message: 'Table created successfully',
+        table: {
+          name,
+          description,
+          fieldCount: fields.length
+        }
+      });
+    } catch (schemaError) {
+      console.error('Schema change error:', schemaError);
+      
+      // Attempt to restore the original schema if the change failed
+      try {
+        fs.writeFileSync(SCHEMA_PATH, schemaContent);
+        console.log('Restored original schema after failed schema change');
+      } catch (restoreError) {
+        console.error('Failed to restore original schema:', restoreError);
+      }
+      
+      res.status(500).json({ 
+        error: 'Failed to apply schema changes',
+        message: schemaError instanceof Error ? schemaError.message : 'Unknown error during schema update'
+      });
+    }
   } catch (error) {
     console.error('Error creating table:', error);
-    res.status(500).json({ error: 'Failed to create table' });
+    res.status(500).json({ 
+      error: 'Failed to create table',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 };
 
@@ -147,7 +207,7 @@ export const createTable = async (req: Request, res: Response): Promise<void> =>
 export const updateTable = async (req: Request, res: Response): Promise<void> => {
   try {
     const { tableName } = req.params;
-    const { fields, newName, description } = req.body;
+    const { fields, newName, description, addField, updateField, deleteField } = req.body;
     
     // Read the current schema
     const schemaContent = fs.readFileSync(SCHEMA_PATH, 'utf8');
@@ -159,12 +219,58 @@ export const updateTable = async (req: Request, res: Response): Promise<void> =>
       res.status(404).json({ error: 'Table not found' });
       return;
     }
+
+    let updatedFields = [...modelInfo.fields];
+    
+    // Handle add field operation
+    if (addField) {
+      // Validate field
+      if (!addField.name || !addField.type) {
+        res.status(400).json({ error: 'Invalid field data' });
+        return;
+      }
+      
+      // Check if field already exists
+      if (updatedFields.some(f => f.name === addField.name)) {
+        res.status(400).json({ error: 'Field already exists' });
+        return;
+      }
+      
+      // Add the new field
+      updatedFields.push({
+        id: (updatedFields.length + 1).toString(),
+        ...addField
+      });
+    }
+    // Handle update field operation
+    else if (updateField && updateField.oldName) {
+      const index = updatedFields.findIndex(f => f.name === updateField.oldName);
+      if (index === -1) {
+        res.status(404).json({ error: 'Field not found' });
+        return;
+      }
+      
+      // Update the field, preserving the id
+      updatedFields[index] = {
+        ...updatedFields[index],
+        name: updateField.name || updatedFields[index].name,
+        type: updateField.type || updatedFields[index].type,
+        required: updateField.required !== undefined ? updateField.required : updatedFields[index].required,
+        unique: updateField.unique !== undefined ? updateField.unique : updatedFields[index].unique,
+        default: updateField.default !== undefined ? updateField.default : updatedFields[index].default,
+        description: updateField.description || updatedFields[index].description
+      };
+    }
+    // Handle delete field operation
+    else if (deleteField) {
+      updatedFields = updatedFields.filter(f => f.name !== deleteField);
+    }
     
     // Generate updated model definition
     const updatedDefinition = generateModelDefinition(
       newName || tableName,
       description || modelInfo.description,
-      fields || modelInfo.fields
+      fields || updatedFields
     );
     
     // Replace the old model definition with the new one
@@ -177,7 +283,13 @@ export const updateTable = async (req: Request, res: Response): Promise<void> =>
     // Apply the schema changes
     await applySchemaChanges();
     
-    res.status(200).json({ message: 'Table updated successfully' });
+    // Get updated fields for the response
+    const updatedModelInfo = parseModelFields(fs.readFileSync(SCHEMA_PATH, 'utf8'), newName || tableName);
+    
+    res.status(200).json({ 
+      message: 'Table updated successfully',
+      fields: updatedModelInfo ? updatedModelInfo.fields : []
+    });
   } catch (error) {
     console.error('Error updating table:', error);
     res.status(500).json({ error: 'Failed to update table' });
@@ -343,36 +455,93 @@ function generateModelDefinition(name: string, description: string, fields: any[
     modelDef = `// Description: ${description}\n${modelDef}`;
   }
   
+  // Check if an id field exists
+  const hasIdField = fields.some(field => field.name === 'id' && field.isPrimary);
+  
+  // Add id field as first field if it doesn't exist
+  if (!hasIdField) {
+    modelDef += `\n  id String @id @default(uuid()) // Primary key`;
+  }
+  
   // Add each field
   fields.forEach(field => {
-    let fieldLine = `\n  ${field.name} ${field.type}`;
-    
-    // Add ? for optional fields
-    if (!field.required) {
-      fieldLine += '?';
+    // Skip if this is an automatically added id field
+    if (field.name === 'id' && field.isPrimary && hasIdField) {
+      // Convert user-defined id field to ensure it has @id attribute
+      let fieldLine = `\n  ${field.name} ${field.type}`;
+      
+      // For id fields, always make them required
+      const attributes = ['@id'];
+      
+      if (field.default || field.defaultValue) {
+        // Ensure default function calls are properly parenthesized
+        let defaultValue = field.default || field.defaultValue;
+        if (defaultValue.includes('(') && !defaultValue.includes(')')) {
+          defaultValue += ')';
+        }
+        attributes.push(`@default(${defaultValue})`);
+      } else {
+        // Add default uuid generator if it's a string id
+        if (field.type === 'String') {
+          attributes.push('@default(uuid())');
+        } else if (field.type === 'Int') {
+          attributes.push('@default(autoincrement())');
+        }
+      }
+      
+      if (attributes.length > 0) {
+        fieldLine += ` ${attributes.join(' ')}`;
+      }
+      
+      // Add description as comment if available
+      if (field.description) {
+        fieldLine += ` // ${field.description}`;
+      } else {
+        fieldLine += ` // Primary key`;
+      }
+      
+      modelDef += fieldLine;
     }
-    
-    // Add attributes
-    const attributes = [];
-    
-    if (field.unique) {
-      attributes.push('@unique');
+    // Process regular fields (non-id or when id already exists)
+    else if (!hasIdField && field.name === 'id') {
+      // Skip the id field since we already added it
+      return;
+    } 
+    else {
+      let fieldLine = `\n  ${field.name} ${field.type}`;
+      
+      // Add ? for optional fields
+      if (!field.required && !field.isRequired) {
+        fieldLine += '?';
+      }
+      
+      // Add attributes
+      const attributes = [];
+      
+      if (field.unique || field.isUnique) {
+        attributes.push('@unique');
+      }
+      
+      if (field.default || field.defaultValue) {
+        // Ensure default function calls are properly parenthesized
+        let defaultValue = field.default || field.defaultValue;
+        if (defaultValue.includes('(') && !defaultValue.includes(')')) {
+          defaultValue += ')';
+        }
+        attributes.push(`@default(${defaultValue})`);
+      }
+      
+      if (attributes.length > 0) {
+        fieldLine += ` ${attributes.join(' ')}`;
+      }
+      
+      // Add description as comment if available
+      if (field.description) {
+        fieldLine += ` // ${field.description}`;
+      }
+      
+      modelDef += fieldLine;
     }
-    
-    if (field.default) {
-      attributes.push(`@default(${field.default})`);
-    }
-    
-    if (attributes.length > 0) {
-      fieldLine += ` ${attributes.join(' ')}`;
-    }
-    
-    // Add description as comment if available
-    if (field.description) {
-      fieldLine += ` // ${field.description}`;
-    }
-    
-    modelDef += fieldLine;
   });
   
   // Close model definition
@@ -382,39 +551,56 @@ function generateModelDefinition(name: string, description: string, fields: any[
 }
 
 /**
- * Apply schema changes using Prisma migrate
+ * Apply schema changes using Prisma
  */
 async function applySchemaChanges() {
   try {
-    console.log("Starting schema migration process...");
+    console.log("Starting schema update process...");
     
     // First generate the Prisma client to validate the schema
     console.log("Generating Prisma client to validate schema...");
-    const generateCommand = 'npx prisma generate';
-    const { stdout: genStdout, stderr: genStderr } = await execPromise(generateCommand);
+    try {
+      const generateCommand = 'npx prisma generate';
+      const { stdout: genStdout, stderr: genStderr } = await execPromise(generateCommand);
+      
+      console.log('Generation stdout:', genStdout);
+      if (genStderr) {
+        console.error('Generation stderr:', genStderr);
+        
+        // Check for specific error messages related to model validation
+        if (genStderr.includes('Error validating model') && genStderr.includes('unique criteria')) {
+          throw new Error('Schema validation failed: Each model must have an ID field with @id attribute that is required.');
+        }
+      }
+    } catch (genError) {
+      console.error('Error generating Prisma client:', genError);
+      throw genError;
+    }
     
-    console.log('Generation stdout:', genStdout);
-    if (genStderr) console.error('Generation stderr:', genStderr);
-    
-    // Then run the migration
-    console.log("Running Prisma migration...");
-    const migrateCommand = 'npx prisma migrate dev --name schema-update --create-only';
-    const { stdout, stderr } = await execPromise(migrateCommand);
-    
-    console.log('Migration stdout:', stdout);
-    if (stderr) console.error('Migration stderr:', stderr);
-    
-    // Apply the migration
-    console.log("Applying migration...");
-    const applyCommand = 'npx prisma migrate dev';
-    await execPromise(applyCommand);
+    // Use prisma db push which is more reliable for dynamic schema changes
+    // It doesn't require interactive prompts and can automatically apply changes
+    console.log("Pushing schema changes to database...");
+    try {
+      const pushCommand = 'npx prisma db push --accept-data-loss';
+      const { stdout, stderr } = await execPromise(pushCommand);
+      
+      console.log('DB Push stdout:', stdout);
+      if (stderr) console.error('DB Push stderr:', stderr);
+    } catch (pushError) {
+      console.error('Error pushing schema to database:', pushError);
+      throw pushError;
+    }
     
     // Disconnect and reconnect Prisma client to reload the schema
     await prisma.$disconnect();
     
     // Generate Prisma client again with updated schema
     console.log("Regenerating Prisma client with updated schema...");
-    await execPromise(generateCommand);
+    await execPromise('npx prisma generate');
+    
+    // Create a new instance of PrismaClient to use the updated schema
+    const newPrismaClient = new PrismaClient();
+    Object.assign(prisma, newPrismaClient);
     
     console.log("Schema changes applied successfully");
     return true;

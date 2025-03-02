@@ -5,6 +5,7 @@ import userRoutes from './routes/userRoutes';
 import loanRoutes from './routes/loanRoutes';
 import dualDbRoutes from './routes/dualDbRoutes';
 import schemaRoutes from './routes/schemaRoutes';
+import permissionRoutes from './routes/permissionRoutes';
 import { connectDatabases, checkDatabaseConnections } from './services/dbService';
 
 // Load environment variables
@@ -60,6 +61,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/loans', loanRoutes);
 app.use('/api/dual', dualDbRoutes);
 app.use('/api/schema', schemaRoutes);
+app.use('/api/permissions', permissionRoutes);
 
 // Start server
 connectDatabases().then(() => {

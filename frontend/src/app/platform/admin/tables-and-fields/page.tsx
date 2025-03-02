@@ -101,7 +101,7 @@ const TablesAndFieldsPage: React.FC = () => {
   const [tables, setTables] = useState<any[]>([]);
   const [selectedTable, setSelectedTable] = useState<string | null>(null);
   const [fields, setFields] = useState<any[]>([]);
-  const [dataTypes, setDataTypes] = useState<string[]>([]);
+  const [dataTypes, setDataTypes] = useState<string[]>(['String', 'Int', 'Float', 'Boolean', 'DateTime']);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAddTableModal, setShowAddTableModal] = useState(false);
@@ -145,7 +145,7 @@ const TablesAndFieldsPage: React.FC = () => {
         
         // Also fetch data types
         const typesData = await fetchDataTypes(token);
-        setDataTypes(typesData.types);
+        setDataTypes(typesData);
       } catch (err) {
         setError('Failed to load tables');
         console.error(err);
@@ -193,17 +193,21 @@ const TablesAndFieldsPage: React.FC = () => {
   const handleSubmitTable = async () => {
     try {
       setLoading(true);
-      // Add empty fields array to match backend requirements
+      // Create a properly configured ID field
       const tableData = {
         ...newTable,
         fields: [
           {
             name: 'id',
             type: 'String',
+            required: true,
             isRequired: true,
-            isPrimary: true,
+            unique: true,
             isUnique: true,
-            defaultValue: '@default(uuid())'
+            isPrimary: true,
+            default: 'uuid()',
+            defaultValue: 'uuid()',
+            description: 'Primary key'
           }
         ]
       };
@@ -588,7 +592,7 @@ const TablesAndFieldsPage: React.FC = () => {
                     className="w-full px-3 py-2 border rounded-md text-black"
                     disabled={loading}
                   >
-                    {dataTypes.map((type) => (
+                    {dataTypes?.map((type) => (
                       <option key={type} value={type}>
                         {type}
                       </option>
@@ -690,7 +694,7 @@ const TablesAndFieldsPage: React.FC = () => {
                     className="w-full px-3 py-2 border rounded-md text-black"
                     disabled={loading}
                   >
-                    {dataTypes.map((type) => (
+                    {dataTypes?.map((type) => (
                       <option key={type} value={type}>
                         {type}
                       </option>

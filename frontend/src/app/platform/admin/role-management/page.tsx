@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 
 // Sample role data
@@ -66,6 +66,155 @@ const RoleManagementPage: React.FC = () => {
     description: '',
     permissions: [] as string[]
   });
+  const [activeTab, setActiveTab] = useState('general');
+  const [tables, setTables] = useState<any[]>([]);
+  const [selectedTable, setSelectedTable] = useState<string | null>(null);
+  const [tableFields, setTableFields] = useState<any[]>([]);
+  const [tablePermissions, setTablePermissions] = useState<any[]>([]);
+  const [fieldPermissions, setFieldPermissions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch tables for permissions
+  const fetchTables = async () => {
+    if (!currentRole) return;
+    
+    setLoading(true);
+    try {
+      // In a real app, this would be an API call
+      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/tables/${currentRole.id}`);
+      // if (!response.ok) throw new Error('Failed to fetch tables');
+      // const data = await response.json();
+      
+      // For now, use mock data
+      const mockTables = [
+        { 
+          id: '1', 
+          name: 'User', 
+          description: 'User accounts', 
+          permissions: { canRead: true, canCreate: false, canUpdate: true, canDelete: false }
+        },
+        { 
+          id: '2', 
+          name: 'Loan', 
+          description: 'Loan records', 
+          permissions: { canRead: true, canCreate: true, canUpdate: true, canDelete: false }
+        },
+        { 
+          id: '3', 
+          name: 'Payment', 
+          description: 'Payment records', 
+          permissions: { canRead: true, canCreate: false, canUpdate: false, canDelete: false }
+        },
+        { 
+          id: '4', 
+          name: 'Role', 
+          description: 'Role definitions', 
+          permissions: { canRead: false, canCreate: false, canUpdate: false, canDelete: false }
+        },
+      ];
+      
+      setTables(mockTables);
+      setTablePermissions(mockTables.map(table => ({
+        tableId: table.id,
+        tableName: table.name,
+        ...table.permissions
+      })));
+    } catch (error) {
+      console.error('Error fetching tables:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch fields for a selected table
+  const fetchTableFields = async (tableName: string) => {
+    if (!currentRole) return;
+    
+    setLoading(true);
+    try {
+      // In a real app, this would be an API call
+      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/fields/${currentRole.id}/${tableName}`);
+      // if (!response.ok) throw new Error('Failed to fetch fields');
+      // const data = await response.json();
+      
+      // For now, use mock data
+      const mockFields = [
+        { 
+          id: '1', 
+          name: 'id', 
+          type: 'String', 
+          required: true,
+          permissions: { canRead: true, canUpdate: false }
+        },
+        { 
+          id: '2', 
+          name: 'name', 
+          type: 'String', 
+          required: true,
+          permissions: { canRead: true, canUpdate: true }
+        },
+        { 
+          id: '3', 
+          name: 'email', 
+          type: 'String', 
+          required: true,
+          permissions: { canRead: true, canUpdate: true }
+        },
+        { 
+          id: '4', 
+          name: 'password', 
+          type: 'String', 
+          required: true,
+          permissions: { canRead: false, canUpdate: false }
+        },
+      ];
+      
+      setTableFields(mockFields);
+      setFieldPermissions(mockFields.map(field => ({
+        fieldId: field.id,
+        fieldName: field.name,
+        tableName,
+        ...field.permissions
+      })));
+    } catch (error) {
+      console.error('Error fetching fields:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load table data when the edit modal is opened or tab changes
+  useEffect(() => {
+    if (isEditModalOpen && activeTab === 'tableAccess') {
+      fetchTables();
+    }
+  }, [isEditModalOpen, activeTab]);
+
+  // Load field data when a table is selected
+  useEffect(() => {
+    if (selectedTable) {
+      fetchTableFields(selectedTable);
+    } else {
+      setTableFields([]);
+      setFieldPermissions([]);
+    }
+  }, [selectedTable]);
+
+  // Handle table permission change
+  const handleTablePermissionChange = (tableName: string, permission: string, value: boolean) => {
+    const updatedPermissions = tablePermissions.map(perm => 
+      perm.tableName === tableName ? { ...perm, [permission]: value } : perm
+    );
+    setTablePermissions(updatedPermissions);
+  };
+
+  // Handle field permission change
+  const handleFieldPermissionChange = (fieldName: string, permission: string, value: boolean) => {
+    const updatedPermissions = fieldPermissions.map(perm => 
+      perm.fieldName === fieldName ? { ...perm, [permission]: value } : perm
+    );
+    setFieldPermissions(updatedPermissions);
+  };
 
   // Handle opening the add role modal
   const handleAddRole = () => {
@@ -85,6 +234,8 @@ const RoleManagementPage: React.FC = () => {
       description: role.description,
       permissions: [...role.permissions]
     });
+    setActiveTab('general');
+    setSelectedTable(null);
     setIsEditModalOpen(true);
   };
 
@@ -308,74 +459,261 @@ const RoleManagementPage: React.FC = () => {
 
         {/* Edit Role Modal */}
         {isEditModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <h2 className="text-xl font-bold mb-4">Edit Role</h2>
-              
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="editRoleName">
-                  Role Name
-                </label>
-                <input
-                  id="editRoleName"
-                  type="text"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Enter role name"
-                  value={newRole.name}
-                  onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="editRoleDescription">
-                  Description
-                </label>
-                <textarea
-                  id="editRoleDescription"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Enter role description"
-                  rows={3}
-                  value={newRole.description}
-                  onChange={(e) => setNewRole({ ...newRole, description: e.target.value })}
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Permissions
-                </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
-                  {availablePermissions.map((permission) => (
-                    <div key={permission.id} className="flex items-start">
-                      <input
-                        id={`edit-permission-${permission.id}`}
-                        type="checkbox"
-                        className="mt-1 mr-2"
-                        checked={newRole.permissions.includes(permission.id)}
-                        onChange={() => handlePermissionChange(permission.id)}
-                      />
-                      <label htmlFor={`edit-permission-${permission.id}`} className="text-sm">
-                        <div className="font-medium">{permission.name}</div>
-                        <div className="text-gray-500 text-xs">{permission.description}</div>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="flex justify-end mt-6">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-auto p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold">Edit Role</h2>
                 <button
                   onClick={() => setIsEditModalOpen(false)}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2"
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Tabs */}
+              <div className="border-b border-gray-200 mb-6">
+                <nav className="-mb-px flex">
+                  <button
+                    onClick={() => setActiveTab('general')}
+                    className={`py-2 px-4 ${
+                      activeTab === 'general'
+                        ? 'border-b-2 border-blue-500 text-blue-600'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    General
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('permissions')}
+                    className={`py-2 px-4 ${
+                      activeTab === 'permissions'
+                        ? 'border-b-2 border-blue-500 text-blue-600'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Permissions
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('tableAccess')}
+                    className={`py-2 px-4 ${
+                      activeTab === 'tableAccess'
+                        ? 'border-b-2 border-blue-500 text-blue-600'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    Table & Field Access
+                  </button>
+                </nav>
+              </div>
+
+              {/* Tab Content */}
+              {activeTab === 'general' && (
+                <div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Role Name
+                    </label>
+                    <input
+                      type="text"
+                      value={newRole.name}
+                      onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      value={newRole.description}
+                      onChange={(e) => setNewRole({ ...newRole, description: e.target.value })}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      rows={3}
+                    ></textarea>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'permissions' && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Role Permissions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {availablePermissions.map((permission) => (
+                      <div key={permission.id} className="flex items-start">
+                        <input
+                          type="checkbox"
+                          id={`perm-${permission.id}`}
+                          checked={newRole.permissions.includes(permission.id)}
+                          onChange={() => handlePermissionChange(permission.id)}
+                          className="mt-1 mr-3"
+                        />
+                        <div>
+                          <label
+                            htmlFor={`perm-${permission.id}`}
+                            className="font-medium text-gray-700"
+                          >
+                            {permission.name}
+                          </label>
+                          <p className="text-sm text-gray-500">{permission.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'tableAccess' && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Table & Field Access Control</h3>
+                  
+                  {loading ? (
+                    <div className="flex justify-center py-8">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col md:flex-row gap-6">
+                      {/* Tables List */}
+                      <div className="w-full md:w-1/3 border-r pr-4">
+                        <h4 className="font-medium text-lg mb-3">Tables</h4>
+                        <div className="space-y-4">
+                          {tables.map((table) => (
+                            <div key={table.id} className="border-b pb-3">
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <button 
+                                    onClick={() => setSelectedTable(table.name)}
+                                    className={`font-medium ${selectedTable === table.name ? 'text-blue-600' : 'text-gray-700'} hover:text-blue-500`}
+                                  >
+                                    {table.name}
+                                  </button>
+                                  <p className="text-sm text-gray-500">{table.description}</p>
+                                </div>
+                              </div>
+                              <div className="mt-2 grid grid-cols-2 gap-x-4">
+                                <div className="flex items-center">
+                                  <input
+                                    type="checkbox"
+                                    id={`${table.name}-read`}
+                                    checked={tablePermissions.find(p => p.tableName === table.name)?.canRead || false}
+                                    onChange={(e) => handleTablePermissionChange(table.name, 'canRead', e.target.checked)}
+                                    className="mr-2"
+                                  />
+                                  <label htmlFor={`${table.name}-read`} className="text-sm">Read</label>
+                                </div>
+                                <div className="flex items-center">
+                                  <input
+                                    type="checkbox"
+                                    id={`${table.name}-create`}
+                                    checked={tablePermissions.find(p => p.tableName === table.name)?.canCreate || false}
+                                    onChange={(e) => handleTablePermissionChange(table.name, 'canCreate', e.target.checked)}
+                                    className="mr-2"
+                                  />
+                                  <label htmlFor={`${table.name}-create`} className="text-sm">Create</label>
+                                </div>
+                                <div className="flex items-center">
+                                  <input
+                                    type="checkbox"
+                                    id={`${table.name}-update`}
+                                    checked={tablePermissions.find(p => p.tableName === table.name)?.canUpdate || false}
+                                    onChange={(e) => handleTablePermissionChange(table.name, 'canUpdate', e.target.checked)}
+                                    className="mr-2"
+                                  />
+                                  <label htmlFor={`${table.name}-update`} className="text-sm">Update</label>
+                                </div>
+                                <div className="flex items-center">
+                                  <input
+                                    type="checkbox"
+                                    id={`${table.name}-delete`}
+                                    checked={tablePermissions.find(p => p.tableName === table.name)?.canDelete || false}
+                                    onChange={(e) => handleTablePermissionChange(table.name, 'canDelete', e.target.checked)}
+                                    className="mr-2"
+                                  />
+                                  <label htmlFor={`${table.name}-delete`} className="text-sm">Delete</label>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Fields List */}
+                      <div className="w-full md:w-2/3">
+                        <h4 className="font-medium text-lg mb-3">
+                          {selectedTable ? `Fields for ${selectedTable}` : 'Select a table to view fields'}
+                        </h4>
+                        
+                        {selectedTable ? (
+                          tableFields.length > 0 ? (
+                            <div className="border rounded-lg overflow-hidden">
+                              <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                  <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Field</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Can Read</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Can Update</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                  {tableFields.map((field) => (
+                                    <tr key={field.id}>
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        {field.name}
+                                        {field.required && <span className="text-red-500 ml-1">*</span>}
+                                      </td>
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{field.type}</td>
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <input
+                                          type="checkbox"
+                                          checked={fieldPermissions.find(p => p.fieldName === field.name)?.canRead || false}
+                                          onChange={(e) => handleFieldPermissionChange(field.name, 'canRead', e.target.checked)}
+                                          className="rounded"
+                                        />
+                                      </td>
+                                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <input
+                                          type="checkbox"
+                                          checked={fieldPermissions.find(p => p.fieldName === field.name)?.canUpdate || false}
+                                          onChange={(e) => handleFieldPermissionChange(field.name, 'canUpdate', e.target.checked)}
+                                          className="rounded"
+                                        />
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <div className="bg-gray-50 p-4 rounded-lg text-center text-gray-500">
+                              No fields found for this table
+                            </div>
+                          )
+                        ) : (
+                          <div className="bg-gray-50 p-8 rounded-lg text-center">
+                            <p className="text-gray-500 mb-2">Select a table to view and configure field permissions</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md mr-2"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleUpdateRole}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  disabled={!newRole.name}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                 >
-                  Update Role
+                  Save Changes
                 </button>
               </div>
             </div>
