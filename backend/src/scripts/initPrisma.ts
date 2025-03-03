@@ -65,6 +65,7 @@ async function main() {
         paymentMethod: 'CREDIT_CARD',
         status: 'COMPLETED',
         notes: 'First payment',
+        updatedAt: new Date(),
       },
     });
     console.log('Sample payment created:', payment.id);

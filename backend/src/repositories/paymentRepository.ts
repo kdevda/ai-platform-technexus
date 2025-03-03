@@ -77,8 +77,14 @@ export const paymentRepository = {
     const prisma = getPrismaClient();
     return prisma.payment.create({
       data: {
-        ...paymentData,
-        status: paymentData.status || 'COMPLETED',
+        loanId: paymentData.loanId,
+        userId: paymentData.userId,
+        amount: paymentData.amount,
+        paymentDate: paymentData.paymentDate,
+        paymentMethod: paymentData.paymentMethod,
+        status: paymentData.status || 'pending',
+        notes: paymentData.notes,
+        updatedAt: new Date(),
       },
       include: {
         loan: true,
