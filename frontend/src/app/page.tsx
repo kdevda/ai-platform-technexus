@@ -320,7 +320,7 @@ export default function Home() {
                   
                   <p className="text-gray-600 mb-6">{assistantOptions[activeAssistant].description}</p>
                   
-                  <h4 className="font-semibold mb-3">Key Capabilities:</h4>
+                  <h4 className="font-semibold mb-3 text-black">Key Capabilities:</h4>
                   <ul className="space-y-2 mb-6">
                     {[
                       'Real-time data analysis and insights',
@@ -333,8 +333,8 @@ export default function Home() {
                         <svg className={`w-5 h-5 text-${assistantOptions[activeAssistant].color.split('-')[1]}-500 flex-shrink-0 mt-0.5`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path>
                         </svg>
-                        <span>{capability}</span>
-          </li>
+                        <span className="text-black">{capability}</span>
+                      </li>
                     ))}
                   </ul>
                   
@@ -352,11 +352,11 @@ export default function Home() {
               
               {/* AI Chat Demo */}
               <div className="lg:col-span-3">
-                <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden transform transition-all duration-500">
+                <div className="bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden transform transition-all duration-500 flex flex-col">
                   <div className="bg-gray-50 border-b border-gray-200 p-4 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className={`w-3 h-3 bg-gradient-to-r ${assistantOptions[activeAssistant].color} rounded-full`}></div>
-                      <h3 className="font-medium">{assistantOptions[activeAssistant].name}</h3>
+                      <h3 className="font-medium text-black">{assistantOptions[activeAssistant].name}</h3>
                     </div>
                     <div className="flex gap-2">
                       <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
@@ -365,12 +365,12 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="p-4 h-[300px] bg-gray-50">
-                    <div className="space-y-4">
+                  <div className="p-4 h-[250px] sm:h-[300px] bg-gray-50 overflow-y-auto flex-grow">
+                    <div className="space-y-4 pb-2">
                       {assistantOptions[activeAssistant].messages.map((message, idx) => (
                         <div 
                           key={`${assistantOptions[activeAssistant].id}-msg-${idx}`}
-                          className={`flex items-start max-w-[80%] ${message.sender === 'user' ? 'ml-auto' : ''} animate-fadeIn`}
+                          className={`flex items-start max-w-[85%] sm:max-w-[80%] ${message.sender === 'user' ? 'ml-auto' : ''} animate-fadeIn`}
                           style={{ animationDelay: `${idx * 0.5}s` }}
                         >
                           {message.sender === 'ai' && (
@@ -392,7 +392,7 @@ export default function Home() {
                       ))}
                       
                       {/* Custom typing animation for demo purposes */}
-                      <div className="flex items-start max-w-[80%] animate-fadeIn">
+                      <div className="flex items-start max-w-[85%] sm:max-w-[80%] animate-fadeIn">
                         <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${assistantOptions[activeAssistant].color} flex items-center justify-center text-white font-bold mr-2 flex-shrink-0`}>
                           AI
                         </div>
@@ -407,14 +407,14 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="p-4 border-t border-gray-200 bg-white">
+                  <div className="p-3 sm:p-4 border-t border-gray-200 bg-white flex-shrink-0">
                     <div className="flex items-center">
                       <input 
                         type="text" 
                         placeholder="Ask something about your loan portfolio..." 
-                        className="flex-1 border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                        className="flex-1 border border-gray-300 rounded-l-md py-2 px-3 sm:px-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                       />
-                      <button className={`bg-gradient-to-r ${assistantOptions[activeAssistant].color} text-white py-2 px-4 rounded-r-md hover:opacity-90 transition-colors`}>
+                      <button className={`bg-gradient-to-r ${assistantOptions[activeAssistant].color} text-white py-2 px-3 sm:px-4 rounded-r-md hover:opacity-90 transition-colors`}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
@@ -709,11 +709,11 @@ function ChatInterface() {
   }, []);
   
   return (
-    <div className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden flex flex-col">
       <div className="bg-gray-50 border-b border-gray-200 p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-3 h-3 bg-black rounded-full"></div>
-          <h3 className="font-medium">Technexus AI Assistant</h3>
+          <h3 className="font-medium text-black">Technexus AI Assistant</h3>
         </div>
         <div className="flex space-x-2">
           <button className="p-1 rounded hover:bg-gray-200">
@@ -724,13 +724,13 @@ function ChatInterface() {
         </div>
       </div>
       
-      <div ref={chatContainerRef} className="p-4 h-[500px] overflow-y-auto bg-gray-50 scroll-smooth">
-        <div className="space-y-4">
+      <div ref={chatContainerRef} className="p-4 h-[350px] sm:h-[500px] overflow-y-auto bg-gray-50 scroll-smooth flex-grow">
+        <div className="space-y-4 pb-2 overflow-hidden">
           {messages.map((message, index) => (
             visibleMessages.includes(message.id) && (
               <div 
                 key={`${message.id}-${index}`} 
-                className={`flex items-start max-w-[80%] ${message.sender === 'user' ? 'ml-auto' : ''} animate-fadeIn`}
+                className={`flex items-start max-w-[85%] sm:max-w-[80%] ${message.sender === 'user' ? 'ml-auto' : ''} animate-fadeIn`}
               >
                 {message.sender === 'ai' && (
                   <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white font-bold mr-2 flex-shrink-0">
@@ -753,7 +753,7 @@ function ChatInterface() {
           
           {/* Typing indicator */}
           {isTyping && (
-            <div className="flex items-start max-w-[80%] animate-fadeIn">
+            <div className="flex items-start max-w-[85%] sm:max-w-[80%] animate-fadeIn">
               <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center text-white font-bold mr-2 flex-shrink-0">
                 AI
               </div>
@@ -769,14 +769,14 @@ function ChatInterface() {
         </div>
       </div>
       
-      <div className="p-4 border-t border-gray-200 bg-white">
+      <div className="p-3 sm:p-4 border-t border-gray-200 bg-white flex-shrink-0">
         <div className="flex items-center">
           <input 
             type="text" 
             placeholder="Type your message..." 
-            className="flex-1 border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+            className="flex-1 border border-gray-300 rounded-l-md py-2 px-3 sm:px-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
           />
-          <button className="bg-black text-white py-2 px-4 rounded-r-md hover:bg-gray-800 transition-colors">
+          <button className="bg-black text-white py-2 px-3 sm:px-4 rounded-r-md hover:bg-gray-800 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
