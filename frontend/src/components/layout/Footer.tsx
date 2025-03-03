@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-sm font-medium uppercase tracking-wider">Solutions</h3>
             <ul className="space-y-3">
-              {["AI Lead Management", "AI Originations", "AI Collections", "AI Servicing", "AI Treasury"].map((item) => (
+              {["AI Relations", "AI Originations", "AI Credit", "AI Servicing", "AI Collections", "AI Treasury", "Lending as a Service (LaaS)"].map((item) => (
                 <li key={item}>
                   <Link href={`/solutions/${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-gray-400 hover:text-white text-sm transition-colors">
                     {item}
@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
             &copy; {new Date().getFullYear()} Technexus. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            {["LinkedIn", "Twitter", "GitHub", "YouTube"].map((item) => (
+            {["LinkedIn", "X", "GitHub", "YouTube"].map((item) => (
               <a key={item} href="#" className="text-gray-500 hover:text-white text-sm transition-colors">
                 {item}
               </a>

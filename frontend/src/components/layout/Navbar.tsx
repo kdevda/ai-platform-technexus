@@ -3,11 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
+import ContactFormModal from '@/components/ui/ContactFormModal';
 
 const Navbar: React.FC = () => {
   const { state, logout } = useAuth();
   const { isAuthenticated, user } = state;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -15,6 +17,12 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-black text-white border-b border-gray-800">
+      <ContactFormModal 
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        heading="Schedule a Demo"
+      />
+      
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex justify-between items-center py-5">
           <div className="flex items-center">
@@ -79,12 +87,12 @@ const Navbar: React.FC = () => {
                 <Link href="/login" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
                   Login
                 </Link>
-                <Link
-                  href="/register"
+                <button
+                  onClick={() => setIsContactModalOpen(true)}
                   className="bg-white text-black px-5 py-2 text-sm uppercase tracking-wider hover:bg-gray-200 transition-colors rounded-none"
                 >
-                  Register
-                </Link>
+                  Schedule a Demo
+                </button>
               </>
             )}
           </div>
@@ -128,12 +136,12 @@ const Navbar: React.FC = () => {
                 <Link href="/login" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
                   Login
                 </Link>
-                <Link
-                  href="/register"
+                <button
+                  onClick={() => setIsContactModalOpen(true)}
                   className="bg-white text-black px-5 py-2 text-sm uppercase tracking-wider hover:bg-gray-200 transition-colors rounded-none inline-block w-full text-center"
                 >
-                  Register
-                </Link>
+                  Schedule a Demo
+                </button>
               </>
             )}
           </div>
