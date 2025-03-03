@@ -30,23 +30,36 @@ const AdminSidebar: React.FC = () => {
         expanded ? 'w-64' : 'w-20'
       }`}
     >
-      <div className="flex justify-between items-center p-4 border-b border-gray-800">
-        <h2 className={`font-bold text-xl ${expanded ? 'block' : 'hidden'}`}>Admin Panel</h2>
-        <button 
-          onClick={toggleSidebar}
-          className="p-2 rounded-md hover:bg-gray-700 focus:outline-none"
-          aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+      <div className="flex flex-col p-4 border-b border-gray-800">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className={`font-bold text-xl ${expanded ? 'block' : 'hidden'}`}>Admin Panel</h2>
+          <button 
+            onClick={toggleSidebar}
+            className="p-2 rounded-md hover:bg-gray-700 focus:outline-none"
+            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            {expanded ? (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+              </svg>
+            ) : (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              </svg>
+            )}
+          </button>
+        </div>
+        
+        {/* Back to Platform button moved here */}
+        <Link 
+          href="/platform/dashboard"
+          className="flex items-center p-2 rounded-md hover:bg-gray-800 transition-colors mt-1"
         >
-          {expanded ? (
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-            </svg>
-          ) : (
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-            </svg>
-          )}
-        </button>
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+          </svg>
+          <span className={`ml-3 ${expanded ? 'block' : 'hidden'}`}>Back to Platform</span>
+        </Link>
       </div>
 
       <nav className="mt-6">
@@ -375,18 +388,6 @@ const AdminSidebar: React.FC = () => {
           </li>
         </ul>
       </nav>
-
-      <div className="absolute bottom-0 w-full border-t border-gray-800 p-4">
-        <Link 
-          href="/platform/dashboard"
-          className="flex items-center p-2 rounded-md hover:bg-gray-800 transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
-          </svg>
-          <span className={`ml-3 ${expanded ? 'block' : 'hidden'}`}>Back to Platform</span>
-        </Link>
-      </div>
     </div>
   );
 };

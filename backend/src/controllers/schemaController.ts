@@ -332,7 +332,7 @@ export const deleteTable = async (req: Request, res: Response): Promise<void> =>
 /**
  * Helper function to parse models from schema
  */
-function parseModels(schemaContent: string) {
+export function parseModels(schemaContent: string) {
   const models: Array<{
     id: string;
     name: string;
@@ -377,7 +377,7 @@ function parseModels(schemaContent: string) {
 /**
  * Helper function to parse fields for a specific model
  */
-function parseModelFields(schemaContent: string, modelName: string) {
+export function parseModelFields(schemaContent: string, modelName: string) {
   // Regular expression to match the specific model
   const modelRegex = new RegExp(`model\\s+${modelName}\\s+{([\\s\\S]*?)}`, 'g');
   const match = modelRegex.exec(schemaContent);

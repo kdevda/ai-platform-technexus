@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import * as fs from 'fs';
+import * as path from 'path';
+import { parseModels, parseModelFields } from './schemaController';
 
 const prisma = new PrismaClient();
+const SCHEMA_PATH = path.resolve(__dirname, '../../prisma/schema.prisma');
 
 /**
  * Get all table permissions for a specific role
@@ -191,20 +195,41 @@ export const getTablesWithPermissions = async (req: Request, res: Response): Pro
   try {
     const { roleId } = req.params;
     
-    // Get all tables
-    const schemaController = require('./schemaController');
-    const tablesData = await schemaController.parseModels(
-      require('fs').readFileSync(require('path').resolve(__dirname, '../../prisma/schema.prisma'), 'utf8')
-    );
+    // Initialize with a more flexible type that matches the actual return from parseModels
+    let tablesData: Array<any> = [];
+    
+    // Check if schema file exists
+    if (!fs.existsSync(SCHEMA_PATH)) {
+      console.warn("Schema file not found at path:", SCHEMA_PATH);
+      // Continue with empty tables array instead of returning error
+    } else {
+      try {
+        // Get all tables
+        const schemaContent = fs.readFileSync(SCHEMA_PATH, 'utf8');
+        const parsedTables = parseModels(schemaContent);
+        
+        if (parsedTables && Array.isArray(parsedTables)) {
+          tablesData = parsedTables;
+        } else {
+          console.error('Error parsing schema models: tablesData is not an array', parsedTables);
+        }
+      } catch (parseError) {
+        console.error('Error parsing schema:', parseError);
+        // Continue with empty tables array
+      }
+    }
     
     // Get permissions for this role
     const permissions = await prisma.tablePermission.findMany({
       where: { roleId }
+    }).catch(err => {
+      console.error('Error fetching table permissions:', err);
+      return []; // Return empty array on error
     });
     
     // Merge tables with permissions
     const tablesWithPermissions = tablesData.map((table: any) => {
-      const permission = permissions.find(p => p.tableName === table.name) || {
+      const permission = permissions.find((p: any) => p.tableName === table.name) || {
         canRead: false,
         canCreate: false,
         canUpdate: false,
@@ -236,16 +261,38 @@ export const getFieldsWithPermissions = async (req: Request, res: Response): Pro
   try {
     const { roleId, tableName } = req.params;
     
-    // Get fields for the table
-    const schemaController = require('./schemaController');
-    const modelInfo = schemaController.parseModelFields(
-      require('fs').readFileSync(require('path').resolve(__dirname, '../../prisma/schema.prisma'), 'utf8'),
-      tableName
-    );
+    // Initialize with proper type annotation
+    let modelInfo: { 
+      fields: Array<{
+        id: string;
+        name: string;
+        type: string;
+        required: boolean;
+        unique: boolean;
+        default: string;
+        description: string;
+      }> 
+    } = { fields: [] };
     
-    if (!modelInfo) {
-      res.status(404).json({ error: 'Table not found' });
-      return;
+    // Check if schema file exists
+    if (!fs.existsSync(SCHEMA_PATH)) {
+      console.warn("Schema file not found at path:", SCHEMA_PATH);
+      // Continue with empty fields array instead of returning error
+    } else {
+      try {
+        // Get fields for the table
+        const schemaContent = fs.readFileSync(SCHEMA_PATH, 'utf8');
+        const parsedModel = parseModelFields(schemaContent, tableName);
+        
+        if (parsedModel) {
+          modelInfo = parsedModel;
+        } else {
+          console.warn(`Table ${tableName} not found in schema`);
+        }
+      } catch (parseError) {
+        console.error('Error parsing schema for fields:', parseError);
+        // Continue with default empty fields array
+      }
     }
     
     // Get permissions for this role and table
@@ -254,11 +301,14 @@ export const getFieldsWithPermissions = async (req: Request, res: Response): Pro
         roleId,
         tableName 
       }
+    }).catch(err => {
+      console.error('Error fetching field permissions:', err);
+      return []; // Return empty array on error
     });
     
     // Merge fields with permissions
     const fieldsWithPermissions = modelInfo.fields.map((field: any) => {
-      const permission = permissions.find(p => p.fieldName === field.name) || {
+      const permission = permissions.find((p: any) => p.fieldName === field.name) || {
         canRead: false,
         canUpdate: false
       };

@@ -2,51 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
-// Sample role data
-const sampleRoles = [
-  {
-    id: '1',
-    name: 'ADMIN',
-    description: 'Full system access with all privileges',
-    permissions: ['read', 'write', 'delete', 'approve', 'manage_users', 'manage_roles'],
-    userCount: 5
-  },
-  {
-    id: '2',
-    name: 'MANAGER',
-    description: 'Can manage loans and users but cannot modify system settings',
-    permissions: ['read', 'write', 'approve', 'manage_users'],
-    userCount: 12
-  },
-  {
-    id: '3',
-    name: 'LOAN_OFFICER',
-    description: 'Can process loan applications and approve/reject them',
-    permissions: ['read', 'write', 'approve'],
-    userCount: 28
-  },
-  {
-    id: '4',
-    name: 'CUSTOMER_SERVICE',
-    description: 'Can view customer information and assist with inquiries',
-    permissions: ['read'],
-    userCount: 34
-  },
-  {
-    id: '5',
-    name: 'AUDITOR',
-    description: 'Can view all system data for auditing purposes',
-    permissions: ['read'],
-    userCount: 7
-  }
-];
-
-// Available permissions for the system
+// Sample permissions for the permissions tab
 const availablePermissions = [
-  { id: 'read', name: 'Read', description: 'Can view data' },
-  { id: 'write', name: 'Write', description: 'Can create and edit data' },
-  { id: 'delete', name: 'Delete', description: 'Can delete data' },
+  { id: 'view', name: 'View', description: 'Can view data' },
+  { id: 'create', name: 'Create', description: 'Can create new records' },
+  { id: 'edit', name: 'Edit', description: 'Can edit existing records' },
+  { id: 'delete', name: 'Delete', description: 'Can delete records' },
   { id: 'approve', name: 'Approve', description: 'Can approve requests' },
   { id: 'manage_users', name: 'Manage Users', description: 'Can manage user accounts' },
   { id: 'manage_roles', name: 'Manage Roles', description: 'Can manage roles and permissions' },
@@ -56,7 +21,9 @@ const availablePermissions = [
 ];
 
 const RoleManagementPage: React.FC = () => {
-  const [roles, setRoles] = useState(sampleRoles);
+  const { state } = useAuth();
+  const token = state.user?.token;
+  const [roles, setRoles] = useState<any[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -74,53 +41,122 @@ const RoleManagementPage: React.FC = () => {
   const [fieldPermissions, setFieldPermissions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Fetch roles from the database
+  const fetchRoles = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!response.ok) throw new Error('Failed to fetch roles');
+      const data = await response.json();
+      
+      // Map roles to the format expected by the UI
+      const formattedRoles = data.map((role: any) => ({
+        id: role.id,
+        name: role.name,
+        description: role.description,
+        permissions: role.permissions || [],
+        userCount: role.userCount || 0
+      }));
+      
+      setRoles(formattedRoles);
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load roles when component mounts
+  useEffect(() => {
+    if (token) {
+      fetchRoles();
+    }
+  }, [token]);
+
   // Fetch tables for permissions
   const fetchTables = async () => {
-    if (!currentRole) return;
+    if (!currentRole || !token) return;
     
     setLoading(true);
     try {
-      // In a real app, this would be an API call
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/tables/${currentRole.id}`);
-      // if (!response.ok) throw new Error('Failed to fetch tables');
-      // const data = await response.json();
+      // Call the actual API endpoint to get tables with permissions
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/tables/${currentRole.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       
-      // For now, use mock data
-      const mockTables = [
-        { 
-          id: '1', 
-          name: 'User', 
-          description: 'User accounts', 
-          permissions: { canRead: true, canCreate: false, canUpdate: true, canDelete: false }
-        },
-        { 
-          id: '2', 
-          name: 'Loan', 
-          description: 'Loan records', 
-          permissions: { canRead: true, canCreate: true, canUpdate: true, canDelete: false }
-        },
-        { 
-          id: '3', 
-          name: 'Payment', 
-          description: 'Payment records', 
-          permissions: { canRead: true, canCreate: false, canUpdate: false, canDelete: false }
-        },
-        { 
-          id: '4', 
-          name: 'Role', 
-          description: 'Role definitions', 
-          permissions: { canRead: false, canCreate: false, canUpdate: false, canDelete: false }
-        },
-      ];
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Failed to fetch tables: ${response.status} ${errorText}`);
+        throw new Error('Failed to fetch tables');
+      }
       
-      setTables(mockTables);
-      setTablePermissions(mockTables.map(table => ({
+      const data = await response.json();
+      
+      if (!data || !Array.isArray(data)) {
+        console.error('Invalid data format received:', data);
+        throw new Error('Invalid data format received');
+      }
+      
+      setTables(data);
+      setTablePermissions(data.map((table: any) => ({
         tableId: table.id,
         tableName: table.name,
         ...table.permissions
       })));
     } catch (error) {
       console.error('Error fetching tables:', error);
+      // Fallback to schema/tables endpoint if permission endpoint fails
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Failed to fetch tables (fallback): ${response.status} ${errorText}`);
+          throw new Error('Failed to fetch tables');
+        }
+        
+        const data = await response.json();
+        
+        if (!data || !Array.isArray(data)) {
+          console.error('Invalid data format received (fallback):', data);
+          throw new Error('Invalid data format received');
+        }
+        
+        // Set tables with default permissions
+        const tablesWithPermissions = data.map((table: any) => ({
+          ...table,
+          permissions: {
+            canRead: false,
+            canCreate: false,
+            canUpdate: false,
+            canDelete: false
+          }
+        }));
+        
+        setTables(tablesWithPermissions);
+        setTablePermissions(tablesWithPermissions.map((table: any) => ({
+          tableId: table.id,
+          tableName: table.name,
+          ...table.permissions
+        })));
+      } catch (fallbackError) {
+        console.error('Error fetching tables (fallback):', fallbackError);
+        
+        // Set empty data when both API calls fail
+        setTables([]);
+        setTablePermissions([]);
+        toast.error('Failed to load tables. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
@@ -128,56 +164,84 @@ const RoleManagementPage: React.FC = () => {
 
   // Fetch fields for a selected table
   const fetchTableFields = async (tableName: string) => {
-    if (!currentRole) return;
+    if (!currentRole || !token) return;
     
     setLoading(true);
     try {
-      // In a real app, this would be an API call
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/fields/${currentRole.id}/${tableName}`);
-      // if (!response.ok) throw new Error('Failed to fetch fields');
-      // const data = await response.json();
+      // Call the actual API endpoint to get fields with permissions
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/fields/${currentRole.id}/${tableName}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       
-      // For now, use mock data
-      const mockFields = [
-        { 
-          id: '1', 
-          name: 'id', 
-          type: 'String', 
-          required: true,
-          permissions: { canRead: true, canUpdate: false }
-        },
-        { 
-          id: '2', 
-          name: 'name', 
-          type: 'String', 
-          required: true,
-          permissions: { canRead: true, canUpdate: true }
-        },
-        { 
-          id: '3', 
-          name: 'email', 
-          type: 'String', 
-          required: true,
-          permissions: { canRead: true, canUpdate: true }
-        },
-        { 
-          id: '4', 
-          name: 'password', 
-          type: 'String', 
-          required: true,
-          permissions: { canRead: false, canUpdate: false }
-        },
-      ];
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Failed to fetch fields: ${response.status} ${errorText}`);
+        throw new Error('Failed to fetch fields');
+      }
       
-      setTableFields(mockFields);
-      setFieldPermissions(mockFields.map(field => ({
-        fieldId: field.id,
+      const data = await response.json();
+      
+      if (!data || !Array.isArray(data)) {
+        console.error('Invalid data format received for fields:', data);
+        throw new Error('Invalid field data format received');
+      }
+      
+      setTableFields(data);
+      setFieldPermissions(data.map((field: any) => ({
+        fieldId: field.id || field.name,
         fieldName: field.name,
         tableName,
         ...field.permissions
       })));
     } catch (error) {
       console.error('Error fetching fields:', error);
+      // Fallback to schema/tables/fields endpoint if permission endpoint fails
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables/${tableName}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Failed to fetch fields (fallback): ${response.status} ${errorText}`);
+          throw new Error('Failed to fetch fields');
+        }
+        
+        const tableData = await response.json();
+        
+        if (!tableData || !tableData.fields || !Array.isArray(tableData.fields)) {
+          console.error('Invalid data format received for fields (fallback):', tableData);
+          throw new Error('Invalid field data format received');
+        }
+        
+        // Set fields with default permissions
+        const fieldsWithPermissions = tableData.fields.map((field: any) => ({
+          ...field,
+          permissions: {
+            canRead: false,
+            canUpdate: false
+          }
+        }));
+        
+        setTableFields(fieldsWithPermissions);
+        setFieldPermissions(fieldsWithPermissions.map((field: any) => ({
+          fieldId: field.id || field.name,
+          fieldName: field.name,
+          tableName,
+          ...field.permissions
+        })));
+      } catch (fallbackError) {
+        console.error('Error fetching fields (fallback):', fallbackError);
+        
+        // Set empty data when both API calls fail
+        setTableFields([]);
+        setFieldPermissions([]);
+        toast.error('Failed to load field data. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
@@ -185,35 +249,100 @@ const RoleManagementPage: React.FC = () => {
 
   // Load table data when the edit modal is opened or tab changes
   useEffect(() => {
-    if (isEditModalOpen && activeTab === 'tableAccess') {
+    if (isEditModalOpen && activeTab === 'tableAccess' && token) {
       fetchTables();
     }
-  }, [isEditModalOpen, activeTab]);
+  }, [isEditModalOpen, activeTab, token]);
 
   // Load field data when a table is selected
   useEffect(() => {
-    if (selectedTable) {
+    if (selectedTable && token) {
       fetchTableFields(selectedTable);
     } else {
       setTableFields([]);
       setFieldPermissions([]);
     }
-  }, [selectedTable]);
+  }, [selectedTable, token]);
 
   // Handle table permission change
-  const handleTablePermissionChange = (tableName: string, permission: string, value: boolean) => {
+  const handleTablePermissionChange = async (tableName: string, permission: string, value: boolean) => {
+    if (!currentRole || !token) return;
+    
+    // Update local state first for immediate UI feedback
     const updatedPermissions = tablePermissions.map(perm => 
       perm.tableName === tableName ? { ...perm, [permission]: value } : perm
     );
     setTablePermissions(updatedPermissions);
+    
+    // Prepare permission data
+    const permData = updatedPermissions.find(p => p.tableName === tableName);
+    if (!permData) return;
+    
+    try {
+      // Save to database
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/tables/${currentRole.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          tableName: permData.tableName,
+          canRead: permData.canRead,
+          canCreate: permData.canCreate,
+          canUpdate: permData.canUpdate,
+          canDelete: permData.canDelete
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update table permission');
+      }
+    } catch (error) {
+      console.error('Error updating table permission:', error);
+      // Revert local state if API call fails
+      fetchTables();
+    }
   };
 
   // Handle field permission change
-  const handleFieldPermissionChange = (fieldName: string, permission: string, value: boolean) => {
+  const handleFieldPermissionChange = async (fieldName: string, permission: string, value: boolean) => {
+    if (!currentRole || !selectedTable || !token) return;
+    
+    // Update local state first for immediate UI feedback
     const updatedPermissions = fieldPermissions.map(perm => 
       perm.fieldName === fieldName ? { ...perm, [permission]: value } : perm
     );
     setFieldPermissions(updatedPermissions);
+    
+    // Prepare permission data
+    const permData = updatedPermissions.find(p => p.fieldName === fieldName);
+    if (!permData) return;
+    
+    try {
+      // Save to database
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/permissions/fields/${currentRole.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          tableName: selectedTable,
+          fieldName: permData.fieldName,
+          canRead: permData.canRead,
+          canUpdate: permData.canUpdate
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update field permission');
+      }
+    } catch (error) {
+      console.error('Error updating field permission:', error);
+      // Revert local state if API call fails
+      if (selectedTable) fetchTableFields(selectedTable);
+    }
   };
 
   // Handle opening the add role modal
@@ -245,43 +374,105 @@ const RoleManagementPage: React.FC = () => {
     setIsDeleteModalOpen(true);
   };
 
-  // Handle saving a new role
-  const handleSaveNewRole = () => {
-    const roleId = `${roles.length + 1}`;
-    const roleToAdd = {
-      id: roleId,
-      name: newRole.name.toUpperCase(),
-      description: newRole.description,
-      permissions: newRole.permissions,
-      userCount: 0
-    };
+  // Handle form submission for adding a new role
+  const handleAddRoleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    setRoles([...roles, roleToAdd]);
-    setIsAddModalOpen(false);
+    if (!token) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newRole)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to add role');
+      }
+      
+      // Refresh roles list and close modal
+      await fetchRoles();
+      setIsAddModalOpen(false);
+      setNewRole({
+        name: '',
+        description: '',
+        permissions: []
+      });
+    } catch (error) {
+      console.error('Error adding role:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Handle updating an existing role
-  const handleUpdateRole = () => {
-    const updatedRoles = roles.map(role => 
-      role.id === currentRole.id 
-        ? { 
-            ...role, 
-            name: newRole.name.toUpperCase(), 
-            description: newRole.description,
-            permissions: newRole.permissions
-          } 
-        : role
-    );
+  // Handle form submission for editing a role
+  const handleEditRoleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    setRoles(updatedRoles);
-    setIsEditModalOpen(false);
+    if (!currentRole || !token) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/${currentRole.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: currentRole.name,
+          description: currentRole.description,
+          permissions: currentRole.permissions
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update role');
+      }
+      
+      // Refresh roles list and close modal
+      await fetchRoles();
+      setIsEditModalOpen(false);
+      setCurrentRole(null);
+      setActiveTab('general');
+    } catch (error) {
+      console.error('Error updating role:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Handle deleting a role
-  const handleConfirmDelete = () => {
-    const updatedRoles = roles.filter(role => role.id !== currentRole.id);
-    setRoles(updatedRoles);
-    setIsDeleteModalOpen(false);
+  // Delete role
+  const handleDeleteRoleSubmit = async () => {
+    if (!currentRole || !token) return;
+    
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/roles/${currentRole.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete role');
+      }
+      
+      // Refresh roles list and close modal
+      await fetchRoles();
+      setIsDeleteModalOpen(false);
+      setCurrentRole(null);
+    } catch (error) {
+      console.error('Error deleting role:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Handle permission checkbox change
@@ -301,16 +492,15 @@ const RoleManagementPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="text-black">
+      <div className="container mx-auto px-4 py-8">
+        <Toaster position="top-right" />
+        
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Role Management</h1>
+          <h1 className="text-2xl font-semibold">Role Management</h1>
           <button
             onClick={handleAddRole}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
             Add New Role
           </button>
         </div>
@@ -348,7 +538,7 @@ const RoleManagementPage: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
-                      {role.permissions.map((permission) => (
+                      {role.permissions.map((permission: string) => (
                         <span 
                           key={permission} 
                           className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800"
@@ -446,7 +636,7 @@ const RoleManagementPage: React.FC = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={handleSaveNewRole}
+                  onClick={handleAddRoleSubmit}
                   className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   disabled={!newRole.name}
                 >
@@ -710,7 +900,7 @@ const RoleManagementPage: React.FC = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={handleUpdateRole}
+                  onClick={handleEditRoleSubmit}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                 >
                   Save Changes
@@ -742,7 +932,7 @@ const RoleManagementPage: React.FC = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={handleConfirmDelete}
+                  onClick={handleDeleteRoleSubmit}
                   className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                 >
                   Delete
