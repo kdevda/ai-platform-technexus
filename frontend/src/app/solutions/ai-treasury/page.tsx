@@ -108,11 +108,11 @@ export default function AITreasuryPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-black mb-6">
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
                 AI Treasury
               </h1>
               <p className="text-gray-600 text-lg md:text-xl mb-8">
-                Transform your treasury operations with AI-powered forecasting, liquidity management, and investment optimization.
+                Optimize cash management, investment decisions, and liquidity planning with AI-driven treasury solutions.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/contact" className="bg-black text-white hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors">
@@ -121,13 +121,6 @@ export default function AITreasuryPage() {
                 <Link href="/solutions" className="border-2 border-black text-black hover:bg-black hover:text-white px-8 py-3 rounded-lg font-medium transition-colors">
                   View All Solutions
                 </Link>
-              </div>
-            </div>
-            <div className="relative h-64 md:h-96 lg:h-auto rounded-xl overflow-hidden bg-gray-100">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
-                <svg className="w-48 h-48 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
               </div>
             </div>
           </div>
@@ -408,46 +401,44 @@ export default function AITreasuryPage() {
         </div>
       </section>
 
-      {/* Success Story */}
+      {/* Client Success Story */}
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black">Client Success Story</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black">Early Adopter Program</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
+            <p className="text-gray-600 mb-10">
+              <span className="font-semibold">Limited Availability</span> - Join our exclusive program to transform your treasury operations.
+            </p>
           </div>
           
-          <div className="bg-white rounded-xl p-8 md:p-12 border border-gray-200">
-            <div className="flex flex-col md:flex-row gap-8 md:gap-12">
-              <div className="md:w-1/3">
-                <h3 className="text-2xl font-bold mb-4 text-black">Global Manufacturing Corp</h3>
-                <div className="h-1 w-12 bg-black mb-6"></div>
-                <div className="prose text-gray-600">
-                  <p>A multinational manufacturer with operations in 14 countries was struggling with inefficient treasury operations and suboptimal fund utilization across regions.</p>
-                  <p className="mt-4">After implementing TechNexus AI Treasury, they experienced:</p>
-                  <ul className="mt-4 space-y-2">
-                    <li>32% improvement in cash utilization efficiency</li>
-                    <li>$2.7M annual increase in interest income</li>
-                    <li>67% reduction in manual treasury processes</li>
-                    <li>8-hour reduction in daily cash position reporting time</li>
-                  </ul>
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden p-8 lg:p-12">
+            <div className="max-w-4xl mx-auto">
+              <p className="text-lg text-gray-700 mb-8 text-center">
+                Join our Early Adopter Program to get exclusive access to our AI Treasury solution and be at the forefront of treasury management innovation.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="font-bold text-lg mb-3 text-black">Priority Access</h3>
+                  <p className="text-gray-600">Get early access to new features and capabilities before they're widely available.</p>
+                </div>
+                
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="font-bold text-lg mb-3 text-black">Special Pricing</h3>
+                  <p className="text-gray-600">Benefit from exclusive pricing and terms available only to early adopters.</p>
+                </div>
+                
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="font-bold text-lg mb-3 text-black">Direct Input</h3>
+                  <p className="text-gray-600">Provide feedback directly to our product team and help shape the roadmap.</p>
                 </div>
               </div>
               
-              <div className="md:w-2/3">
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 h-full">
-                  <div className="flex items-start mb-6">
-                    <svg className="w-10 h-10 text-gray-400 mr-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                    <blockquote className="italic text-gray-600">
-                      "Before implementing AI Treasury, our global cash management was a major challenge. We had funds sitting idle in some regions while borrowing in others. The AI-powered forecasting has transformed our treasury function, allowing us to optimize our global liquidity and significantly reduce interest expenses while increasing yield on our investments. What used to take a team of five people most of the day to complete is now automated, letting our treasury team focus on strategic initiatives instead of manual processes."
-                    </blockquote>
-                  </div>
-                  <div className="pl-14">
-                    <p className="font-bold text-black">Michael Chen</p>
-                    <p className="text-sm text-gray-500">Global Treasurer, Manufacturing Corp</p>
-                  </div>
-                </div>
+              <div className="text-center">
+                <Link href="/contact" className="bg-black text-white hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors inline-block">
+                  Apply for the Program
+                </Link>
               </div>
             </div>
           </div>

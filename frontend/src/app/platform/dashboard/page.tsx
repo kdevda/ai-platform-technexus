@@ -186,10 +186,9 @@ const PlatformDashboard: React.FC = () => {
         const res = await axios.get('/api/applications');
         setApplications(res.data);
       } catch (error: any) {
-        console.error('Error fetching applications:', error);
-        // If the API returns 404, use mock data instead
+        // Don't log 404 errors as they're expected when endpoint doesn't exist
         if (error.response && error.response.status === 404) {
-          console.log('Using mock application data due to 404 error');
+          console.log('Using mock application data - API endpoint not implemented yet');
           // Provide mock data
           setApplications([
             { id: '1', name: 'Home Loan Application', createdAt: '2023-03-01T12:00:00Z', updatedAt: '2023-03-01T12:00:00Z' },

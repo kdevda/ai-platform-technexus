@@ -7,6 +7,7 @@ import dualDbRoutes from './routes/dualDbRoutes';
 import schemaRoutes from './routes/schemaRoutes';
 import permissionRoutes from './routes/permissionRoutes';
 import roleRoutes from './routes/roleRoutes';
+import integrationRoutes from './routes/integrationRoutes';
 import { connectDatabases, checkDatabaseConnections } from './services/dbService';
 
 // Load environment variables
@@ -64,6 +65,7 @@ app.use('/api/dual', dualDbRoutes);
 app.use('/api/schema', schemaRoutes);
 app.use('/api/permissions', permissionRoutes);
 app.use('/api/roles', roleRoutes);
+app.use('/api/integrations', integrationRoutes);
 
 // Start server
 connectDatabases().then(() => {

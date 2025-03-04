@@ -1,386 +1,396 @@
+"use client";
+
 import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 import Layout from '@/components/layout/Layout';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function CareersPage() {
   const benefits = [
     {
-      title: 'Flexible Work',
-      description: 'Remote-first approach with flexible hours to help you maintain work-life balance.',
-      icon: '/icons/flexible.svg',
+      title: "Health & Wellness",
+      description: "Comprehensive health, dental, and vision coverage for you and your family.",
+      icon: (
+        <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      )
     },
     {
-      title: 'Health & Wellness',
-      description: 'Comprehensive health benefits and wellness programs for you and your family.',
-      icon: '/icons/health.svg',
+      title: "Flexible Work",
+      description: "Remote-first culture with flexible hours to help you maintain work-life balance.",
+      icon: (
+        <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      )
     },
     {
-      title: 'Growth & Development',
-      description: 'Continuous learning opportunities, education stipends, and career advancement paths.',
-      icon: '/icons/growth.svg',
+      title: "Growth & Development",
+      description: "Regular learning opportunities, conference allowances, and career advancement paths.",
+      icon: (
+        <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+      )
     },
     {
-      title: 'Competitive Compensation',
-      description: 'Market-leading salary with equity options and performance bonuses.',
-      icon: '/icons/compensation.svg',
+      title: "RRSP Matching",
+      description: "Retirement savings plan with company matching to help secure your future.",
+      icon: (
+        <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      )
+    },
+    {
+      title: "Paid Time Off",
+      description: "Generous vacation policy, paid holidays, and personal days to recharge.",
+      icon: (
+        <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      )
+    },
+    {
+      title: "Team Collaboration",
+      description: "Regular team events, retreats, and collaborative projects to build strong relationships.",
+      icon: (
+        <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      )
     },
   ];
 
-  const openPositions = [
+  const jobOpenings = [
     {
-      id: 'ai-engineer',
-      title: 'AI Engineer',
-      department: 'Engineering',
-      location: 'Remote',
-      type: 'Full-time',
+      title: "Senior Machine Learning Engineer",
+      location: "Remote (Canada)",
+      department: "Engineering",
+      description: "Join our AI team to design and implement machine learning models for lending decisions.",
+      link: "/careers/senior-machine-learning-engineer"
     },
     {
-      id: 'product-manager',
-      title: 'Product Manager',
-      department: 'Product',
-      location: 'Hybrid - Toronto',
-      type: 'Full-time',
+      title: "Frontend Developer",
+      location: "Remote (Canada)",
+      department: "Engineering",
+      description: "Create responsive and intuitive user interfaces for our lending platform.",
+      link: "/careers/general-application"
     },
     {
-      id: 'financial-analyst',
-      title: 'Financial Analyst',
-      department: 'Finance',
-      location: 'Remote',
-      type: 'Full-time',
+      title: "Backend Engineer",
+      location: "Remote (Canada)",
+      department: "Engineering",
+      description: "Build scalable systems that power our lending and financial software.",
+      link: "/careers/general-application"
     },
     {
-      id: 'ux-designer',
-      title: 'UX Designer',
-      department: 'Design',
-      location: 'Remote',
-      type: 'Full-time',
-    },
-    {
-      id: 'compliance-officer',
-      title: 'Compliance Officer',
-      department: 'Legal',
-      location: 'Toronto',
-      type: 'Full-time',
-    },
-    {
-      id: 'data-scientist',
-      title: 'Data Scientist',
-      department: 'Analytics',
-      location: 'Remote',
-      type: 'Full-time',
+      title: "Product Manager",
+      location: "Hybrid (Toronto)",
+      department: "Product",
+      description: "Define product vision and roadmap for our flagship lending solutions.",
+      link: "/careers/general-application"
     },
   ];
 
   return (
     <Layout>
-      {/* Hero Section - Matching Leadership page style */}
+      {/* Hero Section */}
       <section className="bg-white text-black py-16 md:py-24 relative overflow-hidden bg-grid-black">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-              Join Our Team
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-black">
+              Build the future of lending technology
             </h1>
             <p className="text-gray-600 text-lg md:text-xl mt-6">
-              Help us build the future of ethical AI-powered finance. We're looking for talented 
-              individuals who are passionate about innovation and making a positive impact.
+              Join our team of innovators and help transform financial services with AI and machine learning.
             </p>
+            <div className="mt-10">
+              <Link href="#openings" className="inline-flex items-center px-6 py-3 bg-black text-white rounded-md font-medium hover:bg-gray-800 transition-colors">
+                View Open Positions
+                <svg className="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Our Culture Section - Updated to black and white */}
+      {/* Our Values */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Our Culture</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Our Values</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
-            <p className="text-lg text-gray-700 max-w-3xl mx-auto mt-6">
-              We foster an environment that encourages innovation, collaboration, and growth while maintaining a strong focus on ethics and inclusion.
+            <p className="text-gray-600 max-w-3xl mx-auto mt-6">
+              The principles that guide our work and shape our culture
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl">
-              <Image
-                src="/images/team-culture.jpg"
-                alt="Team collaboration"
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Innovation First</h3>
+              <p className="text-gray-600">
+                We push boundaries and challenge the status quo. Our commitment to innovation drives everything from our product development to our internal processes.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Collaborative Spirit</h3>
+              <p className="text-gray-600">
+                We believe the best solutions emerge from diverse perspectives working together. We celebrate teamwork and maintain open channels of communication.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Ethical Excellence</h3>
+              <p className="text-gray-600">
+                We hold ourselves to the highest ethical standards. Our commitment to responsible AI and fair lending practices guides our decisions and actions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Life at Technexus */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Life at Technexus</h2>
+            <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
+            <p className="text-gray-600 max-w-3xl mx-auto mt-6">
+              A workplace that balances innovation, growth, and well-being
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="relative h-96 rounded-xl overflow-hidden shadow-xl">
+              <Image 
+                src="/images/team-collaboration.jpg" 
+                alt="Team collaboration at Technexus"
                 fill
-                className="object-cover transform hover:scale-105 transition duration-700"
+                style={{ objectFit: 'cover' }}
               />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-6 text-gray-900">What Makes Us Different</h3>
-              <ul className="space-y-6">
-                <li className="flex items-start">
-                  <span className="text-black mr-4 mt-1 p-1 bg-gray-200 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              <h3 className="text-2xl font-bold mb-6">A Culture of Innovation and Support</h3>
+              <p className="text-gray-600 mb-6">
+                At Technexus, we've built a culture that encourages bold thinking and provides the support needed to turn ideas into reality. Our team members enjoy:
+              </p>
+              
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-black text-white">
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                  </span>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900">Purpose-Driven</h4>
-                    <p className="text-gray-700">Our mission to create ethical AI-driven financial solutions drives everything we do.</p>
                   </div>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-4 mt-1 p-1 bg-gray-200 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  </span>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900">Innovation-First</h4>
-                    <p className="text-gray-700">We embrace cutting-edge technologies and methodologies to create breakthrough solutions.</p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-4 mt-1 p-1 bg-gray-200 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  </span>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900">Diverse & Inclusive</h4>
-                    <p className="text-gray-700">We value different perspectives and create an environment where everyone belongs.</p>
-                  </div>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-4 mt-1 p-1 bg-gray-200 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  </span>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-900">Remote-First</h4>
-                    <p className="text-gray-700">We believe in work-life balance and trust our team to deliver excellence from anywhere.</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section - Updated to black and white */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Benefits & Perks</h2>
-            <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
-            <p className="text-lg text-gray-700 max-w-3xl mx-auto mt-6">
-              We take care of our team with comprehensive benefits designed to support your wellbeing and growth.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200 group hover:border-gray-300">
-                <div className="mb-4 w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center text-black group-hover:bg-gray-200 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <p className="ml-3 text-gray-600">
+                    <strong className="text-black">Learning opportunities</strong> through workshops, conferences, and peer knowledge sharing
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900">{benefit.title}</h3>
-                <p className="text-gray-700">{benefit.description}</p>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-16 bg-gray-900 rounded-2xl p-10 text-white shadow-xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-              <div>
-                <h3 className="text-2xl font-bold mb-6">Additional Benefits</h3>
-                <ul className="space-y-4">
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-black text-white">
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-gray-100">Generous vacation policy</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </div>
+                  <p className="ml-3 text-gray-600">
+                    <strong className="text-black">Autonomy and ownership</strong> of projects from conception to implementation
+                  </p>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-black text-white">
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-gray-100">Home office stipend</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </div>
+                  <p className="ml-3 text-gray-600">
+                    <strong className="text-black">Work-life balance</strong> with flexible scheduling and remote-first options
+                  </p>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 flex items-center justify-center rounded-full bg-black text-white">
+                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-gray-100">Mental health resources</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-gray-100">Company-wide retreats</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <ul className="space-y-4">
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-gray-100">401(k) matching</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-gray-100">Professional development budget</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-gray-100">Parental leave</span>
-                  </li>
-                  <li className="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-gray-100">Team events and celebrations</span>
-                  </li>
-                </ul>
+                  </div>
+                  <p className="ml-3 text-gray-600">
+                    <strong className="text-black">Meaningful impact</strong> on financial inclusion and technological advancement
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Open Positions Section - Updated to black and white */}
-      <section id="open-positions" className="py-20 bg-gray-50">
+      {/* Benefits */}
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Open Positions</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Benefits & Perks</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
-            <p className="text-lg text-gray-700 max-w-3xl mx-auto mt-6">
-              Join our growing team and help us shape the future of financial technology.
+            <p className="text-gray-600 max-w-3xl mx-auto mt-6">
+              We take care of our team with comprehensive benefits and thoughtful perks
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {openPositions.map((position) => (
-              <div key={position.id} className="border border-gray-200 rounded-xl hover:shadow-lg transition-shadow p-8 hover:border-gray-400 group bg-white">
-                <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-black">{position.title}</h3>
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    <span>{position.department}</span>
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span>{position.location}</span>
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{position.type}</span>
-                  </div>
+            {benefits.map((benefit, index) => (
+              <div key={index} className="bg-white p-8 rounded-xl shadow-sm">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                  {benefit.icon}
                 </div>
-                <Link href={`/careers/${position.id}`} className="inline-block bg-white hover:bg-black hover:text-white border-2 border-black text-black font-medium py-2 px-5 rounded-lg transition-colors">
-                  View Details
-                </Link>
+                <h3 className="text-xl font-bold mb-3">{benefit.title}</h3>
+                <p className="text-gray-600">{benefit.description}</p>
               </div>
             ))}
           </div>
-          
-          <div className="text-center mt-16">
-            <p className="text-gray-700 mb-6">Don't see a role that fits your skills?</p>
-            <Link href="/careers/general-application" className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-8 rounded-lg transition-colors">
+        </div>
+      </section>
+
+      {/* Job Openings */}
+      <section id="openings" className="py-20">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Open Positions</h2>
+            <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
+            <p className="text-gray-600 max-w-3xl mx-auto mt-6">
+              Find your place in our team and help shape the future of lending
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {jobOpenings.map((job, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+                <div className="p-6">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold">{job.title}</h3>
+                      <div className="flex flex-wrap gap-4 mt-2">
+                        <span className="inline-flex items-center text-sm text-gray-600">
+                          <svg className="mr-1.5 h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          {job.location}
+                        </span>
+                        <span className="inline-flex items-center text-sm text-gray-600">
+                          <svg className="mr-1.5 h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                          {job.department}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-4 md:mt-0">
+                      <Link href={job.link} className="inline-flex items-center px-5 py-2 bg-black text-white rounded-md font-medium hover:bg-gray-800 transition-colors">
+                        Apply Now
+                        <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 mt-4">{job.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-6">Don't see a position that matches your skills?</p>
+            <Link href="/careers/general-application" className="inline-flex items-center px-6 py-3 bg-gray-100 text-black rounded-md font-medium hover:bg-gray-200 transition-colors">
               Submit a General Application
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Future Vision Section - Replacing Life at TechNexus */}
-      <section className="py-20 bg-white">
+      {/* Hiring Process */}
+      <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">Our Future Vision</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Our Hiring Process</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
-            <p className="text-lg text-gray-700 max-w-3xl mx-auto mt-6">
-              At TechNexus, we're building the foundation for the next generation of financial technology.
+            <p className="text-gray-600 max-w-3xl mx-auto mt-6">
+              A transparent look at what to expect when you apply
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200">
-              <div className="bg-gray-100 rounded-xl p-6 mb-6 flex items-center justify-center">
-                <svg className="h-12 w-12 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-              </div>
-              <h3 className="font-bold text-lg text-gray-900 mb-4">Pioneering Innovation</h3>
-              <p className="text-gray-700">
-                "Our team is dedicated to pushing the boundaries of what's possible in AI and finance, developing solutions that will fundamentally transform how financial services operate."
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-bold text-xl mb-6">1</div>
+              <h3 className="text-xl font-bold mb-3">Application Review</h3>
+              <p className="text-gray-600">
+                Our team carefully reviews your application, resume, and any additional materials you submit.
               </p>
             </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200">
-              <div className="bg-gray-100 rounded-xl p-6 mb-6 flex items-center justify-center">
-                <svg className="h-12 w-12 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h3 className="font-bold text-lg text-gray-900 mb-4">Growing With Purpose</h3>
-              <p className="text-gray-700">
-                "As we expand our team, we're looking for forward-thinking individuals who share our vision for ethical AI and are ready to contribute to something truly meaningful in the financial sector."
+
+            <div className="bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-bold text-xl mb-6">2</div>
+              <h3 className="text-xl font-bold mb-3">Initial Interview</h3>
+              <p className="text-gray-600">
+                A conversation with our recruitment team to discuss your background, skills, and interest in the role.
               </p>
             </div>
-            
-            <div className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow border border-gray-200">
-              <div className="bg-gray-100 rounded-xl p-6 mb-6 flex items-center justify-center">
-                <svg className="h-12 w-12 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </div>
-              <h3 className="font-bold text-lg text-gray-900 mb-4">Global Impact</h3>
-              <p className="text-gray-700">
-                "Our solutions are designed to create a more inclusive financial system worldwide, breaking down barriers and democratizing access to financial services through ethical AI technologies."
+
+            <div className="bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-bold text-xl mb-6">3</div>
+              <h3 className="text-xl font-bold mb-3">Technical Assessment</h3>
+              <p className="text-gray-600">
+                Depending on the role, you may be asked to complete a skills assessment or technical challenge.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 rounded-xl shadow-sm">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center font-bold text-xl mb-6">4</div>
+              <h3 className="text-xl font-bold mb-3">Final Interviews</h3>
+              <p className="text-gray-600">
+                Meet with team members and leadership to discuss the role in depth and explore fit on both sides.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action - Updated to black and white */}
-      <section className="py-20 bg-gray-900 text-white overflow-hidden relative">
-        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]"></div>
-        <div className="container mx-auto px-4 max-w-6xl relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">Ready to Join Our Team?</h2>
-              <p className="text-xl mb-8 text-gray-300 leading-relaxed">
-                Take the next step in your career journey and be part of our mission to transform fintech with ethical AI solutions.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="#open-positions" 
-                  className="px-8 py-3 bg-white text-gray-900 hover:bg-gray-200 rounded-lg font-medium shadow-lg transition duration-300 text-center">
-                  Explore Positions
-                </Link>
-                <Link href="/contact" 
-                  className="px-8 py-3 bg-transparent hover:bg-gray-800 border-2 border-white text-white font-medium rounded-lg transition-colors text-center">
-                  Contact Recruiting
-                </Link>
-              </div>
-            </div>
-            <div className="relative h-[350px] rounded-2xl overflow-hidden shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-500 to-gray-900 opacity-80"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <h3 className="text-white text-2xl md:text-3xl font-bold text-center px-4">Shape the Future of Finance</h3>
-              </div>
-            </div>
+      {/* CTA */}
+      <section className="py-20 bg-black text-white">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">
+              Ready to join our team?
+            </h2>
+            <p className="text-lg text-gray-300 mb-8">
+              Explore our open positions and take the first step toward an impactful career at Technexus.
+            </p>
+            <Link href="#openings" className="inline-flex items-center px-8 py-4 bg-white text-black rounded-lg font-medium hover:bg-gray-200 transition-colors">
+              View Open Positions
+              <svg className="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>

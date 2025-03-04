@@ -271,9 +271,9 @@ const AdminSidebar: React.FC = () => {
           {/* Integration Ecosystem */}
           <li>
             <Link 
-              href="/platform/admin/integration-ecosystem"
+              href="/platform/admin/integrations-hub"
               className={`flex items-center p-3 rounded-md transition-colors ${
-                isActive('/platform/admin/integration-ecosystem') 
+                isActive('/platform/admin/integrations-hub') 
                   ? 'bg-blue-700' 
                   : 'hover:bg-gray-800'
               }`}
@@ -281,7 +281,7 @@ const AdminSidebar: React.FC = () => {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
               </svg>
-              <span className={`ml-3 ${expanded ? 'block' : 'hidden'}`}>Integration Ecosystem</span>
+              <span className={`ml-3 ${expanded ? 'block' : 'hidden'}`}>Integrations Hub</span>
             </Link>
           </li>
           

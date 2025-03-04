@@ -103,13 +103,6 @@ export default function AICollectionsPage() {
                 </Link>
               </div>
             </div>
-            <div className="relative h-64 md:h-96 lg:h-auto rounded-xl overflow-hidden bg-gray-100">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
-                <svg className="w-48 h-48 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -334,42 +327,40 @@ export default function AICollectionsPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black">Client Success Story</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black">Early Adopter Program</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
+            <p className="text-gray-600 mb-10">
+              <span className="font-semibold">Limited Availability</span> - Join our exclusive program to transform your collections operations.
+            </p>
           </div>
           
-          <div className="bg-gray-50 rounded-xl p-8 md:p-12 border border-gray-200">
-            <div className="flex flex-col md:flex-row gap-8 md:gap-12">
-              <div className="md:w-1/3">
-                <h3 className="text-2xl font-bold mb-4 text-black">Regional Credit Union</h3>
-                <div className="h-1 w-12 bg-black mb-6"></div>
-                <div className="prose text-gray-600">
-                  <p>A mid-sized credit union with $1.2 billion in assets was struggling with rising delinquencies and ineffective collection processes.</p>
-                  <p className="mt-4">After implementing TechNexus AI Collections, they experienced:</p>
-                  <ul className="mt-4 space-y-2">
-                    <li>41% reduction in charge-offs within 6 months</li>
-                    <li>68% increase in early-stage resolutions</li>
-                    <li>23% improvement in member satisfaction scores</li>
-                    <li>$3.2M in recovered funds that would have been written off</li>
-                  </ul>
+          <div className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden p-8 lg:p-12">
+            <div className="max-w-4xl mx-auto">
+              <p className="text-lg text-gray-700 mb-8 text-center">
+                Join our Early Adopter Program to get exclusive access to our AI Collections solution and be at the forefront of collections innovation.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <h3 className="font-bold text-lg mb-3 text-black">Priority Access</h3>
+                  <p className="text-gray-600">Get early access to new features and capabilities before they're widely available.</p>
+                </div>
+                
+                <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <h3 className="font-bold text-lg mb-3 text-black">Special Pricing</h3>
+                  <p className="text-gray-600">Benefit from exclusive pricing and terms available only to early adopters.</p>
+                </div>
+                
+                <div className="bg-white p-6 rounded-lg shadow-sm">
+                  <h3 className="font-bold text-lg mb-3 text-black">Direct Input</h3>
+                  <p className="text-gray-600">Provide feedback directly to our product team and help shape the roadmap.</p>
                 </div>
               </div>
               
-              <div className="md:w-2/3">
-                <div className="bg-white rounded-xl p-6 border border-gray-200 h-full">
-                  <div className="flex items-start mb-6">
-                    <svg className="w-10 h-10 text-gray-400 mr-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                    <blockquote className="italic text-gray-600">
-                      "The AI Collections solution fundamentally transformed how we approach delinquent accounts. Instead of the traditional one-size-fits-all approach, we're now able to tailor our strategies to individual member circumstances. This has not only improved our recovery rates but has actually strengthened relationships with our members during difficult financial times."
-                    </blockquote>
-                  </div>
-                  <div className="pl-14">
-                    <p className="font-bold text-black">Jennifer Martinez</p>
-                    <p className="text-sm text-gray-500">VP of Collections, Regional Credit Union</p>
-                  </div>
-                </div>
+              <div className="text-center">
+                <Link href="/contact" className="bg-black text-white hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors inline-block">
+                  Apply for the Program
+                </Link>
               </div>
             </div>
           </div>

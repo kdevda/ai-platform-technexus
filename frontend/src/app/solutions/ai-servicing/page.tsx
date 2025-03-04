@@ -129,13 +129,6 @@ export default function AIServicingPage() {
                 </Link>
               </div>
             </div>
-            <div className="relative h-64 md:h-96 lg:h-auto rounded-xl overflow-hidden bg-gray-100">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
-                <svg className="w-48 h-48 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -444,57 +437,40 @@ export default function AIServicingPage() {
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black">Success Story</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black">Early Adopter Program</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
             <p className="text-gray-600 mb-10">
-              See how a regional lender transformed their servicing operations and improved customer satisfaction with TechNexus AI Servicing.
+              <span className="font-semibold">Limited Availability</span> - Join our exclusive program to transform your loan servicing operations.
             </p>
           </div>
           
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-3">
-              <div className="p-8 bg-gray-50 flex flex-col justify-center">
-                <div className="text-lg text-gray-500 mb-2">CASE STUDY</div>
-                <h3 className="text-2xl font-bold mb-4 text-black">NorthStar Credit Union</h3>
-                <p className="text-gray-500">$2.8B in assets, 120,000 loans</p>
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden p-8 lg:p-12">
+            <div className="max-w-4xl mx-auto">
+              <p className="text-lg text-gray-700 mb-8 text-center">
+                Join our Early Adopter Program to get exclusive access to our AI Servicing solution and be at the forefront of loan servicing innovation.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="font-bold text-lg mb-3 text-black">Priority Access</h3>
+                  <p className="text-gray-600">Get early access to new features and capabilities before they're widely available.</p>
+                </div>
                 
-                <div className="mt-8">
-                  <h4 className="font-bold mb-2 text-black">Key Results:</h4>
-                  <div className="flex items-start">
-                    <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    <span><span className="font-semibold">Results:</span> 52% reduction in servicing costs, 36% improvement in customer satisfaction scores</span>
-                  </div>
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="font-bold text-lg mb-3 text-black">Special Pricing</h3>
+                  <p className="text-gray-600">Benefit from exclusive pricing and terms available only to early adopters.</p>
+                </div>
+                
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="font-bold text-lg mb-3 text-black">Direct Input</h3>
+                  <p className="text-gray-600">Provide feedback directly to our product team and help shape the roadmap.</p>
                 </div>
               </div>
               
-              <div className="col-span-2 p-8 lg:p-12">
-                <div className="space-y-8">
-                  <div>
-                    <h4 className="text-lg font-bold mb-2 text-black">The Challenge</h4>
-                    <p className="text-gray-600">Scaling servicing operations to handle 40% portfolio growth without adding staff</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-lg font-bold mb-2 text-black">The Solution</h4>
-                    <p className="text-gray-600">Implemented AI Servicing to automate 78% of routine processes and enhance self-service</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-lg font-bold mb-2 text-black">The Results</h4>
-                    <p className="text-gray-600">52% reduction in servicing costs, 36% improvement in customer satisfaction scores</p>
-                  </div>
-                </div>
-                
-                <div className="mt-8 text-right">
-                  <Link href="/case-studies" className="text-black font-medium hover:underline inline-flex items-center">
-                    Read Full Case Study
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                  </Link>
-                </div>
+              <div className="text-center">
+                <Link href="/contact" className="bg-black text-white hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors inline-block">
+                  Apply for the Program
+                </Link>
               </div>
             </div>
           </div>

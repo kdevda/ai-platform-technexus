@@ -121,3 +121,29 @@ model FieldPermission {
 
   @@unique([roleId, tableName, fieldName])
 }
+
+// Integration models
+model Integration {
+  id                  String                  @id @default(uuid())
+  name                String
+  type                String                  // e.g., "email", "payment", "crm"
+  description         String
+  logoUrl             String?
+  isEnabled           Boolean                 @default(false)
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  configurations      IntegrationConfiguration[]
+}
+
+model IntegrationConfiguration {
+  id             String     @id @default(uuid())
+  integrationId  String
+  fieldName      String
+  fieldValue     String
+  isEncrypted    Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  integration    Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  @@unique([integrationId, fieldName])
+}

@@ -8,6 +8,9 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ['i.postimg.cc', 'assets.stickpng.com', 'resend.com'],
+  },
 };
 
 export default nextConfig; 

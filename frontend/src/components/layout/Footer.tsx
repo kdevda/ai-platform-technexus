@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-sm font-medium uppercase tracking-wider">Solutions</h3>
             <ul className="space-y-3">
-              {["AI Relations", "AI Originations", "AI Credit", "AI Servicing", "AI Collections", "AI Treasury", "Lending as a Service (LaaS)"].map((item) => (
+              {["AI Relations", "AI Originations", "AI Credit", "AI Servicing", "AI Collections", "AI Treasury", "Lending as a Service"].map((item) => (
                 <li key={item}>
                   <Link href={`/solutions/${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-gray-400 hover:text-white text-sm transition-colors">
                     {item}
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               {["Privacy Policy", "Terms of Service", "Security", "Compliance"].map((item) => (
                 <li key={item}>
-                  <Link href={`/legal/${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-gray-400 hover:text-white text-sm transition-colors">
+                  <Link href={`/${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-gray-400 hover:text-white text-sm transition-colors">
                     {item}
                   </Link>
                 </li>

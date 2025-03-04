@@ -129,13 +129,6 @@ export default function AICreditPage() {
                 </Link>
               </div>
             </div>
-            <div className="relative h-64 md:h-96 lg:h-auto rounded-xl overflow-hidden bg-gray-100">
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-100 flex items-center justify-center">
-                <svg className="w-48 h-48 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -413,17 +406,56 @@ export default function AICreditPage() {
       {/* Testimonial */}
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="max-w-4xl mx-auto text-center">
-            <svg className="w-12 h-12 text-gray-300 mx-auto mb-6" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
-            </svg>
-            
-            <p className="text-xl md:text-2xl font-medium mb-6">
-              "Implementing TechNexus AI Credit has been transformative for our underwriting process. We're now able to more accurately assess risk for applicants with limited credit history, resulting in a 23% increase in approval rates while maintaining our risk thresholds."
-            </p>
-            
-            <div className="font-bold text-lg text-black">Sarah Johnson</div>
-            <div className="text-gray-500">Chief Risk Officer, National Financial</div>
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl p-8 border border-gray-200 shadow-sm">
+              <h3 className="text-2xl font-bold mb-4 text-black text-center">Early Adopter Program</h3>
+              <div className="mb-6 text-sm text-gray-500 text-center">LIMITED AVAILABILITY</div>
+              
+              <p className="text-gray-600 mb-8 text-center">
+                Join our exclusive Early Adopter Program for AI Credit and be among the first to transform your credit decisioning with our cutting-edge technology.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="flex flex-col items-center text-center p-4">
+                  <div className="h-12 w-12 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 mb-4">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-semibold text-black mb-2">Priority Access</h4>
+                  <p className="text-sm text-gray-600">Be first to receive new features and enhancements to the AI Credit platform</p>
+                </div>
+                
+                <div className="flex flex-col items-center text-center p-4">
+                  <div className="h-12 w-12 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 mb-4">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-semibold text-black mb-2">Special Pricing</h4>
+                  <p className="text-sm text-gray-600">Exclusive pricing and terms for early program participants</p>
+                </div>
+                
+                <div className="flex flex-col items-center text-center p-4">
+                  <div className="h-12 w-12 rounded-full bg-black text-white flex items-center justify-center flex-shrink-0 mb-4">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-semibold text-black mb-2">Direct Input</h4>
+                  <p className="text-sm text-gray-600">Shape the future of AI Credit with your direct feedback and requirements</p>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <Link href="/contact?program=early-adopter" className="inline-flex items-center bg-black text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
+                  Apply for the Program
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
