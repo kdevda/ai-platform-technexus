@@ -415,10 +415,17 @@ export default function AIRelationsPage() {
           
           <div className="bg-white rounded-xl p-8 border border-gray-200 text-center">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-              {Array.from({ length: 6 }).map((_, index) => (
+              {[
+                { name: 'Salesforce', color: 'bg-blue-50', textColor: 'text-blue-700' },
+                { name: 'HubSpot', color: 'bg-orange-50', textColor: 'text-orange-700' },
+                { name: 'Zoho CRM', color: 'bg-red-50', textColor: 'text-red-700' },
+                { name: 'Twilio', color: 'bg-indigo-50', textColor: 'text-indigo-700' },
+                { name: 'SendGrid', color: 'bg-green-50', textColor: 'text-green-700' },
+                { name: 'Slack', color: 'bg-purple-50', textColor: 'text-purple-700' }
+              ].map((integration, index) => (
                 <div key={index} className="h-20 flex items-center justify-center">
-                  <div className="w-full h-12 bg-gray-100 rounded-md flex items-center justify-center">
-                    <span className="font-medium text-gray-500">Integration {index + 1}</span>
+                  <div className={`w-full h-12 ${integration.color} rounded-md flex items-center justify-center`}>
+                    <span className={`font-medium ${integration.textColor}`}>{integration.name}</span>
                   </div>
                 </div>
               ))}

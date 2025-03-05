@@ -131,15 +131,15 @@ const DashboardCharts = () => {
   // Get chart data
   const { barChartData, lineChartData, pieChartData } = getChartData();
   
-  // Extract the data arrays for simple charts
-  const lineData = lineChartData.datasets[0].data;
-  const lineLabels = lineChartData.labels;
+  // Add null checks and default values to prevent errors
+  const lineData = lineChartData?.datasets?.[0]?.data || [];
+  const lineLabels = lineChartData?.labels || [];
   
-  const pieData = pieChartData.datasets[0].data;
-  const pieLabels = pieChartData.labels;
+  const pieData = pieChartData?.datasets?.[0]?.data || [];
+  const pieLabels = pieChartData?.labels || [];
   
-  const barData = barChartData.datasets[0].data;
-  const barLabels = barChartData.labels;
+  const barData = barChartData?.datasets?.[0]?.data || [];
+  const barLabels = barChartData?.labels || [];
   
   return (
     <Tabs defaultValue="overview" className="space-y-4">
