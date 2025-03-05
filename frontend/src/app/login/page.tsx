@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/app/AuthContext';
 import Layout from '@/components/layout/Layout';
 
 const LoginPage: React.FC = () => {

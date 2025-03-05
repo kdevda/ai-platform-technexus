@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/app/AuthContext';
 import { useRouter } from 'next/navigation';
 
 const PlatformHeader: React.FC = () => {

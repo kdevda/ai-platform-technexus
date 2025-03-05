@@ -1,11 +1,27 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/app/AuthContext';
 import { useLoan } from '@/context/LoanContext';
 import PlatformLayout from '@/components/platform/PlatformLayout';
 import Link from 'next/link';
 import axios from 'axios';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { LineChart, BarChart, PieChart } from '@/components/charts';
+import { getChartData } from '@/lib/chartData';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the AIAgentWidget to prevent SSR issues
+const AIAgentWidget = dynamic(
+  () => import('@/components/widgets/AIAgentWidget'),
+  { ssr: false }
+);
 
 // Interfaces
 interface Application {
@@ -318,410 +334,157 @@ const PlatformDashboard: React.FC = () => {
     { id: 5, type: 'message', description: 'New message from John regarding application #3456', time: '02:20 PM', status: 'unread' },
   ]);
 
+  const { barChartData, lineChartData, pieChartData } = getChartData();
+
   return (
     <PlatformLayout>
-      <div className="p-6 pb-8">
-        <h1 className="text-2xl font-bold mb-6 text-black">Dashboard</h1>
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        </div>
         
-        {/* Main content grid - make space for the chat */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center">
-                  <div className="p-3 rounded-full bg-blue-100 text-blue-500 mr-4">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-black text-sm">Total Loan Amount</p>
-                    <p className="text-2xl font-bold text-black">${totalLoanAmount.toLocaleString()}</p>
-                  </div>
+        {/* AI Assistant Widget */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="col-span-2">
+            <Tabs defaultValue="overview" className="space-y-4">
+              <TabsList>
+                <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="loans">Loans</TabsTrigger>
+                <TabsTrigger value="payments">Payments</TabsTrigger>
+              </TabsList>
+              <TabsContent value="overview" className="space-y-4">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Total Loans
+                      </CardTitle>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        className="h-4 w-4 text-muted-foreground"
+                      >
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </svg>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">$45,231.89</div>
+                      <p className="text-xs text-muted-foreground">
+                        +20.1% from last month
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Active Loans
+                      </CardTitle>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        className="h-4 w-4 text-muted-foreground"
+                      >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">24</div>
+                      <p className="text-xs text-muted-foreground">
+                        +4 since last week
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium">
+                        Payments
+                      </CardTitle>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        className="h-4 w-4 text-muted-foreground"
+                      >
+                        <rect width="20" height="14" x="2" y="5" rx="2" />
+                        <path d="M2 10h20" />
+                      </svg>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">12,234</div>
+                      <p className="text-xs text-muted-foreground">
+                        +19% from last month
+                      </p>
+                    </CardContent>
+                  </Card>
                 </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center">
-                  <div className="p-3 rounded-full bg-green-100 text-green-500 mr-4">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-black text-sm">Active Loans</p>
-                    <p className="text-2xl font-bold text-black">{activeLoans}</p>
-                  </div>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+                  <Card className="col-span-4">
+                    <CardHeader>
+                      <CardTitle>Loan Disbursements</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pl-2">
+                      <LineChart data={lineChartData} />
+                    </CardContent>
+                  </Card>
+                  <Card className="col-span-3">
+                    <CardHeader>
+                      <CardTitle>Loan Types</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pl-2">
+                      <PieChart data={pieChartData} />
+                    </CardContent>
+                  </Card>
                 </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center">
-                  <div className="p-3 rounded-full bg-yellow-100 text-yellow-500 mr-4">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-black text-sm">Pending Loans</p>
-                    <p className="text-2xl font-bold text-black">{pendingLoans}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="flex items-center">
-                  <div className="p-3 rounded-full bg-purple-100 text-purple-500 mr-4">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-black text-sm">Approved Loans</p>
-                    <p className="text-2xl font-bold text-black">{approvedLoans}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Recent Applications */}
-            <div className="bg-white rounded-xl shadow mb-8">
-              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-black">Recent Applications</h2>
-                <div className="flex space-x-3 items-center">
-                  <Link href="/platform/applications" className="text-blue-600 hover:text-blue-800 text-sm">
-                    View All
-                  </Link>
-                  <button
-                    onClick={() => setShowApplicationModal(true)}
-                    className="text-white hover:bg-gray-800 bg-black px-4 py-2 rounded-lg text-sm flex items-center"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    New Application
-                  </button>
-                </div>
-              </div>
-              
-              <div className="p-6">
-                {applications.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full">
-                      <thead>
-                        <tr className="bg-gray-50 text-black text-sm leading-normal">
-                          <th className="py-3 px-6 text-left rounded-tl-lg">Name</th>
-                          <th className="py-3 px-6 text-left">Created</th>
-                          <th className="py-3 px-6 text-left rounded-tr-lg">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-black text-sm">
-                        {applications.slice(0, 5).map((app, index) => (
-                          <tr key={app.id} className={`hover:bg-gray-50 ${index === applications.length - 1 ? 'border-b-0' : 'border-b border-gray-200'}`}>
-                            <td className="py-3 px-6">{app.name}</td>
-                            <td className="py-3 px-6">
-                              {new Date(app.createdAt).toLocaleDateString()}
-                            </td>
-                            <td className="py-3 px-6">
-                              <Link
-                                href={`/platform/applications/${app.id}`}
-                                className="text-blue-600 hover:text-blue-900 bg-blue-50 px-3 py-1 rounded-lg"
-                              >
-                                View
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-black mb-4">You don&apos;t have any applications yet.</p>
-                    <button
-                      onClick={() => setShowApplicationModal(true)}
-                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
-                    >
-                      Create Your First Application
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            {/* Recent Loans */}
-            <div className="bg-white rounded-xl shadow mb-8">
-              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-black">Recent Loans</h2>
-                <div className="flex space-x-3 items-center">
-                  <Link href="/platform/loans" className="text-blue-600 hover:text-blue-800 text-sm">
-                    View All
-                  </Link>
-                  <Link
-                    href="/platform/loans/apply"
-                    className="text-white hover:bg-gray-800 bg-black px-4 py-2 rounded-lg text-sm flex items-center"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    New Loan
-                  </Link>
-                </div>
-              </div>
-              
-              <div className="p-6">
-                {loanLoading ? (
-                  <div className="flex justify-center items-center h-32">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                  </div>
-                ) : loans.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full">
-                      <thead>
-                        <tr className="bg-gray-50 text-black text-sm leading-normal">
-                          <th className="py-3 px-6 text-left rounded-tl-lg">Amount</th>
-                          <th className="py-3 px-6 text-left">Purpose</th>
-                          <th className="py-3 px-6 text-left">Status</th>
-                          <th className="py-3 px-6 text-left rounded-tr-lg">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-black text-sm">
-                        {loans.slice(0, 5).map((loan, index) => (
-                          <tr key={loan._id} className={`hover:bg-gray-50 ${index === loans.length - 1 || index === 4 ? 'border-b-0' : 'border-b border-gray-200'}`}>
-                            <td className="py-3 px-6">
-                              ${loan.amount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}
-                            </td>
-                            <td className="py-3 px-6">{loan.purpose}</td>
-                            <td className="py-3 px-6">
-                              <span
-                                className={`py-1 px-3 rounded-full text-xs ${
-                                  loan.status === 'approved'
-                                    ? 'bg-green-200 text-green-800'
-                                    : loan.status === 'pending'
-                                    ? 'bg-yellow-200 text-yellow-800'
-                                    : loan.status === 'active'
-                                    ? 'bg-blue-200 text-blue-800'
-                                    : loan.status === 'rejected'
-                                    ? 'bg-red-200 text-red-800'
-                                    : 'bg-gray-200 text-gray-800'
-                                }`}
-                              >
-                                {loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}
-                              </span>
-                            </td>
-                            <td className="py-3 px-6">
-                              <Link
-                                href={`/platform/loans/${loan._id}`}
-                                className="text-blue-600 hover:text-blue-900 bg-blue-50 px-3 py-1 rounded-lg"
-                              >
-                                View
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : mockLoans.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full">
-                      <thead>
-                        <tr className="bg-gray-50 text-black text-sm leading-normal">
-                          <th className="py-3 px-6 text-left rounded-tl-lg">Amount</th>
-                          <th className="py-3 px-6 text-left">Purpose</th>
-                          <th className="py-3 px-6 text-left">Status</th>
-                          <th className="py-3 px-6 text-left rounded-tr-lg">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-black text-sm">
-                        {mockLoans.slice(0, 5).map((loan, index) => (
-                          <tr key={loan._id} className={`hover:bg-gray-50 ${index === mockLoans.length - 1 || index === 4 ? 'border-b-0' : 'border-b border-gray-200'}`}>
-                            <td className="py-3 px-6">
-                              ${loan.amount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })}
-                            </td>
-                            <td className="py-3 px-6">{loan.purpose}</td>
-                            <td className="py-3 px-6">
-                              <span
-                                className={`py-1 px-3 rounded-full text-xs ${
-                                  loan.status === 'approved'
-                                    ? 'bg-green-200 text-green-800'
-                                    : loan.status === 'pending'
-                                    ? 'bg-yellow-200 text-yellow-800'
-                                    : loan.status === 'active'
-                                    ? 'bg-blue-200 text-blue-800'
-                                    : loan.status === 'rejected'
-                                    ? 'bg-red-200 text-red-800'
-                                    : 'bg-gray-200 text-gray-800'
-                                }`}
-                              >
-                                {loan.status.charAt(0).toUpperCase() + loan.status.slice(1)}
-                              </span>
-                            </td>
-                            <td className="py-3 px-6">
-                              <Link
-                                href={`/platform/loans/${loan._id}`}
-                                className="text-blue-600 hover:text-blue-900 bg-blue-50 px-3 py-1 rounded-lg"
-                              >
-                                View
-                              </Link>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-black mb-4">You don&apos;t have any loans yet.</p>
-                    <Link
-                      href="/platform/loans/apply"
-                      className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
-                    >
-                      Apply for Your First Loan
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-black">Quick Actions</h2>
-              </div>
-              <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Link 
-                  href="/platform/loans/apply" 
-                  className="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100"
-                >
-                  <div className="p-2 rounded-full bg-blue-100 text-blue-500 mr-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-black">Apply for Loan</p>
-                    <p className="text-sm text-black">Request a new loan</p>
-                  </div>
-                </Link>
-                
-                <Link 
-                  href="/platform/payments" 
-                  className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100"
-                >
-                  <div className="p-2 rounded-full bg-green-100 text-green-500 mr-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-black">Make Payment</p>
-                    <p className="text-sm text-black">Pay your loan installment</p>
-                  </div>
-                </Link>
-                
-                <Link 
-                  href="/platform/profile" 
-                  className="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100"
-                >
-                  <div className="p-2 rounded-full bg-purple-100 text-purple-500 mr-3">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-medium text-black">Update Profile</p>
-                    <p className="text-sm text-black">Manage your account</p>
-                  </div>
-                </Link>
-              </div>
-            </div>
+              </TabsContent>
+              <TabsContent value="loans" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Loan Distribution by Category</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <BarChart data={barChartData} />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="payments" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Monthly Payment Collection</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pl-2">
+                    <LineChart data={lineChartData} />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
           
-          {/* AI Chat Widget - Desktop version embedded in dashboard */}
-          <div className="hidden lg:block">
-            <div className="bg-white rounded-xl shadow h-full flex flex-col sticky top-6" style={{ maxHeight: "calc(100vh - 340px)" }}>
-              <div className="bg-black text-white p-4 flex justify-between items-center rounded-t-xl">
-                <h3 className="font-medium">Technexus AI Assistant</h3>
-              </div>
-              <ChatContent />
-            </div>
-
-            {/* Today's Activities Widget */}
-            <div className="bg-white rounded-xl shadow mt-6 mb-8">
-              <div className="bg-white text-black p-4 flex justify-between items-center rounded-t-xl border-b border-gray-200">
-                <h3 className="font-medium">Today's Activities</h3>
-              </div>
-              <div className="max-h-96" style={{ overflowY: "auto", overflowX: "hidden" }}>
-                {activities.length > 0 ? (
-                  <ul className="divide-y divide-gray-200">
-                    {activities.map((activity) => (
-                      <li key={activity.id} className="p-4 hover:bg-gray-50">
-                        <div className="flex items-start">
-                          <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center mr-3 ${
-                            activity.type === 'payment' ? 'bg-green-100 text-green-600' :
-                            activity.type === 'application' ? 'bg-blue-100 text-blue-600' :
-                            activity.type === 'loan' ? 'bg-purple-100 text-purple-600' :
-                            activity.type === 'document' ? 'bg-yellow-100 text-yellow-600' :
-                            'bg-gray-100 text-gray-600'
-                          }`}>
-                            {activity.type === 'payment' && (
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                            )}
-                            {activity.type === 'application' && (
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                              </svg>
-                            )}
-                            {activity.type === 'loan' && (
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                              </svg>
-                            )}
-                            {activity.type === 'document' && (
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                              </svg>
-                            )}
-                            {activity.type === 'message' && (
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                              </svg>
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-black">{activity.description}</p>
-                            <p className="text-xs text-gray-500">{activity.time}</p>
-                          </div>
-                          <div className="ml-3">
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              activity.status === 'completed' ? 'bg-green-100 text-green-800' :
-                              activity.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-blue-100 text-blue-800'
-                            }`}>
-                              {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
-                            </span>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="text-center py-6">
-                    <p className="text-gray-500">No activities recorded today</p>
-                  </div>
-                )}
-              </div>
-            </div>
+          {/* AI Assistant Column */}
+          <div className="col-span-1">
+            <AIAgentWidget 
+              agentId="loan-assistant-agent"
+              title="Loan Assistant"
+              description="Ask me any questions about loans, payments, or application status."
+              initialHeight={600}
+              width="full"
+              position="center"
+            />
           </div>
         </div>
       </div>
