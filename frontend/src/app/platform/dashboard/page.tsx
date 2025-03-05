@@ -231,7 +231,7 @@ const PlatformDashboard: React.FC = () => {
         purpose: 'Home Renovation', 
         status: 'approved', 
         createdAt: '2023-03-05T12:00:00Z',
-        user: { _id: user?._id || '' },
+        user: { _id: user?.id || '' },
         interestRate: 5.5,
         term: 36,
         collateral: 'Property',
@@ -246,7 +246,7 @@ const PlatformDashboard: React.FC = () => {
         purpose: 'Business Investment', 
         status: 'active', 
         createdAt: '2023-02-28T10:30:00Z',
-        user: { _id: user?._id || '' },
+        user: { _id: user?.id || '' },
         interestRate: 6.2,
         term: 48,
         collateral: 'Business Assets',
@@ -261,7 +261,7 @@ const PlatformDashboard: React.FC = () => {
         purpose: 'Education Expenses', 
         status: 'pending', 
         createdAt: '2023-02-20T15:45:00Z',
-        user: { _id: user?._id || '' },
+        user: { _id: user?.id || '' },
         interestRate: 4.8,
         term: 24,
         collateral: 'None',
@@ -276,7 +276,7 @@ const PlatformDashboard: React.FC = () => {
         purpose: 'Vehicle Purchase', 
         status: 'active', 
         createdAt: '2023-02-15T09:15:00Z',
-        user: { _id: user?._id || '' },
+        user: { _id: user?.id || '' },
         interestRate: 5.9,
         term: 60,
         collateral: 'Vehicle',
@@ -335,6 +335,16 @@ const PlatformDashboard: React.FC = () => {
   ]);
 
   const { barChartData, lineChartData, pieChartData } = getChartData();
+  
+  // Extract the data arrays for simple charts
+  const lineData = lineChartData.datasets[0].data;
+  const lineLabels = lineChartData.labels;
+  
+  const pieData = pieChartData.datasets[0].data;
+  const pieLabels = pieChartData.labels;
+  
+  const barData = barChartData.datasets[0].data;
+  const barLabels = barChartData.labels;
 
   return (
     <PlatformLayout>
@@ -439,7 +449,7 @@ const PlatformDashboard: React.FC = () => {
                       <CardTitle>Loan Disbursements</CardTitle>
                     </CardHeader>
                     <CardContent className="pl-2">
-                      <LineChart data={lineChartData} />
+                      <LineChart data={lineData} labels={lineLabels} />
                     </CardContent>
                   </Card>
                   <Card className="col-span-3">
@@ -447,7 +457,7 @@ const PlatformDashboard: React.FC = () => {
                       <CardTitle>Loan Types</CardTitle>
                     </CardHeader>
                     <CardContent className="pl-2">
-                      <PieChart data={pieChartData} />
+                      <PieChart data={pieData} labels={pieLabels} />
                     </CardContent>
                   </Card>
                 </div>
@@ -458,7 +468,7 @@ const PlatformDashboard: React.FC = () => {
                     <CardTitle>Loan Distribution by Category</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <BarChart data={barChartData} />
+                    <BarChart data={barData} labels={barLabels} />
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -468,7 +478,7 @@ const PlatformDashboard: React.FC = () => {
                     <CardTitle>Monthly Payment Collection</CardTitle>
                   </CardHeader>
                   <CardContent className="pl-2">
-                    <LineChart data={lineChartData} />
+                    <LineChart data={lineData} labels={lineLabels} />
                   </CardContent>
                 </Card>
               </TabsContent>

@@ -149,23 +149,6 @@ const AdminSidebar: React.FC = () => {
             </Link>
           </li>
           
-          {/* Advanced Automation */}
-          <li>
-            <Link 
-              href="/platform/admin/advanced-automation"
-              className={`flex items-center p-3 rounded-md transition-colors ${
-                isActive('/platform/admin/advanced-automation') 
-                  ? 'bg-blue-700' 
-                  : 'hover:bg-gray-800'
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              <span className={`ml-3 ${expanded ? 'block' : 'hidden'}`}>Advanced Automation</span>
-            </Link>
-          </li>
-          
           {/* AI Agents */}
           <li>
             <Link 
