@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Spinner } from '@/components/ui/Spinner';
@@ -26,7 +26,8 @@ interface Edge {
   targetHandle?: string;
 }
 
-const FlowEditorPage: React.FC = () => {
+// Create a client component that uses searchParams
+function FlowEditorContent() {
   const { state } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -860,143 +861,154 @@ const FlowEditorPage: React.FC = () => {
   
   if (isLoading) {
     return (
-      <AdminLayout>
-        <div className="flex justify-center items-center h-screen">
-          <Spinner size="lg" />
-        </div>
-      </AdminLayout>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner />
+      </div>
     );
   }
   
   return (
-    <AdminLayout>
-      <div className="flex flex-col h-screen">
-        {/* Header */}
-        <div className="bg-white border-b px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <div>
-              <input
-                type="text"
-                className="text-xl font-semibold border-none focus:ring-0 p-0"
-                value={flowName}
-                onChange={(e) => setFlowName(e.target.value)}
-                placeholder="Flow Name"
-              />
-              <input
-                type="text"
-                className="text-sm text-gray-500 border-none focus:ring-0 p-0 w-full"
-                value={flowDescription}
-                onChange={(e) => setFlowDescription(e.target.value)}
-                placeholder="Flow Description"
-              />
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-2 mr-4">
-              <button
-                className="p-1 rounded hover:bg-gray-100"
-                onClick={() => setZoom(zoom + 0.1)}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-              </button>
-              <span className="text-sm">{Math.round(zoom * 100)}%</span>
-              <button
-                className="p-1 rounded hover:bg-gray-100"
-                onClick={() => setZoom(Math.max(0.1, zoom - 0.1))}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                </svg>
-              </button>
-            </div>
-            
-            <Link
-              href="/platform/admin/ai-agents"
-              className="px-3 py-1 border rounded text-sm hover:bg-gray-50"
-            >
-              Cancel
-            </Link>
-            
-            <button
-              className="px-3 py-1 bg-black text-white rounded text-sm hover:bg-gray-800 disabled:bg-gray-400"
-              onClick={saveFlow}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <>
-                  <Spinner size="sm" />
-                  <span className="ml-2">Saving...</span>
-                </>
-              ) : 'Save Flow'}
-            </button>
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="bg-white border-b px-4 py-4 flex justify-between items-center">
+        <div className="flex items-center space-x-4">
+          <div>
+            <input
+              type="text"
+              className="text-xl font-semibold border-none focus:ring-0 p-0"
+              value={flowName}
+              onChange={(e) => setFlowName(e.target.value)}
+              placeholder="Flow Name"
+            />
+            <input
+              type="text"
+              className="text-sm text-gray-500 border-none focus:ring-0 p-0 w-full"
+              value={flowDescription}
+              onChange={(e) => setFlowDescription(e.target.value)}
+              placeholder="Flow Description"
+            />
           </div>
         </div>
         
-        {/* Main content */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Left sidebar (node palette) */}
-          <div className="w-64 border-r bg-gray-50 overflow-y-auto">
-            <div className="p-4">
-              <h3 className="font-medium text-sm uppercase tracking-wider text-gray-500">Node Palette</h3>
-              
-              {nodeTypes.map((category) => (
-                <div key={category.type} className="mt-4">
-                  <h4 className="font-medium text-sm text-gray-700">{category.category}</h4>
-                  <div className="mt-1 space-y-1">
-                    {category.items.map((item) => (
-                      <div
-                        key={item.id}
-                        className={`p-2 rounded cursor-grab ${getNodeColor(category.type)}`}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, category.type, item)}
-                      >
-                        <div className="text-sm font-medium">{item.name}</div>
-                        <div className="text-xs text-gray-500">{item.description}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Center canvas */}
-          <div className="flex-1 relative overflow-hidden">
-            <div
-              ref={canvasRef}
-              className="absolute inset-0 bg-gray-100"
-              onDragOver={handleCanvasDragOver}
-              onDrop={handleCanvasDrop}
-              onClick={handleCanvasClick}
-              onMouseMove={handleCanvasMouseMove}
-              onMouseUp={handleCanvasMouseUp}
-              onMouseLeave={handleCanvasMouseUp}
-              onWheel={handleCanvasWheel}
-              style={{
-                backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
-                backgroundImage: 'radial-gradient(circle, #00000011 1px, transparent 1px)',
-                transform: `translate(${panOffset.x}px, ${panOffset.y}px)`,
-              }}
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 mr-4">
+            <button
+              className="p-1 rounded hover:bg-gray-100"
+              onClick={() => setZoom(zoom + 0.1)}
             >
-              {/* Edges */}
-              {edges.map(renderEdge)}
-              
-              {/* Nodes */}
-              {nodes.map(renderNode)}
-            </div>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+            <span className="text-sm">{Math.round(zoom * 100)}%</span>
+            <button
+              className="p-1 rounded hover:bg-gray-100"
+              onClick={() => setZoom(Math.max(0.1, zoom - 0.1))}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+              </svg>
+            </button>
           </div>
           
-          {/* Right sidebar (node settings) */}
-          {selectedNode && (
-            <div className="w-72 border-l bg-white p-4 overflow-y-auto">
-              {renderNodeSettings()}
-            </div>
-          )}
+          <Link
+            href="/platform/admin/ai-agents"
+            className="px-3 py-1 border rounded text-sm hover:bg-gray-50"
+          >
+            Cancel
+          </Link>
+          
+          <button
+            className="px-3 py-1 bg-black text-white rounded text-sm hover:bg-gray-800 disabled:bg-gray-400"
+            onClick={saveFlow}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <>
+                <Spinner size="sm" />
+                <span className="ml-2">Saving...</span>
+              </>
+            ) : 'Save Flow'}
+          </button>
         </div>
       </div>
+      
+      {/* Main content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left sidebar (node palette) */}
+        <div className="w-64 border-r bg-gray-50 overflow-y-auto">
+          <div className="p-4">
+            <h3 className="font-medium text-sm uppercase tracking-wider text-gray-500">Node Palette</h3>
+            
+            {nodeTypes.map((category) => (
+              <div key={category.type} className="mt-4">
+                <h4 className="font-medium text-sm text-gray-700">{category.category}</h4>
+                <div className="mt-1 space-y-1">
+                  {category.items.map((item) => (
+                    <div
+                      key={item.id}
+                      className={`p-2 rounded cursor-grab ${getNodeColor(category.type)}`}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, category.type, item)}
+                    >
+                      <div className="text-sm font-medium">{item.name}</div>
+                      <div className="text-xs text-gray-500">{item.description}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Center canvas */}
+        <div className="flex-1 relative overflow-hidden">
+          <div
+            ref={canvasRef}
+            className="absolute inset-0 bg-gray-100"
+            onDragOver={handleCanvasDragOver}
+            onDrop={handleCanvasDrop}
+            onClick={handleCanvasClick}
+            onMouseMove={handleCanvasMouseMove}
+            onMouseUp={handleCanvasMouseUp}
+            onMouseLeave={handleCanvasMouseUp}
+            onWheel={handleCanvasWheel}
+            style={{
+              backgroundSize: `${20 * zoom}px ${20 * zoom}px`,
+              backgroundImage: 'radial-gradient(circle, #00000011 1px, transparent 1px)',
+              transform: `translate(${panOffset.x}px, ${panOffset.y}px)`,
+            }}
+          >
+            {/* Edges */}
+            {edges.map(renderEdge)}
+            
+            {/* Nodes */}
+            {nodes.map(renderNode)}
+          </div>
+        </div>
+        
+        {/* Right sidebar (node settings) */}
+        {selectedNode && (
+          <div className="w-72 border-l bg-white p-4 overflow-y-auto">
+            {renderNodeSettings()}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Main page component with Suspense boundary
+const FlowEditorPage: React.FC = () => {
+  return (
+    <AdminLayout>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <Spinner />
+        </div>
+      }>
+        <FlowEditorContent />
+      </Suspense>
     </AdminLayout>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useAuth } from '@/app/AuthContext';
 import { useLoan } from '@/context/LoanContext';
 import PlatformLayout from '@/components/platform/PlatformLayout';
@@ -16,12 +16,28 @@ import {
 import { LineChart, BarChart, PieChart } from '@/components/charts';
 import { getChartData } from '@/lib/chartData';
 import dynamic from 'next/dynamic';
+import { Spinner } from '@/components/ui/Spinner';
 
 // Dynamically import the AIAgentWidget to prevent SSR issues
 const AIAgentWidget = dynamic(
   () => import('@/components/widgets/AIAgentWidget'),
   { ssr: false }
 );
+
+// Chart component that's rendered client-side only
+const ChartContainer = ({ children }: { children: React.ReactNode }) => {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  if (!isClient) {
+    return <div className="h-60 flex items-center justify-center"><Spinner /></div>;
+  }
+  
+  return <>{children}</>;
+};
 
 // Interfaces
 interface Application {
@@ -107,6 +123,160 @@ const AIChatWidget = ({ messages, input, setInput, handleSubmit }: {
       {/* Mobile bubble chat */}
       <MobileChat />
     </>
+  );
+};
+
+// Charts component
+const DashboardCharts = () => {
+  // Get chart data
+  const { barChartData, lineChartData, pieChartData } = getChartData();
+  
+  // Extract the data arrays for simple charts
+  const lineData = lineChartData.datasets[0].data;
+  const lineLabels = lineChartData.labels;
+  
+  const pieData = pieChartData.datasets[0].data;
+  const pieLabels = pieChartData.labels;
+  
+  const barData = barChartData.datasets[0].data;
+  const barLabels = barChartData.labels;
+  
+  return (
+    <Tabs defaultValue="overview" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="loans">Loans</TabsTrigger>
+        <TabsTrigger value="payments">Payments</TabsTrigger>
+      </TabsList>
+      <TabsContent value="overview" className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Loans
+              </CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="h-4 w-4 text-muted-foreground"
+              >
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">$45,231.89</div>
+              <p className="text-xs text-muted-foreground">
+                +20.1% from last month
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Active Loans
+              </CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="h-4 w-4 text-muted-foreground"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">24</div>
+              <p className="text-xs text-muted-foreground">
+                +4 since last week
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Payments
+              </CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="h-4 w-4 text-muted-foreground"
+              >
+                <rect width="20" height="14" x="2" y="5" rx="2" />
+                <path d="M2 10h20" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12,234</div>
+              <p className="text-xs text-muted-foreground">
+                +19% from last month
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <Card className="col-span-4">
+            <CardHeader>
+              <CardTitle>Loan Disbursements</CardTitle>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <ChartContainer>
+                <LineChart data={lineData} labels={lineLabels} />
+              </ChartContainer>
+            </CardContent>
+          </Card>
+          <Card className="col-span-3">
+            <CardHeader>
+              <CardTitle>Loan Types</CardTitle>
+            </CardHeader>
+            <CardContent className="pl-2">
+              <ChartContainer>
+                <PieChart data={pieData} labels={pieLabels} />
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </div>
+      </TabsContent>
+      <TabsContent value="loans" className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Loan Distribution by Category</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <ChartContainer>
+              <BarChart data={barData} labels={barLabels} />
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="payments" className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Monthly Payment Collection</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <ChartContainer>
+              <LineChart data={lineData} labels={lineLabels} />
+            </ChartContainer>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 };
 
@@ -287,10 +457,10 @@ const PlatformDashboard: React.FC = () => {
       },
     ];
     
-    setMockLoans(mockLoanData);
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (loans.length === 0 && !loanLoading) {
+      setMockLoans(mockLoanData);
+    }
+  }, [getLoans, loanLoading, loans]);
   
   // Handle application submission
   const handleApplicationSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -334,18 +504,6 @@ const PlatformDashboard: React.FC = () => {
     { id: 5, type: 'message', description: 'New message from John regarding application #3456', time: '02:20 PM', status: 'unread' },
   ]);
 
-  const { barChartData, lineChartData, pieChartData } = getChartData();
-  
-  // Extract the data arrays for simple charts
-  const lineData = lineChartData.datasets[0].data;
-  const lineLabels = lineChartData.labels;
-  
-  const pieData = pieChartData.datasets[0].data;
-  const pieLabels = pieChartData.labels;
-  
-  const barData = barChartData.datasets[0].data;
-  const barLabels = barChartData.labels;
-
   return (
     <PlatformLayout>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -356,133 +514,9 @@ const PlatformDashboard: React.FC = () => {
         {/* AI Assistant Widget */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="col-span-2">
-            <Tabs defaultValue="overview" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="loans">Loans</TabsTrigger>
-                <TabsTrigger value="payments">Payments</TabsTrigger>
-              </TabsList>
-              <TabsContent value="overview" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Total Loans
-                      </CardTitle>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        className="h-4 w-4 text-muted-foreground"
-                      >
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                      </svg>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">$45,231.89</div>
-                      <p className="text-xs text-muted-foreground">
-                        +20.1% from last month
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Active Loans
-                      </CardTitle>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        className="h-4 w-4 text-muted-foreground"
-                      >
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">24</div>
-                      <p className="text-xs text-muted-foreground">
-                        +4 since last week
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Payments
-                      </CardTitle>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        className="h-4 w-4 text-muted-foreground"
-                      >
-                        <rect width="20" height="14" x="2" y="5" rx="2" />
-                        <path d="M2 10h20" />
-                      </svg>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">12,234</div>
-                      <p className="text-xs text-muted-foreground">
-                        +19% from last month
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Card className="col-span-4">
-                    <CardHeader>
-                      <CardTitle>Loan Disbursements</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pl-2">
-                      <LineChart data={lineData} labels={lineLabels} />
-                    </CardContent>
-                  </Card>
-                  <Card className="col-span-3">
-                    <CardHeader>
-                      <CardTitle>Loan Types</CardTitle>
-                    </CardHeader>
-                    <CardContent className="pl-2">
-                      <PieChart data={pieData} labels={pieLabels} />
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              <TabsContent value="loans" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Loan Distribution by Category</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pl-2">
-                    <BarChart data={barData} labels={barLabels} />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="payments" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Monthly Payment Collection</CardTitle>
-                  </CardHeader>
-                  <CardContent className="pl-2">
-                    <LineChart data={lineData} labels={lineLabels} />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+            <Suspense fallback={<div className="h-96 flex items-center justify-center"><Spinner /></div>}>
+              <DashboardCharts />
+            </Suspense>
           </div>
           
           {/* AI Assistant Column */}

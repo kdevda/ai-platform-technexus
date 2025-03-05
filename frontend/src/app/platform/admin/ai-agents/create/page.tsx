@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Spinner } from '@/components/ui/Spinner';
@@ -38,7 +38,8 @@ interface AgentTemplate {
   config: LangChainConfig | LangFlowConfig;
 }
 
-const CreateAgentPage: React.FC = () => {
+// Create a client component that uses searchParams
+function CreateAgentForm() {
   const { state } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -290,7 +291,6 @@ const CreateAgentPage: React.FC = () => {
     });
   };
   
-  // Render different forms based on agent type
   const renderLangChainForm = () => (
     <div className="space-y-8">
       <div>
@@ -569,46 +569,36 @@ const CreateAgentPage: React.FC = () => {
   
   if (isLoading) {
     return (
-      <AdminLayout>
-        <div className="flex justify-center items-center h-screen">
-          <Spinner size="lg" />
-        </div>
-      </AdminLayout>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner />
+      </div>
     );
   }
   
   return (
-    <AdminLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Create AI Agent</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {template ? `Based on template: ${template.name}` : `Create a new ${agentType} agent`}
-          </p>
+    <div className="py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-semibold text-gray-900">Create New AI Agent</h1>
         </div>
-        
-        {/* Form */}
+      </div>
+      
+      <div className="mt-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit}>
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              {/* Basic Info */}
-              <div className="space-y-8 divide-y divide-gray-200">
-                <div>
-                  <div>
-                    <h3 className="text-lg font-medium leading-6 text-gray-900">Basic Information</h3>
-                    <p className="mt-1 text-sm text-gray-500">Provide basic information about your agent</p>
-                  </div>
-                  
-                  <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <div className="sm:col-span-6">
+          <div className="shadow overflow-hidden sm:rounded-md">
+            <div className="px-4 py-5 bg-white sm:p-6">
+              <div className="grid grid-cols-6 gap-6">
+                <div className="col-span-6">
+                  <div className="grid grid-cols-6 gap-6">
+                    <div className="col-span-6 sm:col-span-3">
                       <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                        Name
+                        Agent Name
                       </label>
                       <input
                         type="text"
                         name="name"
                         id="name"
+                        autoComplete="name"
                         required
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         value={name}
@@ -616,7 +606,7 @@ const CreateAgentPage: React.FC = () => {
                       />
                     </div>
                     
-                    <div className="sm:col-span-6">
+                    <div className="col-span-6">
                       <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                         Description
                       </label>
@@ -698,6 +688,21 @@ const CreateAgentPage: React.FC = () => {
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+// Main page component with Suspense boundary
+const CreateAgentPage: React.FC = () => {
+  return (
+    <AdminLayout>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <Spinner />
+        </div>
+      }>
+        <CreateAgentForm />
+      </Suspense>
     </AdminLayout>
   );
 };
