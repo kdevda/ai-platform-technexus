@@ -7,8 +7,8 @@ import { Analytics } from "@vercel/analytics/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Loan Management App",
-  description: "A modern loan management application",
+  title: "Technexus - Lending as a Service || AI Agent Platform for Loan Management",
+  description: "Technexus is a lending as a service platform that uses AI agents to manage loans.",
 };
 
 export default function RootLayout({

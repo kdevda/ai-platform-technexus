@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import Link from 'next/link';
+import axios from 'axios';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -43,25 +44,20 @@ export default function ContactPage() {
       const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
       console.log('Using backend URL for contact page:', backendUrl);
       
-      const response = await fetch(`${backendUrl}/email/send`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject || `Contact Form: ${formData.company || formData.name}`,
-          message: `
-            Name: ${formData.name}
-            Email: ${formData.email}
-            ${formData.company ? `Company: ${formData.company}` : ''}
-            Subject: ${formData.subject}
-            
-            Message:
-            ${formData.message}
-          `
-        }),
+
+      const response = await axios.post(`${backendUrl}/email/send`, {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject || `Contact Form: ${formData.company || formData.name}`,
+        message: `
+          Name: ${formData.name}
+          Email: ${formData.email}
+          ${formData.company ? `Company: ${formData.company}` : ''}
+          Subject: ${formData.subject}
+          
+          Message:
+          ${formData.message}
+        `
       });
       
       const data = await response.json();
