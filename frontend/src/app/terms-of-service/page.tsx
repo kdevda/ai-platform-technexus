@@ -203,9 +203,11 @@ export default function TermsOfServicePage() {
             
             <address className="not-italic mt-4">
               Technexus Inc.<br />
-              3900 Confederation Parkway<br />
-              Mississauga, ON<br />
-              Canada<br />
+              40 King St W, 41st Floor
+              <br />
+              Toronto, ON M5H 3Y2
+              <br />
+              Canada
               <br />
               Email: legal@technexus.ca<br />
               Phone: (647) 554-4857

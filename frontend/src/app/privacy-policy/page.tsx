@@ -179,9 +179,11 @@ export default function PrivacyPolicyPage() {
             
             <address className="not-italic mt-4">
               Technexus Inc.<br />
-              3900 Condeferation Parkway<br />
-              Mississauga, ON<br />
-              Canada<br />
+              40 King St W, 41st Floor
+              <br />
+              Toronto, ON M5H 3Y2
+              <br />
+              Canada
               <br />
               Email: privacy@technexus.ca<br />
               Phone: (647) 554-4857

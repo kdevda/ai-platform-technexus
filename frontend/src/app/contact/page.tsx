@@ -178,7 +178,11 @@ export default function ContactPage() {
               <div className="mb-12">
                 <h3 className="text-xl font-semibold mb-4 text-black">Headquarters</h3>
                 <p className="text-gray-600">
-                  Toronto, Canada
+                  40 King St W, 41st Floor
+                  <br />
+                  Toronto, ON M5H 3Y2
+                  <br />
+                  Canada
                 </p>
                 <p className="text-gray-600 mt-4">
                   <strong>General Inquiries:</strong><br />
