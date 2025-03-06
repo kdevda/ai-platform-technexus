@@ -8,6 +8,8 @@ import schemaRoutes from './routes/schemaRoutes';
 import permissionRoutes from './routes/permissionRoutes';
 import roleRoutes from './routes/roleRoutes';
 import integrationRoutes from './routes/integrationRoutes';
+import integrationMongoRoutes from './routes/integrationMongoRoutes';
+import emailRoutes from './routes/emailRoutes';
 import { connectDatabases, checkDatabaseConnections } from './services/dbService';
 
 // Load environment variables
@@ -66,6 +68,8 @@ app.use('/api/schema', schemaRoutes);
 app.use('/api/permissions', permissionRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/integrations', integrationRoutes);
+app.use('/api/mongo/integrations', integrationMongoRoutes);
+app.use('/api/email', emailRoutes);
 
 // Start server
 connectDatabases().then(() => {

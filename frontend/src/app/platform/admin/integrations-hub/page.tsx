@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Spinner } from '@/components/ui/Spinner';
 import Image from 'next/image';
+import { LLMIntegration } from './llm-integration';
 
 interface Integration {
   id: string;
@@ -302,118 +303,121 @@ const IntegrationsHub: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6 max-w-7xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-black">Integrations Hub</h1>
-          <p className="text-black mt-2">
-            Connect with third-party services to extend your platform's capabilities.
+      <div className="container mx-auto p-6 space-y-8">
+        <div className="border-b pb-4 mb-8">
+          <h1 className="text-3xl font-bold">Integrations Hub</h1>
+          <p className="text-gray-500 mt-2">
+            Connect your platform to external services and APIs
           </p>
+        </div>
+        
+        {/* LLM Integration Section */}
+        <section className="mb-10">
+          <LLMIntegration />
+        </section>
+        
+        <div className="border-t pt-8 mt-8">
+          <h2 className="text-2xl font-bold mb-6">Other Integrations</h2>
           
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 text-black border border-red-200 rounded-md">
-              {error}
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <Spinner size="lg" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {integrations.map((integration) => (
+                <div
+                  key={integration.id}
+                  className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow transition-all p-4"
+                >
+                  {/* Name at the top */}
+                  <h3 className="font-semibold text-lg text-black text-center mb-2">{integration.name}</h3>
+                  
+                  {/* Logo below name - MADE BIGGER */}
+                  <div className="flex justify-center mb-3">
+                    <div className="w-30 h-16 flex items-center justify-center">
+                      {integration.logoUrl ? (
+                        <Image
+                          src={integration.logoUrl}
+                          alt={`${integration.name} logo`}
+                          width={110}
+                          height={110}
+                          className="object-contain"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                          <span className="text-xl font-bold text-gray-500">{integration.name.charAt(0)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <p className="text-black text-xs mb-3 text-center">{integration.description}</p>
+                  
+                  <div className="flex flex-col space-y-2">
+                    {/* Type badge */}
+                    <div className="flex justify-center">
+                      <span className="inline-block bg-gray-100 text-black text-xs px-2 py-1 rounded-full border border-gray-200">
+                        {integration.type}
+                      </span>
+                    </div>
+                    
+                    {/* Controls */}
+                    <div className="flex items-center justify-between pt-1.5">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          checked={integration.isEnabled}
+                          onChange={(e) => handleToggleIntegration(integration.id, e.target.checked)}
+                        />
+                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-gray-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-black"></div>
+                        <span className="ml-2 text-xs font-medium text-black">{integration.isEnabled ? 'Enabled' : 'Disabled'}</span>
+                      </label>
+                      <button
+                        onClick={() => openConfigModal(integration)}
+                        className="py-1 px-2.5 text-black font-medium text-xs border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Configure
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {/* Add new integration button */}
+              <div 
+                onClick={() => {
+                  const newIntegration: Integration = {
+                    id: `new-${Date.now()}`,
+                    name: 'Resend', // Default to Resend
+                    type: 'email',
+                    description: 'Email delivery service for transactional emails.',
+                    logoUrl: 'https://resend.com/static/favicons/favicon-32x32.png',
+                    isEnabled: false,
+                    configurationFields: DEFAULT_CONFIG_FIELDS.resend,
+                    configuration: {}
+                  };
+                  setSelectedIntegration(newIntegration);
+                  setConfigValues({});
+                  setIsConfigModalOpen(true);
+                }}
+                className="bg-white rounded-lg border border-dashed border-gray-300 shadow-sm hover:shadow hover:border-black transition-all p-4 flex flex-col items-center justify-center h-[210px] cursor-pointer"
+              >
+                <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-2 border border-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+                <p className="font-medium text-black text-sm">Add New Integration</p>
+              </div>
             </div>
           )}
         </div>
-
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <Spinner size="lg" />
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {integrations.map((integration) => (
-              <div
-                key={integration.id}
-                className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow transition-all p-4"
-              >
-                {/* Name at the top */}
-                <h3 className="font-semibold text-lg text-black text-center mb-2">{integration.name}</h3>
-                
-                {/* Logo below name - MADE BIGGER */}
-                <div className="flex justify-center mb-3">
-                  <div className="w-30 h-16 flex items-center justify-center">
-                    {integration.logoUrl ? (
-                      <Image
-                        src={integration.logoUrl}
-                        alt={`${integration.name} logo`}
-                        width={110}
-                        height={110}
-                        className="object-contain"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                        <span className="text-xl font-bold text-gray-500">{integration.name.charAt(0)}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <p className="text-black text-xs mb-3 text-center">{integration.description}</p>
-                
-                <div className="flex flex-col space-y-2">
-                  {/* Type badge */}
-                  <div className="flex justify-center">
-                    <span className="inline-block bg-gray-100 text-black text-xs px-2 py-1 rounded-full border border-gray-200">
-                      {integration.type}
-                    </span>
-                  </div>
-                  
-                  {/* Controls */}
-                  <div className="flex items-center justify-between pt-1.5">
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={integration.isEnabled}
-                        onChange={(e) => handleToggleIntegration(integration.id, e.target.checked)}
-                      />
-                      <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-gray-400 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-black"></div>
-                      <span className="ml-2 text-xs font-medium text-black">{integration.isEnabled ? 'Enabled' : 'Disabled'}</span>
-                    </label>
-                    <button
-                      onClick={() => openConfigModal(integration)}
-                      className="py-1 px-2.5 text-black font-medium text-xs border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      Configure
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            {/* Add new integration button */}
-            <div 
-              onClick={() => {
-                const newIntegration: Integration = {
-                  id: `new-${Date.now()}`,
-                  name: 'Resend', // Default to Resend
-                  type: 'email',
-                  description: 'Email delivery service for transactional emails.',
-                  logoUrl: 'https://resend.com/static/favicons/favicon-32x32.png',
-                  isEnabled: false,
-                  configurationFields: DEFAULT_CONFIG_FIELDS.resend,
-                  configuration: {}
-                };
-                setSelectedIntegration(newIntegration);
-                setConfigValues({});
-                setIsConfigModalOpen(true);
-              }}
-              className="bg-white rounded-lg border border-dashed border-gray-300 shadow-sm hover:shadow hover:border-black transition-all p-4 flex flex-col items-center justify-center h-[210px] cursor-pointer"
-            >
-              <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mb-2 border border-gray-200">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-              </div>
-              <p className="font-medium text-black text-sm">Add New Integration</p>
-            </div>
-          </div>
-        )}
 
         {/* Configuration Modal with transparent background - modern design */}
         {isConfigModalOpen && selectedIntegration && (

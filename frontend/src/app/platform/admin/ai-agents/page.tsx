@@ -6,6 +6,7 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import { Spinner } from '@/components/ui/Spinner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { FlowBuilder } from './flow-builder';
 
 interface Agent {
   id: string;
@@ -18,6 +19,7 @@ interface Agent {
   config: any;
   lastRun?: string;
   createdBy: string;
+  integrationId?: string;
 }
 
 interface AgentTemplate {
@@ -28,6 +30,7 @@ interface AgentTemplate {
   category: string;
   useCase: string;
   thumbnail: string;
+  integrationId?: string;
 }
 
 const AIAgentsPage: React.FC = () => {
@@ -40,6 +43,8 @@ const AIAgentsPage: React.FC = () => {
   const [showTemplates, setShowTemplates] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [showFlowBuilder, setShowFlowBuilder] = useState(false);
+  const [selectedAgentId, setSelectedAgentId] = useState<string | undefined>(undefined);
 
   // Fetch agents and templates
   useEffect(() => {
@@ -224,6 +229,13 @@ const AIAgentsPage: React.FC = () => {
     router.push(`/platform/admin/ai-agents/create?type=${type}`);
   };
 
+  const handleCreateFlow = (agentId?: string) => {
+    setSelectedAgentId(agentId);
+    setShowFlowBuilder(true);
+    setShowTemplates(false);
+    setCreatingAgent(false);
+  };
+
   const filteredTemplates = templates.filter(template => {
     const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
       template.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -271,65 +283,252 @@ const AIAgentsPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        {/* Page header */}
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-semibold">AI Agents</h1>
-          
-          <div className="flex items-center space-x-4">
+      <div className="p-6 max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold text-black">AI Agents</h1>
+          <div className="flex space-x-2">
             <button
-              onClick={() => setShowTemplates(!showTemplates)}
-              className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              onClick={() => {
+                setShowTemplates(true);
+                setCreatingAgent(false);
+                setShowFlowBuilder(false);
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
             >
-              {showTemplates ? 'View Agents' : 'Browse Templates'}
+              Create Agent
             </button>
-            
-            <div className="relative inline-block text-left">
-              <button
-                onClick={() => setCreatingAgent(!creatingAgent)}
-                className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
-              >
-                Create Agent
-              </button>
-              
-              {creatingAgent && (
-                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                    <button
-                      onClick={() => handleCreateCustomAgent('langchain')}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                      role="menuitem"
-                    >
-                      Create LangChain Agent
-                    </button>
-                    <button
-                      onClick={() => handleCreateCustomAgent('langflow')}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
-                      role="menuitem"
-                    >
-                      Create LangFlow Agent
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+            <button
+              onClick={() => handleCreateFlow()}
+              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+            >
+              Create Flow
+            </button>
           </div>
         </div>
-        
-        {/* Page body (conditionally show agents list or templates) */}
-        {loading ? (
+
+        {/* Loading state */}
+        {loading && (
           <div className="flex justify-center items-center h-64">
             <Spinner size="lg" />
           </div>
-        ) : showTemplates ? (
-          // Templates view
-          <div>
-            {/* Rest of the template view code */}
+        )}
+
+        {/* Show flow builder */}
+        {!loading && showFlowBuilder && (
+          <div className="mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Create Agent Flow</h2>
+              <button
+                onClick={() => setShowFlowBuilder(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                &times; Close
+              </button>
+            </div>
+            <FlowBuilder agentId={selectedAgentId} />
           </div>
-        ) : (
-          // Agents list
+        )}
+
+        {/* Show templates */}
+        {!loading && showTemplates && (
           <div>
-            {/* Rest of the agents list code */}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">Agent Templates</h2>
+              <p className="text-gray-600">
+                Choose a template to quickly create a pre-configured agent
+              </p>
+            </div>
+
+            {/* Template filters */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              <button
+                onClick={() => setSelectedCategory('all')}
+                className={`px-3 py-1 rounded-full text-sm ${
+                  selectedCategory === 'all'
+                    ? 'bg-blue-100 text-blue-800'
+                    : 'bg-gray-100 text-gray-800'
+                }`}
+              >
+                All
+              </button>
+              {/* Add category filter buttons here */}
+            </div>
+
+            {/* Templates grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTemplates.map((template) => (
+                <div
+                  key={template.id}
+                  className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="h-40 bg-gray-200 relative">
+                    {/* Template thumbnail */}
+                    <img
+                      src={template.thumbnail || '/placeholder.png'}
+                      alt={template.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 right-2">
+                      {getTypeBadge(template.type)}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg">{template.name}</h3>
+                    <p className="text-gray-600 text-sm mb-3">
+                      {template.description}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">
+                        {template.category}
+                      </span>
+                      <button
+                        onClick={() => handleCreateFromTemplate(template.id)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        Use Template
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Show agents */}
+        {!loading && !showTemplates && !showFlowBuilder && (
+          <div>
+            {agents.length === 0 ? (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No agents created yet
+                </h3>
+                <p className="text-gray-500 mb-6">
+                  Get started by creating your first AI agent
+                </p>
+                <button
+                  onClick={() => setShowTemplates(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Browse Templates
+                </button>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Name
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Type
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Last Run
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Created
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {agents.map((agent) => (
+                      <tr key={agent.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {agent.name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {agent.description}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {getTypeBadge(agent.type)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(
+                              agent.status
+                            )}`}
+                          >
+                            {agent.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {agent.lastRun
+                            ? new Date(agent.lastRun).toLocaleString()
+                            : 'Never'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(agent.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-end space-x-2">
+                            <Link
+                              href={`/platform/admin/ai-agents/${agent.id}`}
+                              className="text-blue-600 hover:text-blue-900"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              onClick={() => handleCreateFlow(agent.id)}
+                              className="text-purple-600 hover:text-purple-900"
+                            >
+                              Flow
+                            </button>
+                            <button
+                              onClick={() =>
+                                toggleAgentStatus(agent.id, agent.status)
+                              }
+                              className="text-green-600 hover:text-green-900"
+                            >
+                              {agent.status === 'active'
+                                ? 'Deactivate'
+                                : 'Activate'}
+                            </button>
+                            <button
+                              onClick={() => deleteAgent(agent.id)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>

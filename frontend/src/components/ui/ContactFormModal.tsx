@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 interface ContactFormModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, he
     submitted: false,
     error: false,
     message: '',
+    loading: false
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -28,23 +30,78 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, he
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // This would be replaced with actual form submission logic
+    
+    // Set loading state
     setFormStatus({
-      submitted: true,
+      ...formStatus,
+      loading: true,
       error: false,
-      message: 'Thank you for your interest. We will get back to you shortly.',
+      message: ''
     });
     
-    // Reset form after submission
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      phone: '',
-      message: '',
-    });
+    console.log('Submitting contact form:', formData);
+    
+    try {
+      // Use the backend API endpoint instead of the Next.js API route
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      console.log('Using backend URL for contact form:', backendUrl);
+      
+      const response = await axios.post(`${backendUrl}/email/send`, {
+        name: formData.name,
+        email: formData.email,
+        subject: `Contact Form: ${formData.company || formData.name}`,
+        message: `
+          Name: ${formData.name}
+          Email: ${formData.email}
+          ${formData.company ? `Company: ${formData.company}` : ''}
+          ${formData.phone ? `Phone: ${formData.phone}` : ''}
+          
+          Message:
+          ${formData.message}
+        `
+      });
+      
+      console.log('Email API response:', response.data);
+      
+      // Display success message
+      setFormStatus({
+        submitted: true,
+        error: false,
+        message: 'Thank you for your interest. We will get back to you shortly.',
+        loading: false
+      });
+      
+      // Reset form after submission
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        message: '',
+      });
+    } catch (error) {
+      console.error('Error sending contact form email:', error);
+      
+      let errorMessage = 'There was an error submitting your form. Please try again later.';
+      
+      if (axios.isAxiosError(error) && error.response) {
+        console.error('API response error:', error.response.data);
+        
+        if (error.response.data?.error) {
+          errorMessage += ` (${error.response.data.error})`;
+        }
+      }
+      
+      // Handle error
+      setFormStatus({
+        submitted: true,
+        error: true,
+        message: errorMessage,
+        loading: false
+      });
+    }
   };
 
   if (!isOpen) return null;
@@ -82,11 +139,22 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, he
           
           {formStatus.submitted ? (
             <div className="text-center py-8">
-              <svg className="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <h3 className="text-xl font-bold text-green-800 mb-2">Thank You!</h3>
-              <p className="text-green-700 mb-6">{formStatus.message}</p>
+              {formStatus.error ? (
+                <>
+                  <svg className="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <h3 className="text-xl font-bold text-red-800 mb-2">Oops!</h3>
+                </>
+              ) : (
+                <>
+                  <svg className="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <h3 className="text-xl font-bold text-green-800 mb-2">Thank You!</h3>
+                </>
+              )}
+              <p className={`${formStatus.error ? 'text-red-700' : 'text-green-700'} mb-6`}>{formStatus.message}</p>
               <button 
                 onClick={onClose}
                 className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors"
@@ -164,14 +232,24 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, he
                   type="button" 
                   onClick={onClose} 
                   className="px-4 py-2 border border-gray-300 text-gray-700 rounded mr-2 hover:bg-gray-50"
+                  disabled={formStatus.loading}
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                  className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 flex items-center"
+                  disabled={formStatus.loading}
                 >
-                  Submit
+                  {formStatus.loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Sending...
+                    </>
+                  ) : 'Submit'}
                 </button>
               </div>
             </form>

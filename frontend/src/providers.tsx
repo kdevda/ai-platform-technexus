@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AuthProvider } from '@/app/AuthContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { LoanProvider } from '@/context/LoanContext';
 
 interface ProvidersProps {

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar } from '@/components/ui/avatar';
 import { Scrollbar } from '@/components/ui/scrollbar';
-import { useAuth } from '@/app/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, Send } from 'lucide-react';
 import axios from 'axios';

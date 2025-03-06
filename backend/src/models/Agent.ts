@@ -6,6 +6,7 @@ export interface IAgent extends Document {
   type: 'langchain' | 'langflow' | 'custom';
   status: 'active' | 'inactive' | 'draft';
   config: any;
+  integrationId?: mongoose.Types.ObjectId | string;
   createdBy: mongoose.Types.ObjectId | string;
   lastRun?: Date;
   createdAt: Date;
@@ -43,6 +44,7 @@ export interface IAgentTemplate extends Document {
   useCase: string;
   thumbnail: string;
   config: any;
+  integrationId?: mongoose.Types.ObjectId | string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -72,6 +74,10 @@ const agentSchema = new Schema<IAgent>(
     config: {
       type: Schema.Types.Mixed,
       required: true,
+    },
+    integrationId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Integration',
     },
     createdBy: {
       type: Schema.Types.ObjectId,
@@ -168,6 +174,10 @@ const agentTemplateSchema = new Schema<IAgentTemplate>(
       type: Schema.Types.Mixed,
       required: true,
     },
+    integrationId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Integration',
+    },
   },
   {
     timestamps: true,
@@ -178,8 +188,11 @@ const agentTemplateSchema = new Schema<IAgentTemplate>(
 interface IAgentFlow extends Document {
   name: string;
   description: string;
+  version: string;
   nodes: any[];
   edges: any[];
+  agentId: mongoose.Types.ObjectId | string;
+  integrationId?: mongoose.Types.ObjectId | string;
   createdBy: mongoose.Types.ObjectId | string;
   createdAt: Date;
   updatedAt: Date;
@@ -196,6 +209,10 @@ const agentFlowSchema = new Schema<IAgentFlow>(
       type: String,
       default: '',
     },
+    version: {
+      type: String,
+      required: true,
+    },
     nodes: {
       type: Schema.Types.Mixed,
       required: true,
@@ -203,6 +220,15 @@ const agentFlowSchema = new Schema<IAgentFlow>(
     edges: {
       type: Schema.Types.Mixed,
       required: true,
+    },
+    agentId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Agent',
+      required: true,
+    },
+    integrationId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Integration',
     },
     createdBy: {
       type: Schema.Types.ObjectId,

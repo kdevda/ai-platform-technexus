@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
-import { useAuth } from '@/app/AuthContext';
+import React, { useEffect, useState, Suspense, useMemo, useRef } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useLoan } from '@/context/LoanContext';
 import PlatformLayout from '@/components/platform/PlatformLayout';
 import Link from 'next/link';
@@ -126,30 +126,38 @@ const AIChatWidget = ({ messages, input, setInput, handleSubmit }: {
   );
 };
 
-// Charts component
-const DashboardCharts = () => {
-  // Get chart data
-  const { barChartData, lineChartData, pieChartData } = getChartData();
-  
-  // Add null checks and default values to prevent errors
-  const lineData = lineChartData?.datasets?.[0]?.data || [];
-  const lineLabels = lineChartData?.labels || [];
-  
-  const pieData = pieChartData?.datasets?.[0]?.data || [];
-  const pieLabels = pieChartData?.labels || [];
-  
-  const barData = barChartData?.datasets?.[0]?.data || [];
-  const barLabels = barChartData?.labels || [];
-  
+// Replace the DashboardCharts component with more useful widgets
+const DashboardContent = () => {
+  // Get data from the parent component
+  const { state: { loans = [] } } = useLoan();
+  const { state: { user } } = useAuth();
+  const activeLoans = loans.filter((loan) => loan.status === 'active').length;
+  const pendingLoans = loans.filter((loan) => loan.status === 'pending').length;
+  const totalLoanAmount = loans.reduce((total, loan) => total + (loan.amount || 0), 0);
+
+  // Mock activities data
+  const activities = [
+    { id: 1, type: 'payment', description: 'Payment received for Loan #1234', time: '09:30 AM', status: 'completed' },
+    { id: 2, type: 'application', description: 'New application submitted', time: '10:15 AM', status: 'pending' },
+    { id: 3, type: 'loan', description: 'Loan #5678 approved', time: '11:45 AM', status: 'completed' },
+    { id: 4, type: 'document', description: 'Document verification pending for Loan #9012', time: '01:30 PM', status: 'pending' },
+    { id: 5, type: 'message', description: 'New message from John regarding application #3456', time: '02:20 PM', status: 'unread' },
+    { id: 6, type: 'payment', description: 'Upcoming payment reminder for Loan #2345', time: '04:15 PM', status: 'pending' },
+    { id: 7, type: 'application', description: 'Application #4567 under review', time: 'Yesterday', status: 'pending' },
+    { id: 8, type: 'loan', description: 'Rate change notification for Loan #6789', time: 'Yesterday', status: 'completed' },
+  ];
+
   return (
     <Tabs defaultValue="overview" className="space-y-4">
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="loans">Loans</TabsTrigger>
-        <TabsTrigger value="payments">Payments</TabsTrigger>
+        <TabsTrigger value="applications">Applications</TabsTrigger>
+        <TabsTrigger value="activities">Activities</TabsTrigger>
       </TabsList>
+      
       <TabsContent value="overview" className="space-y-4">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -169,9 +177,9 @@ const DashboardCharts = () => {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
+              <div className="text-2xl font-bold">{loans.length}</div>
               <p className="text-xs text-muted-foreground">
-                +20.1% from last month
+                {loans.length > 0 ? '+1 from last month' : 'No loans yet'}
               </p>
             </CardContent>
           </Card>
@@ -196,16 +204,16 @@ const DashboardCharts = () => {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">24</div>
+              <div className="text-2xl font-bold">{activeLoans}</div>
               <p className="text-xs text-muted-foreground">
-                +4 since last week
+                {pendingLoans} pending approval
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Payments
+                Applications
               </CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -222,57 +230,347 @@ const DashboardCharts = () => {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">12,234</div>
+              <div className="text-2xl font-bold">{loans.length}</div>
               <p className="text-xs text-muted-foreground">
-                +19% from last month
+                {loans.length > 0 ? `Last: ${loans[0]?.purpose}` : 'No loans yet'}
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Amount
+              </CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="h-4 w-4 text-muted-foreground"
+              >
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">${totalLoanAmount.toLocaleString()}</div>
+              <p className="text-xs text-muted-foreground">
+                Across all loans
               </p>
             </CardContent>
           </Card>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <Card className="col-span-4">
+        
+        {/* Activities & Notifications Section */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card className="col-span-1">
             <CardHeader>
-              <CardTitle>Loan Disbursements</CardTitle>
+              <CardTitle>Recent Activities</CardTitle>
             </CardHeader>
-            <CardContent className="pl-2">
-              <ChartContainer>
-                <LineChart data={lineData} labels={lineLabels} />
-              </ChartContainer>
+            <CardContent>
+              <div className="space-y-4">
+                {activities.slice(0, 5).map((activity) => (
+                  <div key={activity.id} className="flex items-start space-x-4">
+                    <div className={`rounded-full p-2 ${
+                      activity.status === 'completed' ? 'bg-green-100' : 
+                      activity.status === 'pending' ? 'bg-yellow-100' : 'bg-blue-100'
+                    }`}>
+                      {activity.type === 'payment' && (
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      )}
+                      {activity.type === 'application' && (
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      )}
+                      {activity.type === 'loan' && (
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      )}
+                      {activity.type === 'document' && (
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      )}
+                      {activity.type === 'message' && (
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{activity.description}</p>
+                      <p className="text-xs text-gray-500">{activity.time}</p>
+                    </div>
+                    <div className={`text-xs px-2 py-1 rounded-full ${
+                      activity.status === 'completed' ? 'bg-green-100 text-green-800' : 
+                      activity.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                      'bg-blue-100 text-blue-800'
+                    }`}>
+                      {activity.status}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 text-center">
+                <button className="text-sm text-blue-600 hover:text-blue-800">
+                  View all activities
+                </button>
+              </div>
             </CardContent>
           </Card>
-          <Card className="col-span-3">
+          
+          <Card className="col-span-1">
             <CardHeader>
-              <CardTitle>Loan Types</CardTitle>
+              <CardTitle>Notifications</CardTitle>
             </CardHeader>
-            <CardContent className="pl-2">
-              <ChartContainer>
-                <PieChart data={pieData} labels={pieLabels} />
-              </ChartContainer>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-yellow-700">
+                        <span className="font-medium">Attention!</span> Payment due in 3 days for Loan #1234.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-blue-700">
+                        <span className="font-medium">New Feature!</span> AI Assistant is now available to help you manage your loans.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <p className="text-sm text-green-700">
+                        <span className="font-medium">Success!</span> Your last payment has been processed successfully.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 text-center">
+                <button className="text-sm text-blue-600 hover:text-blue-800">
+                  View all notifications
+                </button>
+              </div>
             </CardContent>
           </Card>
         </div>
       </TabsContent>
+      
       <TabsContent value="loans" className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Loan Distribution by Category</CardTitle>
+            <CardTitle>Your Loans</CardTitle>
           </CardHeader>
-          <CardContent className="pl-2">
-            <ChartContainer>
-              <BarChart data={barData} labels={barLabels} />
-            </ChartContainer>
+          <CardContent>
+            {loans.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500">You don't have any loans yet.</p>
+                <button className="mt-2 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">
+                  Apply for a loan
+                </button>
+              </div>
+            ) : (
+              <div className="rounded-md border">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        ID
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Amount
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Purpose
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Date
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {loans.map((loan) => (
+                      <tr key={loan._id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {loan._id.substring(0, 8)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          ${loan.amount.toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            loan.status === 'approved' ? 'bg-green-100 text-green-800' :
+                            loan.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            loan.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-blue-100 text-blue-800'
+                          }`}>
+                            {loan.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {loan.purpose}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(loan.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </TabsContent>
-      <TabsContent value="payments" className="space-y-4">
+      
+      <TabsContent value="applications" className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Monthly Payment Collection</CardTitle>
+            <CardTitle>Your Applications</CardTitle>
           </CardHeader>
-          <CardContent className="pl-2">
-            <ChartContainer>
-              <LineChart data={lineData} labels={lineLabels} />
-            </ChartContainer>
+          <CardContent>
+            {loans.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500">You don't have any applications yet.</p>
+                <button 
+                  className="mt-2 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
+                  onClick={() => alert('Create new application functionality coming soon')}
+                >
+                  Create new application
+                </button>
+              </div>
+            ) : (
+              <div className="rounded-md border">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        ID
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Date
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {loans.map((loan) => (
+                      <tr key={loan._id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {loan._id.substring(0, 8)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {loan.purpose}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(loan.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            Pending
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </TabsContent>
+      
+      <TabsContent value="activities" className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>All Activities</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {activities.map((activity) => (
+                <div key={activity.id} className="flex items-start space-x-4">
+                  <div className={`rounded-full p-2 ${
+                    activity.status === 'completed' ? 'bg-green-100' : 
+                    activity.status === 'pending' ? 'bg-yellow-100' : 'bg-blue-100'
+                  }`}>
+                    {activity.type === 'payment' && (
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    )}
+                    {activity.type === 'application' && (
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    )}
+                    {activity.type === 'loan' && (
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    )}
+                    {activity.type === 'document' && (
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    )}
+                    {activity.type === 'message' && (
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{activity.description}</p>
+                    <p className="text-xs text-gray-500">{activity.time}</p>
+                  </div>
+                  <div className={`text-xs px-2 py-1 rounded-full ${
+                    activity.status === 'completed' ? 'bg-green-100 text-green-800' : 
+                    activity.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {activity.status}
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </TabsContent>
@@ -286,7 +584,10 @@ const PlatformDashboard: React.FC = () => {
   const { user } = authState;
   const { loans, loading: loanLoading } = loanState;
   
-  // Add state for applications
+  // Add a ref to track if we've already loaded data
+  const isFirstLoad = useRef(false);
+  
+  // Application states
   const [applications, setApplications] = useState<Application[]>([]);
   const [loadingApplications, setLoadingApplications] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
@@ -295,14 +596,32 @@ const PlatformDashboard: React.FC = () => {
     amount: '',
   });
   
-  // Add state for mock loans
+  // Mock loan data for development
   const [mockLoans, setMockLoans] = useState<any[]>([]);
   
-  // Chat state
-  const [chatMessages, setChatMessages] = useState([
-    { sender: 'ai', text: 'How can I assist you today?' }
-  ]);
+  // Get the loans to use for chart data (real or mock)
+  const loansForCharts = loans.length > 0 ? loans : mockLoans;
+  
+  // Chat states
+  const [chatMessages, setChatMessages] = useState<Array<{sender: string; text: string}>>([]);
   const [chatInput, setChatInput] = useState('');
+  const [showMobileChat, setShowMobileChat] = useState(false);
+
+  // Use useMemo to cache chart data and prevent unnecessary recalculations
+  const { barChartData, lineChartData, pieChartData } = useMemo(() => {
+    console.log('Generating chart data...');
+    return getChartData();
+  }, []);
+   
+  // Extract the data arrays for simple charts with null checks
+  const lineData = lineChartData?.datasets?.[0]?.data || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const lineLabels = lineChartData?.labels || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+   
+  const pieData = pieChartData?.datasets?.[0]?.data || [25, 25, 25, 25];
+  const pieLabels = pieChartData?.labels || ['Active', 'Completed', 'Pending', 'Defaulted'];
+   
+  const barData = barChartData?.datasets?.[0]?.data || [10, 20, 30, 40, 50, 60];
+  const barLabels = barChartData?.labels || ['Personal', 'Business', 'Education', 'Home', 'Vehicle', 'Medical'];
   
   // Handle chat submit
   const handleChatSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -362,20 +681,25 @@ const PlatformDashboard: React.FC = () => {
   );
   
   useEffect(() => {
-    // Only fetch loans once when the component mounts
-    getLoans();
+    // Track if the component is mounted to prevent state updates after unmount
+    let isMounted = true;
     
-    // Fetch applications
-    const fetchApplications = async () => {
-      setLoadingApplications(true);
-      try {
-        const res = await axios.get('/api/applications');
-        setApplications(res.data);
-      } catch (error: any) {
-        // Don't log 404 errors as they're expected when endpoint doesn't exist
-        if (error.response && error.response.status === 404) {
-          console.log('Using mock application data - API endpoint not implemented yet');
-          // Provide mock data
+    // Function to fetch all necessary data
+    const fetchDashboardData = async () => {
+      // Only fetch loans if we don't already have them and we're not already loading them
+      if (loans.length === 0 && !loanLoading && !isFirstLoad.current) {
+        console.log('Fetching loans...');
+        getLoans();
+        
+        // Mark that we've already initiated loading
+        isFirstLoad.current = true;
+      }
+      
+      // Fetch applications
+      if (isMounted) {
+        setLoadingApplications(true);
+        try {
+          // Always use mock data instead of making the failing API call
           setApplications([
             { id: '1', name: 'Home Loan Application', createdAt: '2023-03-01T12:00:00Z', updatedAt: '2023-03-01T12:00:00Z' },
             { id: '2', name: 'Business Expansion Loan', createdAt: '2023-02-25T10:30:00Z', updatedAt: '2023-02-25T10:30:00Z' },
@@ -383,84 +707,93 @@ const PlatformDashboard: React.FC = () => {
             { id: '4', name: 'Education Loan', createdAt: '2023-02-15T09:15:00Z', updatedAt: '2023-02-15T09:15:00Z' },
             { id: '5', name: 'Vehicle Financing', createdAt: '2023-02-10T11:20:00Z', updatedAt: '2023-02-10T11:20:00Z' },
           ]);
-        } else {
-          setApplications([]);
+        } catch (error: any) {
+          console.error('Error fetching applications:', error);
+          if (isMounted) {
+            setApplications([]);
+          }
+        } finally {
+          if (isMounted) {
+            setLoadingApplications(false);
+          }
         }
-      } finally {
-        setLoadingApplications(false);
+      }
+      
+      // Set mock loan data if loans array is empty and we have a user
+      if (loans.length === 0 && user?._id && isMounted) {
+        const mockLoanData = [
+          { 
+            _id: 'm1', 
+            amount: 15000, 
+            purpose: 'Home Renovation', 
+            status: 'approved', 
+            createdAt: '2023-03-05T12:00:00Z',
+            user: { _id: user?._id || '' },
+            interestRate: 5.5,
+            term: 36,
+            collateral: 'Property',
+            collateralValue: 150000,
+            startDate: '2023-03-10T00:00:00Z',
+            endDate: '2026-03-10T00:00:00Z',
+            updatedAt: '2023-03-05T12:00:00Z'
+          },
+          { 
+            _id: 'm2', 
+            amount: 25000, 
+            purpose: 'Business Investment', 
+            status: 'active', 
+            createdAt: '2023-02-28T10:30:00Z',
+            user: { _id: user?._id || '' },
+            interestRate: 6.2,
+            term: 48,
+            collateral: 'Business Assets',
+            collateralValue: 75000,
+            startDate: '2023-03-15T00:00:00Z',
+            endDate: '2027-03-15T00:00:00Z',
+            updatedAt: '2023-02-28T10:30:00Z'
+          },
+          { 
+            _id: 'm3', 
+            amount: 5000, 
+            purpose: 'Education Expenses', 
+            status: 'pending', 
+            createdAt: '2023-02-20T15:45:00Z',
+            user: { _id: user?._id || '' },
+            interestRate: 4.8,
+            term: 24,
+            collateral: 'None',
+            collateralValue: 0,
+            startDate: '',
+            endDate: '',
+            updatedAt: '2023-02-20T15:45:00Z'
+          },
+          { 
+            _id: 'm4', 
+            amount: 10000, 
+            purpose: 'Vehicle Purchase', 
+            status: 'active', 
+            createdAt: '2023-02-15T09:15:00Z',
+            user: { _id: user?._id || '' },
+            interestRate: 5.9,
+            term: 60,
+            collateral: 'Vehicle',
+            collateralValue: 18000,
+            startDate: '2023-03-01T00:00:00Z',
+            endDate: '2028-03-01T00:00:00Z',
+            updatedAt: '2023-02-15T09:15:00Z'
+          },
+        ];
+        setMockLoans(mockLoanData);
       }
     };
     
-    fetchApplications();
+    fetchDashboardData();
     
-    // Set mock loan data if loans array is empty
-    const mockLoanData = [
-      { 
-        _id: 'm1', 
-        amount: 15000, 
-        purpose: 'Home Renovation', 
-        status: 'approved', 
-        createdAt: '2023-03-05T12:00:00Z',
-        user: { _id: user?.id || '' },
-        interestRate: 5.5,
-        term: 36,
-        collateral: 'Property',
-        collateralValue: 150000,
-        startDate: '2023-03-10T00:00:00Z',
-        endDate: '2026-03-10T00:00:00Z',
-        updatedAt: '2023-03-05T12:00:00Z'
-      },
-      { 
-        _id: 'm2', 
-        amount: 25000, 
-        purpose: 'Business Investment', 
-        status: 'active', 
-        createdAt: '2023-02-28T10:30:00Z',
-        user: { _id: user?.id || '' },
-        interestRate: 6.2,
-        term: 48,
-        collateral: 'Business Assets',
-        collateralValue: 75000,
-        startDate: '2023-03-15T00:00:00Z',
-        endDate: '2027-03-15T00:00:00Z',
-        updatedAt: '2023-02-28T10:30:00Z'
-      },
-      { 
-        _id: 'm3', 
-        amount: 5000, 
-        purpose: 'Education Expenses', 
-        status: 'pending', 
-        createdAt: '2023-02-20T15:45:00Z',
-        user: { _id: user?.id || '' },
-        interestRate: 4.8,
-        term: 24,
-        collateral: 'None',
-        collateralValue: 0,
-        startDate: '',
-        endDate: '',
-        updatedAt: '2023-02-20T15:45:00Z'
-      },
-      { 
-        _id: 'm4', 
-        amount: 10000, 
-        purpose: 'Vehicle Purchase', 
-        status: 'active', 
-        createdAt: '2023-02-15T09:15:00Z',
-        user: { _id: user?.id || '' },
-        interestRate: 5.9,
-        term: 60,
-        collateral: 'Vehicle',
-        collateralValue: 18000,
-        startDate: '2023-03-01T00:00:00Z',
-        endDate: '2028-03-01T00:00:00Z',
-        updatedAt: '2023-02-15T09:15:00Z'
-      },
-    ];
-    
-    if (loans.length === 0 && !loanLoading) {
-      setMockLoans(mockLoanData);
-    }
-  }, [getLoans, loanLoading, loans]);
+    // Cleanup function to prevent setting state after unmount
+    return () => {
+      isMounted = false;
+    };
+  }, [loans.length, loanLoading, user?._id, getLoans]); // Use only needed dependencies and rely on ref to prevent repeats
   
   // Handle application submission
   const handleApplicationSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -504,6 +837,15 @@ const PlatformDashboard: React.FC = () => {
     { id: 5, type: 'message', description: 'New message from John regarding application #3456', time: '02:20 PM', status: 'unread' },
   ]);
 
+  const userRole = user?.role || 'No role found';
+  const hasAdminRole = user?.roles?.includes('ADMIN') || false;
+  console.log('User info:', { 
+    user,
+    role: userRole,
+    hasAdminRole,
+    roles: user?.roles
+  });
+
   return (
     <PlatformLayout>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -514,9 +856,9 @@ const PlatformDashboard: React.FC = () => {
         {/* AI Assistant Widget */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="col-span-2">
-            <Suspense fallback={<div className="h-96 flex items-center justify-center"><Spinner /></div>}>
-              <DashboardCharts />
-            </Suspense>
+            <ChartContainer>
+              <DashboardContent />
+            </ChartContainer>
           </div>
           
           {/* AI Assistant Column */}

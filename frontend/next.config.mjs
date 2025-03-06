@@ -11,6 +11,15 @@ const nextConfig = {
   images: {
     domains: ['i.postimg.cc', 'assets.stickpng.com', 'resend.com'],
   },
+  // Add rewrites for API proxy
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5000/api/:path*', // Proxy to Backend
+      },
+    ];
+  },
 };
 
 export default nextConfig; 

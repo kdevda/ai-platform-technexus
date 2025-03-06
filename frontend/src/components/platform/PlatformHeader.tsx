@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/app/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 const PlatformHeader: React.FC = () => {
@@ -102,6 +102,26 @@ const PlatformHeader: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Debug tools - Only visible in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed bottom-2 right-2 z-50 bg-gray-800 text-white p-2 rounded text-xs">
+          <button 
+            className="px-2 py-1 bg-blue-600 rounded mr-2"
+            onClick={() => {
+              // Force ADMIN role for testing
+              if (state.user) {
+                const user = {...state.user, role: 'ADMIN'};
+                localStorage.setItem('user', JSON.stringify(user));
+                window.location.reload();
+              }
+            }}
+          >
+            Set Admin Role
+          </button>
+          <span>Role: {state.user?.role || 'none'}</span>
+        </div>
+      )}
     </header>
   );
 };

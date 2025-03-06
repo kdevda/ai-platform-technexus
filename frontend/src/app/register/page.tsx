@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/app/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import Layout from '@/components/layout/Layout';
 
 const RegisterPage: React.FC = () => {

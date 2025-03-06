@@ -1,7 +1,8 @@
-import { User } from './User';
-import { Loan } from './Loan';
-import { Payment } from './Payment';
+import User from './User';
+import Loan from './Loan';
+import Payment from './Payment';
 import { Agent, AgentExecution, AgentTemplate, AgentFlow } from './Agent';
+import Integration from './Integration';
 
 export {
   User,
@@ -10,5 +11,6 @@ export {
   Agent,
   AgentExecution,
   AgentTemplate,
-  AgentFlow
+  AgentFlow,
+  Integration
 }; 

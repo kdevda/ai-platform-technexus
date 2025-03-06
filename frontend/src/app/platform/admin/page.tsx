@@ -8,7 +8,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <AdminLayout>
       <div>
-        <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-6 text-black">Admin Dashboard</h1>
         
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -20,8 +20,8 @@ const AdminDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Total Users</p>
-                <p className="text-2xl font-bold">247</p>
+                <p className="text-black text-sm">Total Users</p>
+                <p className="text-2xl font-bold text-black">247</p>
               </div>
             </div>
           </div>
@@ -34,8 +34,8 @@ const AdminDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Active Loans</p>
-                <p className="text-2xl font-bold">128</p>
+                <p className="text-black text-sm">Active Loans</p>
+                <p className="text-2xl font-bold text-black">128</p>
               </div>
             </div>
           </div>
@@ -48,8 +48,8 @@ const AdminDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Pending Approvals</p>
-                <p className="text-2xl font-bold">23</p>
+                <p className="text-black text-sm">Pending Approvals</p>
+                <p className="text-2xl font-bold text-black">23</p>
               </div>
             </div>
           </div>
@@ -62,8 +62,8 @@ const AdminDashboard: React.FC = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-gray-500 text-sm">Total Portfolio</p>
-                <p className="text-2xl font-bold">$1.2M</p>
+                <p className="text-black text-sm">Total Portfolio</p>
+                <p className="text-2xl font-bold text-black">$1.2M</p>
               </div>
             </div>
           </div>
@@ -78,8 +78,8 @@ const AdminDashboard: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">User Management</h3>
-              <p className="text-gray-600">Manage user accounts, roles, and permissions.</p>
+              <h3 className="text-lg font-semibold mb-2 text-black">User Management</h3>
+              <p className="text-black">Manage user accounts, roles, and permissions.</p>
             </div>
           </Link>
           
@@ -90,8 +90,8 @@ const AdminDashboard: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Loan Management</h3>
-              <p className="text-gray-600">Review, approve, and manage loan applications.</p>
+              <h3 className="text-lg font-semibold mb-2 text-black">Loan Management</h3>
+              <p className="text-black">Review, approve, and manage loan applications.</p>
             </div>
           </Link>
           
@@ -102,8 +102,8 @@ const AdminDashboard: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Payment Processing</h3>
-              <p className="text-gray-600">Track and manage payment transactions.</p>
+              <h3 className="text-lg font-semibold mb-2 text-black">Payment Processing</h3>
+              <p className="text-black">Track and manage payment transactions.</p>
             </div>
           </Link>
           
@@ -114,8 +114,8 @@ const AdminDashboard: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Reports & Analytics</h3>
-              <p className="text-gray-600">Generate insights and reports on platform performance.</p>
+              <h3 className="text-lg font-semibold mb-2 text-black">Reports & Analytics</h3>
+              <p className="text-black">Generate insights and reports on platform performance.</p>
             </div>
           </Link>
           
@@ -127,8 +127,8 @@ const AdminDashboard: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Platform Settings</h3>
-              <p className="text-gray-600">Configure platform settings and preferences.</p>
+              <h3 className="text-lg font-semibold mb-2 text-black">Platform Settings</h3>
+              <p className="text-black">Configure platform settings and preferences.</p>
             </div>
           </Link>
           
@@ -139,8 +139,8 @@ const AdminDashboard: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Audit & Compliance</h3>
-              <p className="text-gray-600">Review system logs and ensure regulatory compliance.</p>
+              <h3 className="text-lg font-semibold mb-2 text-black">Audit & Compliance</h3>
+              <p className="text-black">Review system logs and ensure regulatory compliance.</p>
             </div>
           </Link>
         </div>
@@ -148,7 +148,7 @@ const AdminDashboard: React.FC = () => {
         {/* Recent Activity */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold">Recent Activity</h2>
+            <h2 className="text-lg font-semibold text-black">Recent Activity</h2>
           </div>
           <div className="p-6">
             <ul className="space-y-4">
@@ -162,10 +162,10 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-800">
+                    <p className="text-sm text-black">
                       <span className="font-medium">John Doe</span> registered a new account
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">2 hours ago</p>
+                    <p className="text-xs text-black mt-1">2 hours ago</p>
                   </div>
                 </div>
               </li>
@@ -179,10 +179,10 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-800">
+                    <p className="text-sm text-black">
                       <span className="font-medium">Admin</span> approved loan application #12345
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">3 hours ago</p>
+                    <p className="text-xs text-black mt-1">3 hours ago</p>
                   </div>
                 </div>
               </li>
@@ -196,10 +196,10 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-800">
+                    <p className="text-sm text-black">
                       <span className="font-medium">System</span> detected unusual login activity
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">5 hours ago</p>
+                    <p className="text-xs text-black mt-1">5 hours ago</p>
                   </div>
                 </div>
               </li>
@@ -213,10 +213,10 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-800">
+                    <p className="text-sm text-black">
                       <span className="font-medium">Jane Smith</span> submitted a new loan application
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">8 hours ago</p>
+                    <p className="text-xs text-black mt-1">8 hours ago</p>
                   </div>
                 </div>
               </li>

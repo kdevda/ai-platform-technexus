@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import PlatformHeader from './PlatformHeader';
 import Sidebar from './Sidebar';
-import { useAuth } from '@/app/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 interface PlatformLayoutProps {

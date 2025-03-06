@@ -17,6 +17,7 @@ export default function ContactPage() {
     submitted: false,
     error: false,
     message: '',
+    loading: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -26,23 +27,77 @@ export default function ContactPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // This would be replaced with actual form submission logic
+    
+    // Set loading state
     setFormStatus({
-      submitted: true,
-      error: false,
-      message: 'Thank you for your message. We will get back to you shortly.',
+      ...formStatus,
+      loading: true
     });
     
-    // Reset form after submission (in a real app, this would happen after successful API response)
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      subject: '',
-      message: '',
-    });
+    console.log('Submitting contact form:', formData);
+    
+    try {
+      // Use the backend API endpoint instead of the Next.js API route
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      console.log('Using backend URL for contact page:', backendUrl);
+      
+      const response = await fetch(`${backendUrl}/email/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject || `Contact Form: ${formData.company || formData.name}`,
+          message: `
+            Name: ${formData.name}
+            Email: ${formData.email}
+            ${formData.company ? `Company: ${formData.company}` : ''}
+            Subject: ${formData.subject}
+            
+            Message:
+            ${formData.message}
+          `
+        }),
+      });
+      
+      const data = await response.json();
+      console.log('Email API response:', data);
+      
+      if (data.success) {
+        // Display success message
+        setFormStatus({
+          submitted: true,
+          error: false,
+          message: 'Thank you for your message. We will get back to you shortly.',
+          loading: false
+        });
+        
+        // Reset form after submission
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          subject: '',
+          message: '',
+        });
+      } else {
+        throw new Error(data.error || 'Failed to send message');
+      }
+    } catch (error) {
+      console.error('Error sending contact form email:', error);
+      
+      // Handle error
+      setFormStatus({
+        submitted: true,
+        error: true,
+        message: error instanceof Error ? error.message : 'There was an error submitting your form. Please try again later.',
+        loading: false
+      });
+    }
   };
 
   const officeLocations = [
@@ -172,13 +227,24 @@ export default function ContactPage() {
             <div>
               {formStatus.submitted ? (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-                  <svg className="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  <h3 className="text-xl font-bold text-green-800 mb-2">Thank You!</h3>
-                  <p className="text-green-700">{formStatus.message}</p>
+                  {formStatus.error ? (
+                    <>
+                      <svg className="w-12 h-12 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <h3 className="text-xl font-bold text-red-800 mb-2">Oops!</h3>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      <h3 className="text-xl font-bold text-green-800 mb-2">Thank You!</h3>
+                    </>
+                  )}
+                  <p className={`${formStatus.error ? 'text-red-700' : 'text-green-700'}`}>{formStatus.message}</p>
                   <button 
-                    onClick={() => setFormStatus({ submitted: false, error: false, message: '' })}
+                    onClick={() => setFormStatus({ submitted: false, error: false, message: '', loading: false })}
                     className="mt-6 bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
                   >
                     Send Another Message
@@ -256,9 +322,21 @@ export default function ContactPage() {
                     ></textarea>
                   </div>
                   
-                  <div className="flex justify-end">
-                    <button type="submit" className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium">
-                      Send Message
+                  <div className="mt-8">
+                    <button 
+                      type="submit" 
+                      className="w-full bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center"
+                      disabled={formStatus.loading}
+                    >
+                      {formStatus.loading ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Sending...
+                        </>
+                      ) : 'Send Message'}
                     </button>
                   </div>
                 </form>

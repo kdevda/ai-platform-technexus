@@ -82,13 +82,16 @@ export default function IntegrationsPage() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="bg-white text-black py-16 md:py-24 relative overflow-hidden bg-grid-black">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section className="pt-20 pb-16 md:pt-28 md:pb-24 bg-gradient-to-r from-gray-900 to-black text-white overflow-hidden relative">
+        <div className="absolute inset-0 z-0 opacity-20">
+          <div className="absolute inset-0 bg-grid-white/20"></div>
+        </div>
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
           <div className="text-center md:text-left max-w-4xl mx-auto md:mx-0">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
               Connect Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">Entire</span> Ecosystem
             </h1>
-            <p className="text-gray-600 text-lg md:text-xl mt-6 max-w-2xl mx-auto md:mx-0">
+            <p className="mt-6 text-xl text-gray-300 max-w-2xl mx-auto md:mx-0">
               Seamlessly integrate Technexus with your preferred tools and services. Our platform connects with over 50 leading solutions to enhance your loan management experience.
             </p>
             <div className="mt-10 flex flex-wrap gap-4 justify-center md:justify-start">
