@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function AIRelationsPage() {
   const features = [
     {
-      title: 'Intelligent Customer Segmentation',
+      title: <span className="text-black">Intelligent Customer Segmentation</span>,
       description: 'Automatically categorize your customers based on behavior, needs, and potential, enabling targeted outreach strategies.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -17,7 +17,7 @@ export default function AIRelationsPage() {
       )
     },
     {
-      title: 'Personalized Communication Flows',
+      title: <span className="text-black">Personalized Communication Flows</span>,
       description: 'Create dynamic, multi-channel communication journeys tailored to individual customer preferences and behaviors.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@ export default function AIRelationsPage() {
       )
     },
     {
-      title: 'Behavior Prediction & Analysis',
+      title: <span className="text-black">Behavior Prediction & Analysis</span>,
       description: 'Anticipate customer needs and financial behaviors with AI models that continuously learn and improve over time.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +35,7 @@ export default function AIRelationsPage() {
       )
     },
     {
-      title: 'Engagement Optimization',
+      title: <span className="text-black">Engagement Optimization</span>,
       description: 'Automatically determine the best time, channel, and message content for maximum customer engagement and response rates.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -47,22 +47,22 @@ export default function AIRelationsPage() {
 
   const benefits = [
     {
-      title: 'Increased Conversion Rates',
+      title: <span className="text-black">Increased Conversion Rates</span>,
       description: 'Convert more prospects into customers with precisely targeted outreach based on data-driven insights.',
       percentage: '32%'
     },
     {
-      title: 'Reduced Customer Acquisition Cost',
+      title: <span className="text-black">Reduced Customer Acquisition Cost</span>,
       description: 'Lower your cost per acquisition by focusing resources on the most promising customer segments.',
       percentage: '27%'
     },
     {
-      title: 'Improved Customer Retention',
+      title: <span className="text-black">Improved Customer Retention</span>,
       description: 'Strengthen relationships and reduce churn by anticipating needs and delivering personalized experiences.',
       percentage: '41%'
     },
     {
-      title: 'Enhanced Operational Efficiency',
+      title: <span className="text-black">Enhanced Operational Efficiency</span>,
       description: 'Automate repetitive tasks and focus your team on high-value relationship building activities.',
       percentage: '56%'
     }
@@ -70,7 +70,7 @@ export default function AIRelationsPage() {
 
   const usesCases = [
     {
-      title: 'Customer Retention Programs',
+      title: <span className="text-black">Customer Retention Programs</span>,
       description: 'Identify at-risk customers before they churn and deploy targeted retention strategies automatically.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -79,7 +79,7 @@ export default function AIRelationsPage() {
       )
     },
     {
-      title: 'Cross-Selling Campaigns',
+      title: <span className="text-black">Cross-Selling Campaigns</span>,
       description: 'Recommend the right financial products to the right customers at the right time based on their financial profile.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@ export default function AIRelationsPage() {
       )
     },
     {
-      title: 'Lifecycle Marketing',
+      title: <span className="text-black">Lifecycle Marketing</span>,
       description: 'Create personalized communication strategies for each stage of the customer journey, from acquisition to advocacy.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -97,7 +97,7 @@ export default function AIRelationsPage() {
       )
     },
     {
-      title: 'Service Personalization',
+      title: <span className="text-black">Service Personalization</span>,
       description: 'Tailor your service approach based on individual preferences, previous interactions, and predicted needs.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
