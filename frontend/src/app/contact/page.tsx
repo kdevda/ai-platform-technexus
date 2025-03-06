@@ -60,7 +60,7 @@ export default function ContactPage() {
         `
       });
       
-      const data = await response.json();
+      const data = response.data;
       console.log('Email API response:', data);
       
       if (data.success) {
