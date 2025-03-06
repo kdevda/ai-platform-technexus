@@ -199,7 +199,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Intelligent Risk Assessment</h3>
+              <h3 className="text-xl text-black font-semibold mb-2">Intelligent Risk Assessment</h3>
               <p className="text-gray-600">
                 Advanced algorithms analyze thousands of data points to provide accurate risk profiles and optimal pricing.
               </p>
@@ -212,7 +212,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Automated Underwriting</h3>
+              <h3 className="text-xl text-black font-semibold mb-2">Automated Underwriting</h3>
               <p className="text-gray-600">
                 Reduce decision time from days to minutes with AI-powered underwriting that maintains compliance.
               </p>
@@ -225,7 +225,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Conversational AI</h3>
+              <h3 className="text-xl text-black font-semibold mb-2">Conversational AI</h3>
               <p className="text-gray-600">
                 Natural language processing enables intuitive interactions for both customers and loan officers.
               </p>
@@ -238,7 +238,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Fraud Detection</h3>
+              <h3 className="text-xl text-black font-semibold mb-2">Fraud Detection</h3>
               <p className="text-gray-600">
                 Real-time anomaly detection identifies potential fraud before it impacts your portfolio.
               </p>
@@ -251,7 +251,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Predictive Analytics</h3>
+              <h3 className="text-xl text-black font-semibold mb-2">Predictive Analytics</h3>
               <p className="text-gray-600">
                 Forecast portfolio performance and identify opportunities for optimization and growth.
               </p>
@@ -264,7 +264,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Regulatory Compliance</h3>
+              <h3 className="text-xl text-black font-semibold mb-2">Regulatory Compliance</h3>
               <p className="text-gray-600">
                 Stay compliant with automated checks and documentation for regulatory requirements.
               </p>
@@ -315,7 +315,7 @@ export default function Home() {
                     <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${assistantOptions[activeAssistant].color} flex items-center justify-center text-white mr-4`}>
                       {assistantOptions[activeAssistant].icon}
                     </div>
-                    <h3 className="text-2xl font-bold">{assistantOptions[activeAssistant].name}</h3>
+                    <h3 className="text-2xl text-black font-bold">{assistantOptions[activeAssistant].name}</h3>
                   </div>
                   
                   <p className="text-gray-600 mb-6">{assistantOptions[activeAssistant].description}</p>
