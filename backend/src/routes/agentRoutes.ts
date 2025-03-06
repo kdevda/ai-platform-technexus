@@ -1,11 +1,11 @@
 import express from 'express';
 import { agentController } from '../controllers/agentController';
-import { authenticateToken } from '../middleware/auth';
+import { protect, admin } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
 // Apply authentication middleware to all agent routes
-router.use(authenticateToken);
+router.use(protect);
 
 // Agent CRUD operations
 router.get('/agents', agentController.getAgents);
@@ -15,7 +15,7 @@ router.put('/agents/:id', agentController.updateAgent);
 router.delete('/agents/:id', agentController.deleteAgent);
 
 // Agent status management
-router.patch('/agents/:id/status', agentController.updateAgentStatus);
+router.patch('/agents/:id/status', agentController.toggleAgentStatus);
 
 // Agent execution
 router.post('/agents/:id/execute', agentController.executeAgent);

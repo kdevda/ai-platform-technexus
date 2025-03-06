@@ -139,7 +139,7 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
 
   return (
     <div className={`${widthClasses[width]} p-2 flex ${positionClasses[position]}`}>
-      <Card className="w-full overflow-hidden" style={{ maxHeight: `${initialHeight}px` }}>
+      <Card className={`w-full overflow-hidden max-h-[${initialHeight}px]`}>
         <CardHeader className="bg-primary/5 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
@@ -157,50 +157,47 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
           </div>
         </CardHeader>
 
-        <CardContent className="p-0 relative" style={{ height: `${initialHeight - 140}px` }}>
-          <Scrollbar>
-            <div className="p-4 space-y-4">
-              {messages.map((message, index) => (
+        <CardContent className={`p-0 relative h-[${initialHeight - 140}px]`}>
+          <div className="h-full overflow-y-auto p-4" ref={messagesEndRef}>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex ${
+                  message.role === 'user' ? 'justify-end' : 'justify-start'
+                }`}
+              >
                 <div
-                  key={index}
-                  className={`flex ${
-                    message.role === 'user' ? 'justify-end' : 'justify-start'
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    message.role === 'user'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted'
                   }`}
                 >
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      message.role === 'user'
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    }`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                    <p className="text-xs opacity-70 mt-1">
-                      {new Date(message.timestamp).toLocaleTimeString()}
-                    </p>
+                  <p className="text-sm">{message.content}</p>
+                  <p className="text-xs opacity-70 mt-1">
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="max-w-[80%] rounded-lg p-3 bg-muted">
+                  <div className="flex items-center space-x-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <p className="text-sm">Thinking...</p>
                   </div>
                 </div>
-              ))}
-              {loading && (
-                <div className="flex justify-start">
-                  <div className="max-w-[80%] rounded-lg p-3 bg-muted">
-                    <div className="flex items-center space-x-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <p className="text-sm">Thinking...</p>
-                    </div>
-                  </div>
+              </div>
+            )}
+            {error && (
+              <div className="flex justify-center">
+                <div className="max-w-[80%] rounded-lg p-3 bg-destructive/10 text-destructive">
+                  <p className="text-sm">{error}</p>
                 </div>
-              )}
-              {error && (
-                <div className="flex justify-center">
-                  <div className="max-w-[80%] rounded-lg p-3 bg-destructive/10 text-destructive">
-                    <p className="text-sm">{error}</p>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          </Scrollbar>
+              </div>
+            )}
+          </div>
         </CardContent>
 
         <CardFooter className="p-3 border-t">

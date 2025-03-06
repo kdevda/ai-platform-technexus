@@ -33,11 +33,11 @@ export const Select: React.FC<SelectProps> = ({
   const options: {value: string, label: React.ReactNode}[] = [];
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child) && child.type === SelectContent) {
-      React.Children.forEach(child.props.children, (item) => {
+      React.Children.forEach((child.props as { children: React.ReactNode }).children, (item) => {
         if (React.isValidElement(item) && item.type === SelectItem) {
           options.push({
-            value: item.props.value,
-            label: item.props.children
+            value: (item.props as { value: string }).value,
+            label: (item.props as { children: React.ReactNode }).children
           });
         }
       });
