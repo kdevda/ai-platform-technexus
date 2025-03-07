@@ -300,8 +300,8 @@ export default function PlatformPage() {
                     <circle cx="740" cy="30" r="15" fill="#475569" />
                     <path d="M735 30 L740 25 L745 30 L740 35 L735 30" fill="#f8fafc" />
                     
-                    <circle cx="780" cy="30" r="15" fill="#3b82f6" />
-                    <text x="780" y="34" fontSize="10" fill="#f8fafc" textAnchor="middle">JD</text>
+                    <circle cx="780" cy="30" r="15" fill="#ffffff" />
+                    <text x="780" y="34" fontSize="10" fill="#000000" textAnchor="middle">KD</text>
                     
                     {/* Sidebar */}
                     <rect x="0" y="60" width="200" height="540" fill="#1e293b" />
@@ -363,15 +363,15 @@ export default function PlatformPage() {
                     <text x="240" y="230" fontSize="14" fill="#0f172a" fontWeight="bold">Monthly Originations</text>
                     <text x="240" y="250" fontSize="11" fill="#64748b">Last 6 months ($000s)</text>
                     
-                    <line x1="240" y1="270" x2="240" y2="380" stroke="#e2e8f0" />
+                    <line x1="260" y1="270" x2="260" y2="380" stroke="#e2e8f0" />
                     <line x1="240" y1="380" x2="470" y2="380" stroke="#e2e8f0" />
                     
                     {/* Y-axis labels */}
-                    <text x="230" y="270" fontSize="9" fill="#64748b" textAnchor="end">1,500</text>
-                    <text x="230" y="300" fontSize="9" fill="#64748b" textAnchor="end">1,200</text>
-                    <text x="230" y="330" fontSize="9" fill="#64748b" textAnchor="end">900</text>
-                    <text x="230" y="360" fontSize="9" fill="#64748b" textAnchor="end">600</text>
-                    <text x="230" y="390" fontSize="9" fill="#64748b" textAnchor="end">300</text>
+                    <text x="250" y="275" fontSize="9" fill="#64748b" textAnchor="end">1,500</text>
+                    <text x="250" y="300" fontSize="9" fill="#64748b" textAnchor="end">1,200</text>
+                    <text x="250" y="325" fontSize="9" fill="#64748b" textAnchor="end">900</text>
+                    <text x="250" y="350" fontSize="9" fill="#64748b" textAnchor="end">600</text>
+                    <text x="250" y="375" fontSize="9" fill="#64748b" textAnchor="end">300</text>
                     
                     {/* X-axis labels */}
                     <text x="275" y="395" fontSize="9" fill="#64748b" textAnchor="middle">Jul</text>
@@ -403,25 +403,25 @@ export default function PlatformPage() {
                     <text x="530" y="250" fontSize="11" fill="#64748b">By percentage of portfolio</text>
                     
                     {/* Bar Chart Bars */}
-                    <rect x="540" y="270" width="30" height="90" rx="2" fill="#3b82f6" />
-                    <rect x="580" y="290" width="30" height="70" rx="2" fill="#3b82f6" />
-                    <rect x="620" y="240" width="30" height="120" rx="2" fill="#3b82f6" />
-                    <rect x="660" y="310" width="30" height="50" rx="2" fill="#3b82f6" />
-                    <rect x="700" y="330" width="30" height="30" rx="2" fill="#3b82f6" />
+                    <rect x="540" y="290" width="30" height="90" rx="2" fill="#3b82f6" />
+                    <rect x="580" y="310" width="30" height="70" rx="2" fill="#3b82f6" />
+                    <rect x="620" y="270" width="30" height="110" rx="2" fill="#3b82f6" />
+                    <rect x="660" y="330" width="30" height="50" rx="2" fill="#3b82f6" />
+                    <rect x="700" y="350" width="30" height="30" rx="2" fill="#3b82f6" />
                     
                     {/* Bar Chart Labels */}
-                    <text x="555" y="370" fontSize="9" fill="#64748b" textAnchor="middle">Personal</text>
-                    <text x="595" y="370" fontSize="9" fill="#64748b" textAnchor="middle">Auto</text>
-                    <text x="635" y="370" fontSize="9" fill="#64748b" textAnchor="middle">Business</text>
-                    <text x="675" y="370" fontSize="9" fill="#64748b" textAnchor="middle">Student</text>
-                    <text x="715" y="370" fontSize="9" fill="#64748b" textAnchor="middle">Mortgage</text>
+                    <text x="555" y="390" fontSize="9" fill="#64748b" textAnchor="middle">Personal</text>
+                    <text x="595" y="390" fontSize="9" fill="#64748b" textAnchor="middle">Auto</text>
+                    <text x="635" y="390" fontSize="9" fill="#64748b" textAnchor="middle">Business</text>
+                    <text x="675" y="390" fontSize="9" fill="#64748b" textAnchor="middle">Student</text>
+                    <text x="715" y="390" fontSize="9" fill="#64748b" textAnchor="middle">Mortgage</text>
                     
                     {/* Percentages */}
-                    <text x="555" y="265" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">25%</text>
-                    <text x="595" y="285" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">20%</text>
-                    <text x="635" y="235" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">35%</text>
-                    <text x="675" y="305" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">15%</text>
-                    <text x="715" y="325" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">5%</text>
+                    <text x="555" y="285" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">25%</text>
+                    <text x="595" y="305" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">20%</text>
+                    <text x="635" y="265" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">30%</text>
+                    <text x="675" y="325" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">15%</text>
+                    <text x="715" y="345" fontSize="9" fill="#0f172a" fontWeight="bold" textAnchor="middle">5%</text>
                     
                     {/* Recent Activity Widget */}
                     <rect x="220" y="450" width="270" height="130" rx="8" fill="white" stroke="#e2e8f0" />
@@ -480,7 +480,7 @@ export default function PlatformPage() {
                     <rect x="35" y="160" width="20" height="20" rx="2" fill="#f8fafc" stroke="#64748b" />
                     
                     <rect x="20" y="200" width="160" height="40" rx="4" fill="#475569" />
-                    <text x="70" y="225" fontSize="14" fill="#f8fafc">Select Dropdown</text>
+                    <text x="70" y="225" fontSize="14" fill="#f8fafc">Dropdown</text>
                     <rect x="35" y="210" width="20" height="20" rx="2" fill="#f8fafc" stroke="#64748b" />
                     
                     <rect x="20" y="250" width="160" height="40" rx="4" fill="#475569" />
@@ -523,7 +523,7 @@ export default function PlatformPage() {
                     <text x="240" y="250" fontSize="12" fill="#0f172a">Business Type *</text>
                     <rect x="240" y="260" width="250" height="30" rx="4" fill="#f8fafc" stroke="#e2e8f0" />
                     <text x="250" y="280" fontSize="12" fill="#94a3b8">Limited Liability Company (LLC)</text>
-                    <polyline points="470,270 480,275 470,280" stroke="#64748b" strokeWidth="1.5" fill="none" />
+                    {/* <polyline points="470,270 480,275 470,280" stroke="#64748b" strokeWidth="1.5" fill="none" /> */}
                     
                     <text x="240" y="310" fontSize="12" fill="#0f172a">Tax ID / EIN *</text>
                     <rect x="240" y="320" width="250" height="30" rx="4" fill="#f8fafc" stroke="#e2e8f0" />
@@ -544,18 +544,18 @@ export default function PlatformPage() {
                     <text x="595" y="160" fontSize="12" fill="#0f172a" fontWeight="bold">Field Properties</text>
                     <line x1="595" y1="170" x2="745" y2="170" stroke="#e2e8f0" />
                     
-                    <text x="595" y="185" fontSize="10" fill="#64748b">FIELD TYPE</text>
+                    <text x="595" y="190" fontSize="10" fill="#64748b">FIELD TYPE</text>
                     <rect x="595" y="195" width="150" height="25" rx="4" fill="#ffffff" stroke="#e2e8f0" />
                     <text x="605" y="210" fontSize="10" fill="#0f172a">Text Field</text>
-                    <polyline points="730,205 740,210 730,215" stroke="#64748b" strokeWidth="1" fill="none" />
+                    {/* <polyline points="730,205 740,210 730,215" stroke="#64748b" strokeWidth="1" fill="none" /> */}
                     
-                    <text x="595" y="230" fontSize="10" fill="#64748b">LABEL</text>
+                    <text x="595" y="235" fontSize="10" fill="#64748b">LABEL</text>
                     <rect x="595" y="240" width="150" height="25" rx="4" fill="#ffffff" stroke="#e2e8f0" />
                     <text x="605" y="255" fontSize="10" fill="#0f172a">Business Name</text>
                     
-                    <text x="595" y="275" fontSize="10" fill="#64748b">REQUIRED</text>
-                    <rect x="595" y="285" width="20" height="20" rx="4" fill="#2563eb" />
-                    <polyline points="600,285 605,295 615,275" stroke="white" strokeWidth="1.5" fill="none" />
+                    <text x="595" y="280" fontSize="10" fill="#64748b">REQUIRED</text>
+                    <rect x="595" y="285" width="15" height="15" rx="4" fill="#2563eb" />
+                    {/* <polyline points="590,285 605,303 625,25" stroke="white" strokeWidth="1.5" fill="none" /> */}
                     
                     <rect x="595" y="315" width="70" height="30" rx="4" fill="#ffffff" stroke="#e2e8f0" />
                     <text x="630" y="335" fontSize="12" fill="#0f172a" textAnchor="middle">Cancel</text>
@@ -687,16 +687,10 @@ export default function PlatformPage() {
                       {/* iPhone Frame - Using actual iPhone 15 Pro Max proportions */}
                       <rect x="0" y="0" width="300" height="600" rx="45" fill="#1a1a1a" /> {/* Outer frame */}
                       <rect x="3" y="3" width="294" height="594" rx="42" fill="#0f0f0f" /> {/* Inner bezel */}
-                      <rect x="9" y="9" width="282" height="582" rx="35" fill="#000000" /> {/* Screen area */}
-                      
-                      {/* Dynamic Island */}
-                      <rect x="100" y="9" width="100" height="25" rx="12" fill="#000000" />
-                      <ellipse cx="150" cy="22" rx="50" ry="12" fill="#0f0f0f" />
-                      <circle cx="120" cy="22" r="4" fill="#222222" /> {/* Front camera */}
-                      <ellipse cx="150" cy="22" rx="20" ry="4" fill="#222222" opacity="0.8" /> {/* Camera sensors */}
+                      <rect x="9" y="9" width="282" height="582" rx="35" fill="000000" /> {/* Screen area */}
                       
                       {/* Screen Content Area */}
-                      <rect x="9" y="9" width="282" height="582" rx="35" fill="#000000" />
+                      <rect x="9" y="9" width="282" height="582" rx="35" fill="#f8fafc" />
                       
                       {/* Status Bar */}
                       <text x="25" y="40" fontSize="9" fill="#ffffff" fontWeight="bold">9:41</text>
@@ -708,10 +702,16 @@ export default function PlatformPage() {
                       
                       {/* App Content */}
                       {/* App Header */}
-                      <rect x="9" y="50" width="282" height="50" rx="0" fill="#2563eb" />
+                      <rect x="9" y="50" width="282" height="50" rx="0" fill="#000000" />
                       <text x="150" y="80" fontSize="15" fill="#ffffff" fontWeight="bold" textAnchor="middle">Technexus</text>
-                      <circle cx="255" cy="75" r="15" fill="#1e40af" />
-                      <text x="255" y="79" fontSize="10" fill="#ffffff" textAnchor="middle" fontWeight="bold">JD</text>
+                      <circle cx="255" cy="75" r="15" fill="#ffffff" />
+                      <text x="255" y="79" fontSize="10" fill="#000000" textAnchor="middle" fontWeight="bold">KD</text>
+                      
+                      {/* Dynamic Island */}
+                      <rect x="100" y="17" width="100" height="25" rx="12" fill="#000000" />
+                      <ellipse cx="150" cy="29" rx="50" ry="12" fill="#0f0f0f" />
+                      <circle cx="120" cy="29" r="4" fill="#222222" /> {/* Front camera */}
+                      <ellipse cx="150" cy="29" rx="20" ry="4" fill="#222222" opacity="0.8" /> {/* Camera sensors */}
                       
                       {/* Portfolio Overview */}
                       <rect x="20" y="110" width="260" height="80" rx="12" fill="#ffffff" stroke="#e2e8f0" />
@@ -760,11 +760,11 @@ export default function PlatformPage() {
                       <text x="265" y="470" fontSize="8" fill="#64748b" textAnchor="end">1h</text>
                       
                       {/* Tab Bar */}
-                      <rect x="9" y="515" width="282" height="75" rx="0" fill="#0a0a0a" strokeWidth="0" />
+                      <rect x="9" y="515" width="282" height="75" rx="40" fill="#ffffff" strokeWidth="0" />
                       
                       <g transform="translate(35, 530)">
-                        <circle cx="0" cy="10" r="4" fill="#ffffff" />
-                        <text x="0" y="30" fontSize="8" fill="#ffffff" textAnchor="middle">Home</text>
+                        <circle cx="0" cy="10" r="4" fill="#000000" />
+                        <text x="0" y="30" fontSize="8" fill="#000000" textAnchor="middle">Home</text>
                       </g>
                       
                       <g transform="translate(90, 530)">
