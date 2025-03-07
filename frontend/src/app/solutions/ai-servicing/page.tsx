@@ -179,7 +179,7 @@ export default function AIServicingPage() {
                     <span className="text-xl font-bold">1</span>
                   </div>
                   <h3 className="text-lg font-bold mb-3 text-black">Data Integration</h3>
-                  <p className="text-gray-600 pl-14">Connect with core systems, payment processors, and customer channels.</p>
+                  <p className="text-gray-600 text-center">Connect with core systems, payment processors, and customer channels.</p>
                 </div>
                 
                 <div className="relative bg-white p-6 rounded-xl border border-gray-200 text-center">
@@ -187,7 +187,7 @@ export default function AIServicingPage() {
                     <span className="text-xl font-bold">2</span>
                   </div>
                   <h3 className="text-lg font-bold mb-3 text-black">Workflow Automation</h3>
-                  <p className="text-gray-600 pl-14">Configure AI-powered processes that handle routine servicing tasks.</p>
+                  <p className="text-gray-600 text-center">Configure AI-powered processes that handle routine servicing tasks.</p>
                 </div>
                 
                 <div className="relative bg-white p-6 rounded-xl border border-gray-200 text-center">
@@ -195,7 +195,7 @@ export default function AIServicingPage() {
                     <span className="text-xl font-bold">3</span>
                   </div>
                   <h3 className="text-lg font-bold mb-3 text-black">Customer Engagement</h3>
-                  <p className="text-gray-600 pl-14">Deliver personalized interactions through borrowers' preferred channels.</p>
+                  <p className="text-gray-600 text-center">Deliver personalized interactions through borrowers' preferred channels.</p>
                 </div>
                 
                 <div className="relative bg-white p-6 rounded-xl border border-gray-200 text-center">
@@ -203,7 +203,7 @@ export default function AIServicingPage() {
                     <span className="text-xl font-bold">4</span>
                   </div>
                   <h3 className="text-lg font-bold mb-3 text-black">Continuous Optimization</h3>
-                  <p className="text-gray-600 pl-14">Continuously improve operations through performance monitoring and predictive insights.</p>
+                  <p className="text-gray-600 text-center">Continuously improve operations through performance monitoring and predictive insights.</p>
                 </div>
               </div>
             </div>
