@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function AICreditPage() {
   const features = [
     {
-      title: 'Alternative Data Analysis',
+      title: <span className="text-black">Alternative Data Analysis</span>,
       description: 'Enrich traditional credit assessments with alternative data sources for a more complete borrower profile.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -17,7 +17,7 @@ export default function AICreditPage() {
       )
     },
     {
-      title: 'Predictive Risk Modeling',
+      title: <span className="text-black">Predictive Risk Modeling</span>,
       description: 'Use advanced machine learning models to accurately predict default risk and optimize loan terms.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@ export default function AICreditPage() {
       )
     },
     {
-      title: 'Adaptive Credit Scoring',
+      title: <span className="text-black">Adaptive Credit Scoring</span>,
       description: 'Continuously improve scoring models through machine learning that adapts to changing economic conditions.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +35,7 @@ export default function AICreditPage() {
       )
     },
     {
-      title: 'Explainable AI Decisions',
+      title: <span className="text-black">Explainable AI Decisions</span>,
       description: 'Provide transparent explanations for credit decisions that satisfy regulatory requirements while educating borrowers.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -47,22 +47,22 @@ export default function AICreditPage() {
 
   const benefits = [
     {
-      title: 'Increased Approval Rates',
+      title: <span className="text-black">Increased Approval Rates</span>,
       description: 'Approve more qualified borrowers by leveraging expanded data sets for credit decisions.',
       value: '23%'
     },
     {
-      title: 'Reduced Default Rates',
+      title: <span className="text-black">Reduced Default Rates</span>, 
       description: 'More accurate risk assessment leads to lower default rates across the loan portfolio.',
       value: '31%'
     },
     {
-      title: 'Faster Decision Time',
+      title: <span className="text-black">Faster Decision Time</span>,
       description: 'Deliver credit decisions in seconds rather than days through automated analysis.',
       value: '94%'
     },
     {
-      title: 'Improved Risk Segmentation',
+      title: <span className="text-black">Improved Risk Segmentation</span>,
       description: 'Better classify borrowers into risk tiers for more appropriate pricing and terms.',
       value: '4.2x'
     }
@@ -70,7 +70,7 @@ export default function AICreditPage() {
 
   const useCases = [
     {
-      title: 'Thin-File Borrowers',
+      title: <span className="text-black">Thin-File Borrowers</span>,
       description: 'Assess creditworthiness for consumers with limited traditional credit history.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -79,7 +79,7 @@ export default function AICreditPage() {
       )
     },
     {
-      title: 'Small Business Lending',
+      title: <span className="text-black">Small Business Lending</span>,
       description: 'Evaluate small businesses with limited operating history using alternative financial indicators.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@ export default function AICreditPage() {
       )
     },
     {
-      title: 'Auto and Equipment Financing',
+      title: <span className="text-black">Auto and Equipment Financing</span>,
       description: 'Create specialized risk models for secured lending that incorporate collateral valuation.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -97,7 +97,7 @@ export default function AICreditPage() {
       )
     },
     {
-      title: 'Credit Line Management',
+      title: <span className="text-black">Credit Line Management</span>,
       description: 'Dynamically adjust credit lines based on ongoing behavior and changing risk profiles.',
       icon: (
         <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -179,7 +179,7 @@ export default function AICreditPage() {
                     <span className="font-semibold">1</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Data Collection & Enrichment</h3>
+                    <h3 className="text-black text-xl font-bold mb-2">Data Collection & Enrichment</h3>
                     <p className="text-gray-600">Gather traditional credit data and alternative data sources to create a comprehensive profile of each applicant.</p>
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export default function AICreditPage() {
                     <span className="font-semibold">2</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Advanced Risk Modeling</h3>
+                    <h3 className="text-black text-xl font-bold mb-2">Advanced Risk Modeling</h3>
                     <p className="text-gray-600">Apply sophisticated machine learning algorithms to identify patterns and predict credit risk with greater accuracy.</p>
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export default function AICreditPage() {
                     <span className="font-semibold">3</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Decision & Explanation</h3>
+                    <h3 className="text-black text-xl font-bold mb-2">Decision & Explanation</h3>
                     <p className="text-gray-600">Generate credit decisions with transparent explanations that satisfy regulatory requirements and help borrowers understand outcomes.</p>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ export default function AICreditPage() {
                     <span className="font-semibold">4</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold mb-2">Continuous Learning</h3>
+                    <h3 className="text-black text-xl font-bold mb-2">Continuous Learning</h3>
                     <p className="text-gray-600">Models adapt over time based on portfolio performance, ensuring credit decisions remain accurate as conditions change.</p>
                   </div>
                 </div>
@@ -218,32 +218,32 @@ export default function AICreditPage() {
             
             <div className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm">
               <div className="bg-gray-50 p-6 border-b border-gray-200">
-                <h3 className="text-2xl font-bold mb-2">Credit Decision Flow</h3>
+                <h3 className="text-black text-2xl font-bold mb-2">Credit Decision Flow</h3>
                 <p className="text-gray-600">From application to decision in seconds</p>
               </div>
               <div className="p-8">
                 <div className="space-y-6">
                   <div className="relative pl-8 border-l-2 border-gray-200 pb-6">
                     <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-black"></div>
-                    <h4 className="font-bold mb-1">Application Data</h4>
+                    <h4 className="text-black font-bold mb-1">Application Data</h4>
                     <p className="text-sm text-gray-600">Application information and consent for data access</p>
                   </div>
                   
                   <div className="relative pl-8 border-l-2 border-gray-200 pb-6">
                     <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-black"></div>
-                    <h4 className="font-bold mb-1">Data Aggregation</h4>
+                    <h4 className="text-black font-bold mb-1">Data Aggregation</h4>
                     <p className="text-sm text-gray-600">Traditional + alternative data sources combined</p>
                   </div>
                   
                   <div className="relative pl-8 border-l-2 border-gray-200 pb-6">
                     <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-black"></div>
-                    <h4 className="font-bold mb-1">Risk Analysis</h4>
+                    <h4 className="text-black font-bold mb-1">Risk Analysis</h4>
                     <p className="text-sm text-gray-600">ML models assess probability of default and ability to repay</p>
                   </div>
                   
                   <div className="relative pl-8">
                     <div className="absolute -left-2 top-0 w-4 h-4 rounded-full bg-black"></div>
-                    <h4 className="font-bold mb-1">Decision & Terms</h4>
+                    <h4 className="text-black font-bold mb-1">Decision & Terms</h4>
                     <p className="text-sm text-gray-600">Approval with optimized terms or explanation for denial</p>
                   </div>
                 </div>
@@ -465,7 +465,7 @@ export default function AICreditPage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">Built for Compliance</h2>
+              <h2 className="text-black text-3xl md:text-4xl font-bold tracking-tight mb-6">Built for Compliance</h2>
               <p className="text-gray-600 mb-8">
                 AI Credit is designed with regulatory compliance at its core, ensuring your credit decisions remain explainable, fair, and transparent.
               </p>
@@ -476,7 +476,7 @@ export default function AICreditPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                   <div>
-                    <h3 className="text-lg font-bold mb-1">Explainable Decisions</h3>
+                    <h3 className="text-black text-lg font-bold mb-1">Explainable Decisions</h3>
                     <p className="text-gray-600">Our system provides detailed factors for each credit decision, making it easy to comply with adverse action notice requirements.</p>
                   </div>
                 </div>
@@ -486,7 +486,7 @@ export default function AICreditPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                   <div>
-                    <h3 className="text-lg font-bold mb-1">Fair Lending Analysis</h3>
+                    <h3 className="text-black text-lg font-bold mb-1">Fair Lending Analysis</h3>
                     <p className="text-gray-600">Built-in tools monitor model performance across protected classes to help ensure fair lending compliance.</p>
                   </div>
                 </div>
@@ -496,7 +496,7 @@ export default function AICreditPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                   <div>
-                    <h3 className="text-lg font-bold mb-1">Audit Trail & Documentation</h3>
+                    <h3 className="text-black text-lg font-bold mb-1">Audit Trail & Documentation</h3>
                     <p className="text-gray-600">Comprehensive logging of all credit decisions and model changes to support regulatory examinations.</p>
                   </div>
                 </div>
@@ -506,7 +506,7 @@ export default function AICreditPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                   <div>
-                    <h3 className="text-lg font-bold mb-1">Model Risk Management</h3>
+                    <h3 className="text-black text-lg font-bold mb-1">Model Risk Management</h3>
                     <p className="text-gray-600">Rigorous validation processes and documentation to comply with model risk management guidance.</p>
                   </div>
                 </div>
@@ -515,27 +515,27 @@ export default function AICreditPage() {
             
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                <div className="font-bold mb-2">ECOA & Reg B</div>
+                <div className="font-bold mb-2 text-black">ECOA & Reg B</div>
                 <p className="text-sm text-gray-600">Supports adverse action notices with specific reasons for credit decisions</p>
               </div>
               
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                <div className="font-bold mb-2">FCRA</div>
+                <div className="font-bold mb-2 text-black">FCRA</div>
                 <p className="text-sm text-gray-600">Complies with credit reporting requirements and consumer disclosure rights</p>
               </div>
               
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                <div className="font-bold mb-2">UDAAP</div>
+                <div className="font-bold mb-2 text-black">UDAAP</div>
                 <p className="text-sm text-gray-600">Designed to prevent unfair, deceptive, or abusive practices</p>
               </div>
               
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                <div className="font-bold mb-2">SR 11-7</div>
+                <div className="font-bold mb-2 text-black">SR 11-7</div>
                 <p className="text-sm text-gray-600">Aligns with model risk management guidance from federal regulators</p>
               </div>
               
               <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 col-span-2">
-                <div className="font-bold mb-2">AI Explainability</div>
+                <div className="font-bold mb-2 text-black">AI Explainability</div>
                 <p className="text-sm text-gray-600">Transparent, interpretable models that meet emerging AI/ML regulatory expectations</p>
               </div>
             </div>

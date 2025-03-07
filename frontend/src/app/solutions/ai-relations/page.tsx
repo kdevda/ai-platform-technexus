@@ -300,16 +300,16 @@ export default function AIRelationsPage() {
                 </div>
                 <div className="space-y-4">
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">Good morning! I've analyzed yesterday's customer interactions and found 3 high-value opportunities you might want to prioritize today.</p>
+                    <p className="text-sm text-gray-700">Good morning! I've analyzed yesterday's customer interactions and found 3 high-value opportunities you might want to prioritize today.</p>
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">Customer Johnson has been browsing premium plans for the last week. Based on their profile, they're 68% likely to upgrade with the right incentive.</p>
+                    <p className="text-sm text-gray-700">Customer Johnson has been browsing premium plans for the last week. Based on their profile, they're 68% likely to upgrade with the right incentive.</p>
                   </div>
                   <div className="bg-black p-3 rounded-lg rounded-tr-none max-w-[80%] ml-auto">
                     <p className="text-sm text-white">What messaging approach do you recommend for Johnson?</p>
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">Based on Johnson's communication history, a personal call highlighting the cost savings of annual billing would be most effective. I've drafted talking points for you to review.</p>
+                    <p className="text-sm text-gray-700">Based on Johnson's communication history, a personal call highlighting the cost savings of annual billing would be most effective. I've drafted talking points for you to review.</p>
                   </div>
                 </div>
               </div>

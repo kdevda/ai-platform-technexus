@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function AIOriginationsPage() {
   const features = [
     {
-      title: 'Intelligent Application Processing',
+      title: <span className="text-black">Intelligent Application Processing</span>, 
       description: 'Automate and streamline loan applications with AI-powered document analysis and verification.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -17,7 +17,7 @@ export default function AIOriginationsPage() {
       )
     },
     {
-      title: 'Fraud Detection & Prevention',
+      title: <span className="text-black">Fraud Detection & Prevention</span>,
       description: 'Identify potential fraud patterns in applications using advanced machine learning algorithms.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@ export default function AIOriginationsPage() {
       )
     },
     {
-      title: 'Digital Identity Verification',
+      title: <span className="text-black">Digital Identity Verification</span>,
       description: 'Securely verify applicant identities through biometric matching and document authenticity checks.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +35,7 @@ export default function AIOriginationsPage() {
       )
     },
     {
-      title: 'Data Enrichment & Analysis',
+      title: <span className="text-black">Data Enrichment & Analysis</span>,
       description: 'Enrich application data with additional sources to create a more comprehensive borrower profile.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -47,22 +47,22 @@ export default function AIOriginationsPage() {
 
   const benefits = [
     {
-      title: 'Reduced Processing Time',
+      title: <span className="text-black">Reduced Processing Time</span>,
       description: 'Decrease application review time from days to minutes with automated verification processes.',
       value: '85%'
     },
     {
-      title: 'Increased Application Throughput',
+      title: <span className="text-black">Increased Application Throughput</span>,
       description: 'Process more applications with the same resources through intelligent workflow automation.',
       value: '3.5x'
     },
     {
-      title: 'Lower Operating Costs',
+      title: <span className="text-black">Lower Operating Costs</span>,
       description: 'Minimize manual review costs while maintaining high verification standards.',
       value: '42%'
     },
     {
-      title: 'Enhanced Fraud Detection',
+      title: <span className="text-black">span className="text-bla</span>,
       description: 'Identify fraudulent applications before approval, reducing potential losses.',
       value: '67%'
     }
@@ -435,19 +435,19 @@ export default function AIOriginationsPage() {
                   <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Real-time account creation</span>
+                  <span className="text-black">Real-time account creation</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Bidirectional data synchronization</span>
+                  <span className="text-black">Bidirectional data synchronization</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Automated data validation</span>
+                  <span className="text-black">Automated data validation</span>
                 </li>
               </ul>
             </div>
@@ -462,19 +462,19 @@ export default function AIOriginationsPage() {
                   <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Credit bureau integration</span>
+                  <span className="text-black">Credit bureau integration</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Identity verification services</span>
+                  <span className="text-black">Identity verification services</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                   </svg>
-                  <span>Employment and income verification</span>
+                  <span className="text-black">Employment and income verification</span>
                 </li>
               </ul>
             </div>

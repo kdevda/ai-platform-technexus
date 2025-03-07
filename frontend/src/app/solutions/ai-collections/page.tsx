@@ -304,16 +304,16 @@ export default function AICollectionsPage() {
                 </div>
                 <div className="space-y-4">
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">I've identified 28 accounts showing early payment stress patterns. Would you like me to prepare outreach recommendations?</p>
+                    <p className="text-sm text-gray-700">I've identified 28 accounts showing early payment stress patterns. Would you like me to prepare outreach recommendations?</p>
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">Customer Smith has missed their second payment but has shown consistent payment history prior. Based on their profile, a payment plan may be the best approach.</p>
+                    <p className="text-sm text-gray-700">Customer Smith has missed their second payment but has shown consistent payment history prior. Based on their profile, a payment plan may be the best approach.</p>
                   </div>
                   <div className="bg-black p-3 rounded-lg rounded-tr-none max-w-[80%] ml-auto">
                     <p className="text-sm text-white">Generate a report of all accounts 15-30 days past due with prior good standing.</p>
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">Report generated. I've identified 42 accounts matching your criteria. Based on their profiles, here are my recommended approaches...</p>
+                    <p className="text-sm text-gray-700">Report generated. I've identified 42 accounts matching your criteria. Based on their profiles, here are my recommended approaches...</p>
                   </div>
                 </div>
               </div>
@@ -421,13 +421,45 @@ export default function AICollectionsPage() {
               <div className="aspect-square rounded-xl overflow-hidden bg-white border border-gray-200 p-8 flex items-center justify-center">
                 <div className="w-full max-w-md">
                   <div className="relative rounded-xl overflow-hidden shadow-sm">
-                    <Image 
-                      src="/images/compliance-dashboard.jpg" 
-                      alt="Compliance Dashboard" 
-                      width={600} 
-                      height={400}
-                      className="w-full h-auto"
-                    />
+                    <svg 
+                      className="w-full h-auto text-black" 
+                      viewBox="0 0 600 400" 
+                      fill="none" 
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect width="600" height="400" rx="8" fill="#f8fafc" />
+                      
+                      {/* Shield */}
+                      <path 
+                        d="M300 120C300 120 340 140 400 140V220C400 260 340 300 300 320C260 300 200 260 200 220V140C260 140 300 120 300 120Z" 
+                        fill="#e2e8f0" 
+                        stroke="#0f172a" 
+                        strokeWidth="8" 
+                      />
+                      
+                      {/* Checkmark */}
+                      <path 
+                        d="M260 220L290 250L340 180" 
+                        stroke="#0f172a" 
+                        strokeWidth="12" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                      />
+                      
+                      {/* Document icons */}
+                      <rect x="120" y="180" width="40" height="50" rx="4" fill="#cbd5e1" stroke="#0f172a" strokeWidth="2" />
+                      <rect x="130" y="190" width="20" height="2" rx="1" fill="#0f172a" />
+                      <rect x="130" y="200" width="20" height="2" rx="1" fill="#0f172a" />
+                      <rect x="130" y="210" width="15" height="2" rx="1" fill="#0f172a" />
+                      
+                      <rect x="440" y="180" width="40" height="50" rx="4" fill="#cbd5e1" stroke="#0f172a" strokeWidth="2" />
+                      <rect x="450" y="190" width="20" height="2" rx="1" fill="#0f172a" />
+                      <rect x="450" y="200" width="20" height="2" rx="1" fill="#0f172a" />
+                      <rect x="450" y="210" width="15" height="2" rx="1" fill="#0f172a" />
+                      
+                      {/* Text labels */}
+                      <text x="300" y="360" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0f172a">Regulatory Compliance Dashboard</text>
+                    </svg>
                   </div>
                 </div>
               </div>

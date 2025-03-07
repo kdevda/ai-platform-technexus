@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function LendingAsAServicePage() {
   const features = [
     {
-      title: 'End-to-End Lending Platform',
+      title: <span className="text-black">End-to-End Lending Platform</span>,
       description: 'A complete turnkey solution that handles the entire lending process from application to servicing and collections.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -17,7 +17,7 @@ export default function LendingAsAServicePage() {
       )
     },
     {
-      title: 'AI-Powered Credit Decisions',
+      title: <span className="text-black">AI-Powered Credit Decisions</span>,
       description: 'Advanced models that evaluate creditworthiness beyond traditional metrics, enabling more inclusive and accurate lending.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@ export default function LendingAsAServicePage() {
       )
     },
     {
-      title: 'White-Label Integration',
+      title: <span className="text-black">White-Label Integration</span>,
       description: 'Seamlessly integrate lending capabilities into your existing platforms with your own branding and user experience.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -35,7 +35,7 @@ export default function LendingAsAServicePage() {
       )
     },
     {
-      title: 'Regulatory Compliance Engine',
+      title: <span className="text-black">Regulatory Compliance Engine</span>,
       description: 'Built-in compliance safeguards and automated reporting to ensure adherence to applicable lending regulations.',
       icon: (
         <svg className="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -47,22 +47,22 @@ export default function LendingAsAServicePage() {
 
   const benefits = [
     {
-      title: 'Accelerated Time-to-Market',
+      title: <span className="text-black">Accelerated Time-to-Market</span>,
       description: 'Launch lending products in weeks, not months, without building complex infrastructure from scratch.',
       value: '75%'
     },
     {
-      title: 'Reduced Operational Costs',
+      title: <span className="text-black">Reduced Operational Costs</span>,
       description: 'Eliminate the need for extensive IT resources and maintenance while lowering processing costs per loan.',
       value: '60%'
     },
     {
-      title: 'Increased Approval Rates',
+      title: <span className="text-black">Increased Approval Rates</span>,
       description: 'Accept more qualified borrowers with AI-powered underwriting that looks beyond traditional credit metrics.',
       value: '35%'
     },
     {
-      title: 'Lower Default Rates',
+      title: <span className="text-black">Lower Default Rates</span>,
       description: 'Improve portfolio performance with predictive analytics that identify risk factors traditional systems miss.',
       value: '40%'
     }
@@ -70,7 +70,7 @@ export default function LendingAsAServicePage() {
 
   const serviceModels = [
     {
-      title: 'Core LaaS Platform',
+      title: <span className="text-black">Core LaaS Platform</span>,
       features: [
         'Digital application processing',
         'Automated underwriting',
@@ -82,7 +82,7 @@ export default function LendingAsAServicePage() {
       recommended: false
     },
     {
-      title: 'LaaS Professional',
+      title: <span className="text-black">LaaS Professional</span>,
       features: [
         'Everything in Core',
         'Advanced fraud detection',
@@ -94,7 +94,7 @@ export default function LendingAsAServicePage() {
       recommended: true
     },
     {
-      title: 'LaaS Enterprise',
+      title: <span className="text-black">LaaS Enterprise</span>,
       features: [
         'Everything in Professional',
         'White-label customization',
@@ -144,7 +144,7 @@ export default function LendingAsAServicePage() {
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Key Features</h2>
+            <h2 className="text-black text-3xl md:text-4xl font-bold tracking-tight">Key Features</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
             <p className="text-gray-600 max-w-3xl mx-auto mt-6">
               Our Lending as a Service platform provides all the components needed to run a sophisticated lending operation.
@@ -171,7 +171,7 @@ export default function LendingAsAServicePage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Benefits</h2>
+            <h2 className="text-black text-3xl md:text-4xl font-bold tracking-tight">Benefits</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
             <p className="text-gray-600 max-w-3xl mx-auto mt-6">
               Organizations using our LaaS platform see rapid improvements in lending efficiency and profitability.
@@ -194,7 +194,7 @@ export default function LendingAsAServicePage() {
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Service Models</h2>
+            <h2 className="text-black text-3xl md:text-4xl font-bold tracking-tight">Service Models</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
             <p className="text-gray-600 max-w-3xl mx-auto mt-6">
               Choose the right level of service to match your organization's needs and growth stage.
@@ -212,7 +212,7 @@ export default function LendingAsAServicePage() {
                 <h3 className="text-2xl font-bold mb-6 text-center">{model.title}</h3>
                 <ul className="space-y-3 mb-8">
                   {model.features.map((feature, i) => (
-                    <li key={i} className="flex items-start">
+                    <li key={i} className="text-black flex items-start">
                       <svg className="w-5 h-5 text-black mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                       </svg>
@@ -236,7 +236,7 @@ export default function LendingAsAServicePage() {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">Implementation Process</h2>
+              <h2 className="text-black text-3xl md:text-4xl font-bold tracking-tight mb-6">Implementation Process</h2>
               <p className="text-gray-600 mb-8">
                 Our streamlined implementation process gets you up and running with minimal disruption to your operations.
               </p>
@@ -247,7 +247,7 @@ export default function LendingAsAServicePage() {
                     1
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold mb-2">Discovery & Planning</h3>
+                    <h3 className="text-black text-lg font-bold mb-2">Discovery & Planning</h3>
                     <p className="text-gray-600">We analyze your existing lending processes and define integration requirements.</p>
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export default function LendingAsAServicePage() {
                     2
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold mb-2">Configuration & Customization</h3>
+                    <h3 className="text-black text-lg font-bold mb-2">Configuration & Customization</h3>
                     <p className="text-gray-600">We tailor the platform to your specific products, decision criteria, and compliance needs.</p>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export default function LendingAsAServicePage() {
                     3
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold mb-2">Integration & Testing</h3>
+                    <h3 className="text-black text-lg font-bold mb-2">Integration & Testing</h3>
                     <p className="text-gray-600">We connect with your existing systems and thoroughly test all processes.</p>
                   </div>
                 </div>
@@ -277,7 +277,7 @@ export default function LendingAsAServicePage() {
                     4
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold mb-2">Launch & Ongoing Support</h3>
+                    <h3 className="text-black text-lg font-bold mb-2">Launch & Ongoing Support</h3>
                     <p className="text-gray-600">We provide training, monitor performance, and deliver continuous improvements.</p>
                   </div>
                 </div>
@@ -285,12 +285,12 @@ export default function LendingAsAServicePage() {
             </div>
             
             <div className="relative bg-gray-50 rounded-xl p-8 border border-gray-200">
-              <h3 className="text-2xl font-bold mb-6">Typical Timeline</h3>
+              <h3 className="text-black text-2xl font-bold mb-6">Typical Timeline</h3>
               
               <div className="space-y-6">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span className="font-medium">Discovery & Planning</span>
+                    <span className="text-black font-medium">Discovery & Planning</span>
                     <span className="text-gray-500">1-2 weeks</span>
                   </div>
                   <div className="w-full bg-gray-200 h-2 rounded-full">
@@ -300,7 +300,7 @@ export default function LendingAsAServicePage() {
                 
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span className="font-medium">Configuration & Customization</span>
+                    <span className="text-black font-medium">Configuration & Customization</span>
                     <span className="text-gray-500">2-4 weeks</span>
                   </div>
                   <div className="w-full bg-gray-200 h-2 rounded-full">
@@ -310,7 +310,7 @@ export default function LendingAsAServicePage() {
                 
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span className="font-medium">Integration & Testing</span>
+                    <span className="text-black font-medium">Integration & Testing</span>
                     <span className="text-gray-500">3-6 weeks</span>
                   </div>
                   <div className="w-full bg-gray-200 h-2 rounded-full">
@@ -320,7 +320,7 @@ export default function LendingAsAServicePage() {
                 
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span className="font-medium">Launch & Initial Support</span>
+                    <span className="text-black font-medium">Launch & Initial Support</span>
                     <span className="text-gray-500">1-2 weeks</span>
                   </div>
                   <div className="w-full bg-gray-200 h-2 rounded-full">
@@ -334,7 +334,7 @@ export default function LendingAsAServicePage() {
                   <svg className="w-5 h-5 text-black mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                   </svg>
-                  <span className="font-medium">Total: 7-14 weeks to full deployment</span>
+                  <span className="text-black font-medium">Total: 7-14 weeks to full deployment</span>
                 </div>
               </div>
             </div>
@@ -346,7 +346,7 @@ export default function LendingAsAServicePage() {
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Industry Applications</h2>
+            <h2 className="text-black text-3xl md:text-4xl font-bold tracking-tight">Industry Applications</h2>
             <div className="h-1 w-20 bg-black mx-auto mt-4"></div>
             <p className="text-gray-600 max-w-3xl mx-auto mt-6">
               Our Lending as a Service platform adapts to a wide range of lending scenarios across industries.
@@ -360,7 +360,7 @@ export default function LendingAsAServicePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-3">Banking & Credit Unions</h3>
+              <h3 className="text-black text-xl font-bold mb-3">Banking & Credit Unions</h3>
               <ul className="space-y-2 mb-6 text-gray-600">
                 <li>• Personal loans</li>
                 <li>• Small business lending</li>
@@ -381,7 +381,7 @@ export default function LendingAsAServicePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-3">Retail & E-commerce</h3>
+              <h3 className="text-black text-xl font-bold mb-3">Retail & E-commerce</h3>
               <ul className="space-y-2 mb-6 text-gray-600">
                 <li>• Buy-now-pay-later</li>
                 <li>• Point-of-sale financing</li>
@@ -399,10 +399,10 @@ export default function LendingAsAServicePage() {
             <div className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-md transition-shadow">
               <div className="mb-6">
                 <svg className="w-12 h-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-3">Fintech Startups</h3>
+              <h3 className="text-black text-xl font-bold mb-3">Fintech Startups</h3>
               <ul className="space-y-2 mb-6 text-gray-600">
                 <li>• Embedded lending</li>
                 <li>• Specialized credit products</li>
@@ -437,24 +437,6 @@ export default function LendingAsAServicePage() {
                   Schedule Demo
                 </Link>
               </div>
-            </div>
-            
-            <div className="bg-gray-800 rounded-xl p-8">
-              <h3 className="text-xl font-bold mb-4">Success Story</h3>
-              <p className="text-gray-300 mb-6">
-                "TechNexus' Lending as a Service platform allowed us to launch our consumer loan product in just 8 weeks. We saw a 40% reduction in operational costs and a 35% increase in qualified applicants compared to our legacy system."
-              </p>
-              <div className="mb-6">
-                <div className="font-medium">Michael Chen</div>
-                <div className="text-sm text-gray-400">Chief Digital Officer, Regional Bank</div>
-              </div>
-              
-              <Link href="/case-studies" className="text-sm text-gray-300 hover:text-white flex items-center">
-                Read More Case Studies
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </Link>
             </div>
           </div>
         </div>

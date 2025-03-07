@@ -303,13 +303,13 @@ export default function AITreasuryPage() {
                 </div>
                 <div className="space-y-4">
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">Good morning. I've analyzed overnight market movements and updated your cash forecast. You have $4.2M in excess funds that could be deployed more effectively.</p>
+                    <p className="text-sm text-gray-700">Good morning. I've analyzed overnight market movements and updated your cash forecast. You have $4.2M in excess funds that could be deployed more effectively.</p>
                   </div>
                   <div className="bg-black p-3 rounded-lg rounded-tr-none max-w-[80%] ml-auto">
                     <p className="text-sm text-white">What investment options do you recommend for the excess funds?</p>
                   </div>
                   <div className="bg-gray-100 p-3 rounded-lg rounded-tl-none max-w-[80%]">
-                    <p className="text-sm">Based on your liquidity requirements and risk tolerance, I recommend: 
+                    <p className="text-sm text-gray-700">Based on your liquidity requirements and risk tolerance, I recommend: 
                       <br/>• 30-day Treasury Bills ($2M) - 4.8% yield
                       <br/>• 90-day Commercial Paper ($1.5M) - 5.2% yield
                       <br/>• Overnight Repo ($0.7M) - 4.5% yield
