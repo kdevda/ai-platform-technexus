@@ -33,17 +33,6 @@ export const emailService = {
       if (emailData.cc) formData.append('cc', emailData.cc);
       if (emailData.bcc) formData.append('bcc', emailData.bcc);
       formData.append('subject', emailData.subject);
-      
-      // The backend expects either 'text' or 'html', not 'body'
-      if (emailData.body.includes('<') && emailData.body.includes('>')) {
-        // If the body contains HTML tags, send it as HTML
-        formData.append('html', emailData.body);
-      } else {
-        // Otherwise, send it as plain text
-        formData.append('text', emailData.body);
-      }
-      
-      // Also include the original body field for compatibility
       formData.append('body', emailData.body);
       
       // Add connection data if available
@@ -56,9 +45,8 @@ export const emailService = {
       
       // Append attachments if any
       if (emailData.attachments && emailData.attachments.length > 0) {
-        emailData.attachments.forEach((attachment) => {
-          // Use 'attachments' as the field name to match the backend multer configuration
-          formData.append('attachments', attachment.file, attachment.name);
+        emailData.attachments.forEach((attachment, index) => {
+          formData.append(`attachment${index}`, attachment.file);
         });
       }
       
