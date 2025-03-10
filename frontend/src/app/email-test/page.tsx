@@ -34,10 +34,10 @@ export default function EmailTest() {
     });
     
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       console.log('Using backend URL:', backendUrl);
       
-      const response = await axios.post(`${backendUrl}/email/send`, {
+      const response = await axios.post(`${backendUrl}/api/email/send`, {
         name: formData.name,
         email: formData.email,
         subject: formData.subject,
@@ -78,14 +78,15 @@ export default function EmailTest() {
     });
     
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      console.log('Using backend URL for contact form test:', backendUrl);
       
-      const response = await axios.post(`${backendUrl}/email/send`, {
-        name: formData.name,
-        email: formData.email,
-        company: 'Test Company',
-        phone: '555-1234',
-        message: formData.message
+      const response = await axios.post(`${backendUrl}/api/email/contact`, {
+        name: 'Test User',
+        email: formData.email || 'test@example.com',
+        subject: 'Contact Form Test',
+        message: 'This is a test message from the email test page.',
+        to: 'kd@technexus.ca'
       });
       
       console.log('Contact form test response:', response.data);

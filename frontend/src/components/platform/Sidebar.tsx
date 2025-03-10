@@ -115,11 +115,11 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className={`transition-all duration-300 ease-in-out ${expanded ? 'w-64' : 'w-16'} bg-gray-800 text-white h-full flex-shrink-0 relative`}>
+    <div className={`transition-all duration-300 ease-in-out ${expanded ? 'w-64' : 'w-16'} bg-black text-white h-full flex-shrink-0 relative`}>
       {/* Toggle button */}
       <button 
         onClick={toggleSidebar}
-        className="absolute -right-3 top-4 bg-gray-800 rounded-full p-1 shadow-md z-10"
+        className="absolute -right-3 top-4 bg-black rounded-full p-1 shadow-md z-10"
         aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
       >
         <div className="w-5 h-5 flex items-center justify-center text-white">

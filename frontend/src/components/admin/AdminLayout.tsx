@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import AdminSidebar from './AdminSidebar';
@@ -12,13 +12,26 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
   const { state, hasRole } = useAuth();
-  const isAdmin = hasRole('ADMIN');
-
+  // Track if we've already checked admin status
+  const [adminChecked, setAdminChecked] = useState(false);
+  // Cache the admin status
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Only run the authentication check once when the component mounts
+  // or when auth state changes
   useEffect(() => {
-    if (!state.loading && (!state.user || !isAdmin)) {
-      router.push('/platform/dashboard');
+    if (!adminChecked) {
+      const adminStatus = hasRole('ADMIN');
+      console.log('Admin access check result:', adminStatus);
+      setIsAdmin(adminStatus);
+      setAdminChecked(true);
+      
+      if (!state.loading && !adminStatus) {
+        console.log('Redirecting: Not an admin');
+        router.push('/login');
+      }
     }
-  }, [state.loading, state.user, isAdmin, router]);
+  }, [state.loading, state.user, hasRole, router, adminChecked]);
 
   // Show nothing while loading or if not authenticated/admin
   if (state.loading || !state.user || !isAdmin) {

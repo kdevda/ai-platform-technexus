@@ -41,11 +41,11 @@ export default function ContactPage() {
     
     try {
       // Use the backend API endpoint instead of the Next.js API route
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       console.log('Using backend URL for contact page:', backendUrl);
       
 
-      const response = await axios.post(`${backendUrl}/email/send`, {
+      const response = await axios.post(`${backendUrl}/api/email/contact`, {
         name: formData.name,
         email: formData.email,
         subject: formData.subject || `Contact Form: ${formData.company || formData.name}`,

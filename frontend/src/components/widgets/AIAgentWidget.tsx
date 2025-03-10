@@ -37,6 +37,7 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isActive, setIsActive] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { state } = useAuth();
   const token = state.user?.token;
@@ -55,42 +56,63 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
     center: 'justify-center'
   };
 
+  // Initialize the chat session when the component mounts
   useEffect(() => {
-    // Generate a session ID when component mounts
-    setSessionId(`session-${Math.random().toString(36).substring(2, 11)}`);
+    const initializeSession = async () => {
+      try {
+        // Create a new session
+        const response = await axios.post(
+          `/api/agents/${agentId}/initialize`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
 
-    // Add a welcome message
-    setMessages([
-      {
-        role: 'assistant',
-        content: 'Hello! How can I assist you today?',
-        timestamp: new Date()
+        if (response.data.success) {
+          setSessionId(response.data.data.sessionId);
+          setIsActive(true);
+        } else {
+          setError('Failed to initialize chat session');
+          setIsActive(false);
+        }
+      } catch (error) {
+        console.error('Error initializing agent session:', error);
+        setError('Error initializing chat session');
+        setIsActive(false);
       }
-    ]);
-  }, []);
+    };
 
+    if (token) {
+      initializeSession();
+    } else {
+      setIsActive(false);
+    }
+  }, [agentId, token]);
+
+  // Scroll to bottom whenever messages change
   useEffect(() => {
-    // Scroll to bottom whenever messages change
     scrollToBottom();
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
   };
 
   const handleSendMessage = async () => {
-    if (!input.trim()) return;
-    if (!token) {
-      setError('Authentication required');
-      return;
-    }
+    if (!input.trim() || loading || !token) return;
 
     // Add user message
     const userMessage: Message = {
       role: 'user',
-      content: input,
+      content: input.trim(),
       timestamp: new Date()
     };
+
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setLoading(true);
@@ -131,7 +153,7 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter') {
       e.preventDefault();
       handleSendMessage();
     }
@@ -139,38 +161,62 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
 
   return (
     <div className={`${widthClasses[width]} p-2 flex ${positionClasses[position]}`}>
-      <Card className={`w-full overflow-hidden max-h-[${initialHeight}px]`}>
-        <CardHeader className="bg-primary/5 p-4">
+      <Card className="w-full overflow-hidden shadow-xl border border-gray-200 rounded-xl max-w-4xl">
+        <CardHeader className="bg-gray-100 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Avatar className="h-8 w-8 bg-primary">
+              <Avatar className="h-8 w-8 bg-black text-white">
                 <span className="text-xs font-semibold">AI</span>
               </Avatar>
               <div>
                 <CardTitle className="text-lg">{title}</CardTitle>
-                {description && <p className="text-sm text-muted-foreground">{description}</p>}
+                {description && <p className="text-sm text-gray-600">{description}</p>}
               </div>
             </div>
-            <Badge variant="outline" className="bg-primary/10 text-primary">
-              Active
+            <Badge 
+              variant="outline" 
+              className={`${isActive 
+                ? 'bg-green-100 text-green-800 border-green-300' 
+                : 'bg-red-100 text-red-800 border-red-300'}`}
+            >
+              {isActive ? 'Active' : 'Inactive'}
             </Badge>
           </div>
         </CardHeader>
 
-        <CardContent className={`p-0 relative h-[${initialHeight - 140}px]`}>
-          <div className="h-full overflow-y-auto p-4" ref={messagesEndRef}>
+        <div className="relative" style={{ height: `${initialHeight - 140}px` }}>
+          <div 
+            className="h-full overflow-y-auto p-4 bg-gray-50" 
+            ref={messagesEndRef}
+          >
+            {messages.length === 0 && (
+              <div className="flex flex-col items-center justify-center h-full text-center p-6">
+                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </div>
+                <h3 className="font-medium text-lg text-gray-900">Welcome to Loan Assistant</h3>
+                <p className="text-gray-600 text-sm mt-2">Ask me any questions about loans, payments, or applications. I'm here to help!</p>
+              </div>
+            )}
             {messages.map((message, index) => (
               <div
                 key={index}
                 className={`flex ${
                   message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                } mb-4`}
               >
+                {message.role === 'assistant' && (
+                  <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center mr-2 flex-shrink-0">
+                    <span className="text-xs">AI</span>
+                  </div>
+                )}
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted'
+                      ? 'bg-black text-white'
+                      : 'bg-white border border-gray-200 text-gray-800'
                   }`}
                 >
                   <p className="text-sm">{message.content}</p>
@@ -178,29 +224,37 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
                     {new Date(message.timestamp).toLocaleTimeString()}
                   </p>
                 </div>
+                {message.role === 'user' && (
+                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center ml-2 flex-shrink-0">
+                    <span className="text-xs text-gray-600">You</span>
+                  </div>
+                )}
               </div>
             ))}
             {loading && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] rounded-lg p-3 bg-muted">
+              <div className="flex justify-start mb-4">
+                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center mr-2 flex-shrink-0">
+                  <span className="text-xs">AI</span>
+                </div>
+                <div className="max-w-[80%] rounded-lg p-3 bg-white border border-gray-200">
                   <div className="flex items-center space-x-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <p className="text-sm">Thinking...</p>
+                    <Loader2 className="h-4 w-4 animate-spin text-black" />
+                    <p className="text-sm text-gray-600">Thinking...</p>
                   </div>
                 </div>
               </div>
             )}
             {error && (
-              <div className="flex justify-center">
-                <div className="max-w-[80%] rounded-lg p-3 bg-destructive/10 text-destructive">
+              <div className="flex justify-center mb-4">
+                <div className="max-w-[80%] rounded-lg p-3 bg-red-50 text-red-600 border border-red-200">
                   <p className="text-sm">{error}</p>
                 </div>
               </div>
             )}
           </div>
-        </CardContent>
+        </div>
 
-        <CardFooter className="p-3 border-t">
+        <div className="p-3 bg-white">
           <div className="flex w-full space-x-2">
             <Input
               placeholder="Type your message..."
@@ -208,12 +262,13 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={loading || !token}
-              className="flex-1"
+              className="flex-1 border-gray-300 focus:border-black focus:ring-black"
             />
             <Button
               onClick={handleSendMessage}
               disabled={loading || !input.trim() || !token}
               size="icon"
+              className="bg-black hover:bg-gray-800 text-white"
             >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -222,7 +277,7 @@ const AIAgentWidget: React.FC<AIAgentWidgetProps> = ({
               )}
             </Button>
           </div>
-        </CardFooter>
+        </div>
       </Card>
     </div>
   );

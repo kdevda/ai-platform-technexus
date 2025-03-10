@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -58,8 +58,43 @@ export const isMongoDBConnected = (): boolean => {
   return mongoose.connection.readyState === 1;
 };
 
+/**
+ * Get a Mongoose model by its name
+ */
+export const getModelByName = async (modelName: string): Promise<Model<any> | null> => {
+  try {
+    // Check if model is already registered
+    if (mongoose.models[modelName]) {
+      return mongoose.models[modelName];
+    }
+    
+    // Check if MongoDB is connected
+    if (!mongoose.connection || !mongoose.connection.db) {
+      console.error('MongoDB is not connected');
+      return null;
+    }
+    
+    // If not registered, try to get the schema
+    const schema = await mongoose.connection.db.collection(modelName).findOne({});
+    if (!schema) {
+      console.error(`No schema found for model: ${modelName}`);
+      return null;
+    }
+    
+    // Create a dynamic schema based on the first document
+    const dynamicSchema = new mongoose.Schema({}, { strict: false });
+    
+    // Register and return the model
+    return mongoose.model(modelName, dynamicSchema);
+  } catch (error) {
+    console.error(`Error getting model ${modelName}:`, error);
+    return null;
+  }
+};
+
 export default {
   connectMongoDB,
   disconnectMongoDB,
   isMongoDBConnected,
+  getModelByName,
 }; 

@@ -9,8 +9,8 @@ import { Spinner } from '@/components/ui/Spinner';
 // API functions
 const fetchTables = async (token: string | undefined) => {
   if (!token) throw new Error('Authentication token is required');
-  console.log('Fetching tables from:', `${process.env.NEXT_PUBLIC_API_URL}/schema/tables`);
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables`, {
+  console.log('Fetching tables from:', `${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -27,7 +27,7 @@ const fetchTables = async (token: string | undefined) => {
 
 const fetchTableFields = async (tableName: string, token: string | undefined) => {
   if (!token) throw new Error('Authentication token is required');
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables/${tableName}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables/${tableName}`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -38,7 +38,7 @@ const fetchTableFields = async (tableName: string, token: string | undefined) =>
 
 const fetchDataTypes = async (token: string | undefined) => {
   if (!token) throw new Error('Authentication token is required');
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/data-types`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/data-types`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -50,8 +50,8 @@ const fetchDataTypes = async (token: string | undefined) => {
 const createTable = async (tableData: any, token: string | undefined) => {
   if (!token) throw new Error('Authentication token is required');
   console.log('Creating table with data:', tableData);
-  console.log('API URL:', `${process.env.NEXT_PUBLIC_API_URL}/schema/tables`);
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables`, {
+  console.log('API URL:', `${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const createTable = async (tableData: any, token: string | undefined) => {
 
 const updateTable = async (tableName: string, tableData: any, token: string | undefined) => {
   if (!token) throw new Error('Authentication token is required');
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables/${tableName}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables/${tableName}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ const updateTable = async (tableName: string, tableData: any, token: string | un
 
 const deleteTable = async (tableName: string, token: string | undefined) => {
   if (!token) throw new Error('Authentication token is required');
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables/${tableName}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables/${tableName}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`

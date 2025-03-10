@@ -147,3 +147,37 @@ model IntegrationConfiguration {
 
   @@unique([integrationId, fieldName])
 }
+
+// Model for storing Resend API configuration
+model ResendConfig {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String
+  description String?
+  isSecret    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Model for storing emails sent through the platform
+model Email {
+  id            String    @id @default(uuid())
+  from          String
+  to            String
+  cc            String?
+  bcc           String?
+  subject       String
+  body          String    @db.Text
+  status        String    @default("draft") // draft, sending, sent, delivered, bounced, complained, delayed, failed
+  sentAt        DateTime?
+  connectionId  String?
+  connectionType String?
+  attachments   Json?     @default("[]")
+  metadata      Json?     @default("{}")
+  senderId      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Define relationships if User model is available
+  // sender        User      @relation(fields: [senderId], references: [id])
+}

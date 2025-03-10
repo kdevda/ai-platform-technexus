@@ -9,20 +9,48 @@ import Layout from '@/components/layout/Layout';
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [localLoading, setLocalLoading] = useState(false);
+  const [localError, setLocalError] = useState<string | null>(null);
   const { state, login, clearError } = useAuth();
   const { isAuthenticated, loading, error } = state;
   const router = useRouter();
 
+  // Clear any local errors when auth state changes
   useEffect(() => {
-    if (isAuthenticated) {
+    if (error) {
+      setLocalLoading(false);
+    }
+  }, [error]);
+
+  // Handle redirect after successful authentication
+  useEffect(() => {
+    if (isAuthenticated && !loading) {
       router.push('/platform/dashboard');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, loading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
+    
+    // Clear any previous errors
+    clearError();
+    setLocalError(null);
+    
+    // Set local loading state 
+    setLocalLoading(true);
+    
+    try {
+      await login(email, password);
+      // If login is successful, we'll be redirected by the above useEffect
+    } catch (error) {
+      console.error('Login error:', error);
+      setLocalError(error instanceof Error ? error.message : 'Login failed. Please try again.');
+      setLocalLoading(false);
+    }
   };
+
+  // Determine if we should show loading state - either from local state or auth context
+  const isLoading = localLoading || loading;
 
   return (
     <Layout>
@@ -33,12 +61,16 @@ const LoginPage: React.FC = () => {
             <p className="text-gray-600 mt-2">Enter your credentials to access your account</p>
           </div>
           
-          {error && (
+          {/* Show either auth context error or local error */}
+          {(error || localError) && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
               <div className="flex justify-between">
-                <p>{error}</p>
+                <p>{error || localError}</p>
                 <button
-                  onClick={clearError}
+                  onClick={() => {
+                    clearError();
+                    setLocalError(null);
+                  }}
                   className="text-sm underline"
                   aria-label="Close error message"
                 >
@@ -60,6 +92,7 @@ const LoginPage: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-black"
                 required
+                disabled={isLoading}
               />
             </div>
             
@@ -74,6 +107,7 @@ const LoginPage: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-black"
                 required
+                disabled={isLoading}
               />
             </div>
             
@@ -84,6 +118,7 @@ const LoginPage: React.FC = () => {
                   name="remember-me"
                   type="checkbox"
                   className="h-4 w-4 text-black border-gray-300 rounded"
+                  disabled={isLoading}
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                   Remember me
@@ -99,10 +134,10 @@ const LoginPage: React.FC = () => {
             
             <button
               type="submit"
-              className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
-              disabled={loading}
+              className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-70"
+              disabled={isLoading}
             >
-              {loading ? (
+              {isLoading ? (
                 <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -116,14 +151,14 @@ const LoginPage: React.FC = () => {
             </button>
           </form>
           
-          <div className="mt-8 text-center">
+          {/*<div className="mt-8 text-center">
             <p className="text-gray-600">
               Don&apos;t have an account?{' '}
               <Link href="/register" className="text-black font-medium hover:underline">
                 Register here
               </Link>
             </p>
-          </div>
+          </div>*/}
         </div>
       </div>
     </Layout>

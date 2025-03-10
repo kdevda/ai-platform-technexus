@@ -1,12 +1,30 @@
 import { User, Loan } from '@/types';
 
-// Ensure the API URL has the correct format
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-console.log('API URL configured as:', API_URL); 
+// Define fallback API URL in case environment variable is undefined
+const DEFAULT_API_URL = 'http://localhost:5000';
 
-// Debug utility to log API requests in production
+// Ensure the API URL has the correct format
+export const API_URL = (() => {
+  const configuredUrl = process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+  
+  // Display warning in development if using the default URL
+  if (!process.env.NEXT_PUBLIC_API_URL && process.env.NODE_ENV === 'development') {
+    console.warn(
+      'Warning: NEXT_PUBLIC_API_URL is not set in your environment variables. ' +
+      `Using default API URL: ${DEFAULT_API_URL}`
+    );
+  }
+  
+  // Log the configured API URL for debugging
+  console.log(`API URL configured as: ${configuredUrl}`);
+  
+  return configuredUrl;
+})();
+
+// Debug utility to log API requests
 const logApiRequest = (method: string, endpoint: string, data?: any) => {
-  if (process.env.NODE_ENV === 'production') {
+  const shouldLog = process.env.NODE_ENV === 'development' || process.env.DEBUG === 'true';
+  if (shouldLog) {
     console.log(`API Request: ${method} ${API_URL}${endpoint}`, data ? { data } : '');
   }
 };
@@ -56,8 +74,10 @@ const handleApiError = async (error: unknown, response?: Response): Promise<stri
 // Auth API calls
 export const loginUser = async (email: string, password: string): Promise<User> => {
   try {
-    const endpoint = '/users/login';
+    const endpoint = '/api/users/login';
     logApiRequest('POST', endpoint, { email });
+    
+    console.log(`Attempting login for ${email} to ${API_URL}${endpoint}`);
     
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
@@ -67,13 +87,49 @@ export const loginUser = async (email: string, password: string): Promise<User> 
       body: JSON.stringify({ email, password }),
     });
 
+    console.log(`Login response status: ${response.status}`);
+
     if (!response.ok) {
-      const errorMessage = await handleApiError(null, response);
-      throw new Error(errorMessage);
+      const errorData = await response.json().catch(() => ({ message: 'Invalid server response' }));
+      console.error('Login failed:', errorData);
+      throw new Error(errorData.message || `Login failed with status ${response.status}`);
     }
 
-    return await response.json();
+    const user = await response.json().catch(() => {
+      console.error('Failed to parse login response as JSON');
+      throw new Error('Invalid response format from server');
+    });
+    
+    console.log('Login successful, user data received:', {
+      id: user._id,
+      email: user.email,
+      hasToken: !!user.token
+    });
+    
+    if (!user.token) {
+      console.error('No token received from server');
+      throw new Error('Authentication failed: No token received');
+    }
+    
+    // Store user data in localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user', JSON.stringify(user));
+      
+      // Also save token separately for easier access
+      if (user.token) {
+        console.log(`Saving token to localStorage (length: ${user.token.length})`);
+        localStorage.setItem('token', user.token);
+        
+        // Redundant storage in sessionStorage as backup
+        sessionStorage.setItem('token', user.token);
+      } else {
+        console.warn('Login successful but no token received from server');
+      }
+    }
+    
+    return user;
   } catch (error) {
+    console.error('Login error:', error);
     const errorMessage = await handleApiError(error);
     throw new Error(errorMessage);
   }
@@ -81,7 +137,7 @@ export const loginUser = async (email: string, password: string): Promise<User> 
 
 export const registerUser = async (name: string, email: string, password: string): Promise<User> => {
   try {
-    const endpoint = '/users';
+    const endpoint = '/api/users';
     logApiRequest('POST', endpoint, { name, email });
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -93,8 +149,8 @@ export const registerUser = async (name: string, email: string, password: string
     });
 
     if (!response.ok) {
-      const errorMessage = await handleApiError(null, response);
-      throw new Error(errorMessage);
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Registration failed');
     }
 
     return await response.json();
@@ -106,8 +162,9 @@ export const registerUser = async (name: string, email: string, password: string
 
 export const getUserProfile = async (token: string): Promise<User> => {
   try {
-    const endpoint = '/users/profile';
+    const endpoint = '/api/users/profile';
     logApiRequest('GET', endpoint);
+    console.log('Fetching user profile with token starting with:', token.substring(0, 10) + '...');
     
     const response = await fetch(`${API_URL}${endpoint}`, {
       method: 'GET',
@@ -117,13 +174,19 @@ export const getUserProfile = async (token: string): Promise<User> => {
       },
     });
 
+    console.log('Profile response status:', response.status);
+    
     if (!response.ok) {
-      const errorMessage = await handleApiError(null, response);
-      throw new Error(errorMessage);
+      const errorData = await response.json().catch(() => ({ message: 'No JSON response' }));
+      console.error('Profile fetch error:', errorData);
+      throw new Error(errorData.message || 'Failed to fetch user profile');
     }
 
-    return await response.json();
+    const userData = await response.json();
+    console.log('User profile fetched successfully:', userData.email);
+    return userData;
   } catch (error) {
+    console.error('Profile fetch exception:', error);
     const errorMessage = await handleApiError(error);
     throw new Error(errorMessage);
   }
@@ -141,7 +204,7 @@ export const applyForLoan = async (
   }
 ): Promise<Loan> => {
   try {
-    const endpoint = '/loans';
+    const endpoint = '/api/loans';
     logApiRequest('POST', endpoint, loanData);
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -170,7 +233,7 @@ export const createLoan = async (
   loanData: { amount: number; interestRate: number; term: number; purpose: string }
 ): Promise<Loan> => {
   try {
-    const endpoint = '/loans';
+    const endpoint = '/api/loans';
     logApiRequest('POST', endpoint, loanData);
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -196,7 +259,7 @@ export const createLoan = async (
 
 export const getLoans = async (token: string): Promise<Loan[]> => {
   try {
-    const endpoint = '/loans';
+    const endpoint = '/api/loans';
     logApiRequest('GET', endpoint);
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -221,7 +284,7 @@ export const getLoans = async (token: string): Promise<Loan[]> => {
 
 export const getLoanById = async (token: string, id: string): Promise<Loan> => {
   try {
-    const endpoint = `/loans/${id}`;
+    const endpoint = `/api/loans/${id}`;
     logApiRequest('GET', endpoint);
     
     const response = await fetch(`${API_URL}${endpoint}`, {
@@ -252,7 +315,7 @@ export const updateLoanStatus = async (
   endDate?: Date
 ): Promise<Loan> => {
   try {
-    const endpoint = `/loans/${id}`;
+    const endpoint = `/api/loans/${id}`;
     logApiRequest('PUT', endpoint, { status, startDate, endDate });
     
     const response = await fetch(`${API_URL}${endpoint}`, {

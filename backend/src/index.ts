@@ -10,7 +10,12 @@ import roleRoutes from './routes/roleRoutes';
 import integrationRoutes from './routes/integrationRoutes';
 import integrationMongoRoutes from './routes/integrationMongoRoutes';
 import emailRoutes from './routes/emailRoutes';
+import emailsRoutes from './routes/emailsRoutes';
+import webhookRoutes from './routes/webhookRoutes';
 import agentRoutes from './routes/agentRoutes';
+import widgetRoutes from './routes/widgetRoutes';
+import widgetDataRoutes from './routes/widgetDataRoutes';
+import metadataRoutes from './routes/metadataRoutes';
 import { connectDatabases, checkDatabaseConnections } from './services/dbService';
 
 // Load environment variables
@@ -69,9 +74,14 @@ app.use('/api/schema', schemaRoutes);
 app.use('/api/permissions', permissionRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/integrations', integrationRoutes);
-app.use('/api/mongo/integrations', integrationMongoRoutes);
+app.use('/api/integrations-mongo', integrationMongoRoutes);
 app.use('/api/email', emailRoutes);
-app.use('/api/agent', agentRoutes);
+app.use('/api/emails', emailsRoutes);
+app.use('/api/webhooks', webhookRoutes);
+app.use('/api/agents', agentRoutes);
+app.use('/api/widgets', widgetRoutes);
+app.use('/api/data', widgetDataRoutes);
+app.use('/api/metadata', metadataRoutes);
 
 // Start server
 connectDatabases().then(() => {

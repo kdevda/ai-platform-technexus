@@ -3,7 +3,6 @@
 import React, { useEffect, useState, Suspense, useMemo, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLoan } from '@/context/LoanContext';
-import PlatformLayout from '@/components/platform/PlatformLayout';
 import Link from 'next/link';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -61,54 +60,89 @@ const AIChatWidget = ({ messages, input, setInput, handleSubmit }: {
   const MobileChat = () => (
     <div className="fixed bottom-4 right-4 z-50 md:hidden">
       {isOpen ? (
-        <div className="bg-white rounded-xl shadow-xl w-80 flex flex-col overflow-hidden border border-gray-200">
-          <div className="bg-black text-white p-4 flex justify-between items-center rounded-t-xl">
-            <h3 className="font-medium">Technexus AI Assistant</h3>
-            <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">
+        <div className="bg-white rounded-xl shadow-2xl w-80 flex flex-col overflow-hidden border border-gray-200">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-900 text-white p-4 flex justify-between items-center rounded-t-xl">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="font-medium">Technexus AI</h3>
+            </div>
+            <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white transition-colors">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
           
-          <div className="flex-1 p-4 max-h-80 bg-white">
-            {messages.map((msg, index) => (
-              <div key={index} className={`mb-3 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`rounded-xl px-4 py-2 max-w-3/4 ${
-                  msg.sender === 'user' 
-                    ? 'bg-black text-white' 
-                    : 'bg-gray-200 text-black'
-                }`}>
-                  {msg.text}
+          <div className="flex-1 p-4 max-h-[400px] overflow-y-auto bg-gray-50">
+            {messages.length === 0 ? (
+              <div className="text-center text-gray-500 py-10">
+                <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
                 </div>
+                <h4 className="text-lg font-medium text-gray-700">How can I help?</h4>
+                <p className="text-sm">Ask me about loans, payments, or applications</p>
               </div>
-            ))}
+            ) : (
+              messages.map((msg, index) => (
+                <div key={index} className={`mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {msg.sender !== 'user' && (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-blue-800 flex-shrink-0 flex items-center justify-center mr-2">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className={`rounded-2xl px-4 py-2 max-w-[75%] shadow-sm ${
+                    msg.sender === 'user' 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-white text-gray-800 border border-gray-100'
+                  }`}>
+                    {msg.text}
+                  </div>
+                  {msg.sender === 'user' && (
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center ml-2">
+                      <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
           
-          <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4 flex">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              className="flex-1 border border-gray-300 rounded-l-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 text-black"
-              autoFocus
-              onClick={(e) => e.currentTarget.focus()}
-            />
-            <button 
-              type="submit" 
-              className="bg-black text-white px-4 py-2 rounded-r-xl hover:bg-gray-800"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
+          <form onSubmit={handleSubmit} className="border-t border-gray-200 p-3 bg-white">
+            <div className="relative flex items-center">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask me anything..."
+                className="flex-1 border border-gray-300 rounded-full pl-4 pr-12 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black"
+                autoFocus
+                onClick={(e) => e.currentTarget.focus()}
+              />
+              <button 
+                type="submit" 
+                className="absolute right-1 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </form>
         </div>
       ) : (
         <button 
           onClick={() => setIsOpen(true)}
-          className="bg-black text-white p-4 rounded-full shadow-lg hover:bg-gray-800 transition-colors"
+          className="bg-gradient-to-r from-blue-600 to-blue-900 text-white p-4 rounded-full shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 animate-pulse"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -156,7 +190,7 @@ const DashboardContent = () => {
         <TabsTrigger value="activities">Activities</TabsTrigger>
       </TabsList>
       
-      <TabsContent value="overview" className="space-y-4">
+      <TabsContent value="overview" className="space-y-4 text-black">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -386,7 +420,7 @@ const DashboardContent = () => {
         </div>
       </TabsContent>
       
-      <TabsContent value="loans" className="space-y-4">
+      <TabsContent value="loans" className="space-y-4 text-black">
         <Card>
           <CardHeader>
             <CardTitle>Your Loans</CardTitle>
@@ -456,7 +490,7 @@ const DashboardContent = () => {
         </Card>
       </TabsContent>
       
-      <TabsContent value="applications" className="space-y-4">
+      <TabsContent value="applications" className="space-y-4 text-black">
         <Card>
           <CardHeader>
             <CardTitle>Your Applications</CardTitle>
@@ -518,7 +552,7 @@ const DashboardContent = () => {
         </Card>
       </TabsContent>
       
-      <TabsContent value="activities" className="space-y-4">
+      <TabsContent value="activities" className="space-y-4 text-black">
         <Card>
           <CardHeader>
             <CardTitle>All Activities</CardTitle>
@@ -847,12 +881,20 @@ const PlatformDashboard: React.FC = () => {
   });
 
   return (
-    <PlatformLayout>
+    <div className="text-gray-800">
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setShowApplicationModal(true)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              New Application
+            </button>
+          </div>
         </div>
-        
+
         {/* AI Assistant Widget */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="col-span-2">
@@ -863,25 +905,26 @@ const PlatformDashboard: React.FC = () => {
           
           {/* AI Assistant Column */}
           <div className="col-span-1">
-            <AIAgentWidget 
-              agentId="loan-assistant-agent"
-              title="Loan Assistant"
-              description="Ask me any questions about loans, payments, or application status."
-              initialHeight={600}
-              width="full"
-              position="center"
-            />
+            <div className="h-full">
+              <AIAgentWidget 
+                agentId="loan-assistant-agent"
+                title="Loan Assistant"
+                initialHeight={650}
+                width="full"
+                position="center"
+              />
+            </div>
           </div>
         </div>
       </div>
-      
+
       {/* New Application Modal */}
       {showApplicationModal && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-black">New Application</h3>
-              <button 
+              <h3 className="text-xl font-semibold text-gray-800">New Application</h3>
+              <button
                 onClick={() => setShowApplicationModal(false)}
                 className="text-gray-500 hover:text-gray-700"
               >
@@ -902,7 +945,7 @@ const PlatformDashboard: React.FC = () => {
                   name="appName"
                   value={newApplication.name}
                   onChange={(e) => setNewApplication({...newApplication, name: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800"
                   required
                 />
               </div>
@@ -917,7 +960,7 @@ const PlatformDashboard: React.FC = () => {
                   name="amount"
                   value={newApplication.amount || ''}
                   onChange={(e) => setNewApplication({...newApplication, amount: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800"
                 />
               </div>
               
@@ -931,7 +974,7 @@ const PlatformDashboard: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   Create Application
                 </button>
@@ -943,7 +986,7 @@ const PlatformDashboard: React.FC = () => {
       
       {/* Mobile Chat Widget */}
       <AIChatWidget messages={chatMessages} input={chatInput} setInput={setChatInput} handleSubmit={handleChatSubmit} />
-    </PlatformLayout>
+    </div>
   );
 };
 

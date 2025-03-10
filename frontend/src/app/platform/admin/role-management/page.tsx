@@ -113,7 +113,7 @@ const RoleManagementPage: React.FC = () => {
       console.error('Error fetching tables:', error);
       // Fallback to schema/tables endpoint if permission endpoint fails
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -199,7 +199,7 @@ const RoleManagementPage: React.FC = () => {
       console.error('Error fetching fields:', error);
       // Fallback to schema/tables/fields endpoint if permission endpoint fails
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/schema/tables/${tableName}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schema/tables/${tableName}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
