@@ -23,7 +23,7 @@ export interface EmailData {
 
 export const emailService = {
   // Send an email
-  async sendEmail(emailData: EmailData): Promise<{ success: boolean; message: string; data?: any }> {
+  async sendEmail(emailData: EmailData): Promise<{ success: boolean; message: string; error?: any; data?: any }> {
     try {
       const formData = new FormData();
       
@@ -33,7 +33,17 @@ export const emailService = {
       if (emailData.cc) formData.append('cc', emailData.cc);
       if (emailData.bcc) formData.append('bcc', emailData.bcc);
       formData.append('subject', emailData.subject);
-      formData.append('body', emailData.body);
+      
+      // Determine if the body contains HTML and send appropriately
+      if (emailData.body) {
+        if (emailData.body.includes('<') && emailData.body.includes('>')) {
+          // If body contains HTML tags, send as HTML
+          formData.append('html', emailData.body);
+        } else {
+          // Otherwise send as plain text
+          formData.append('text', emailData.body);
+        }
+      }
       
       // Add connection data if available
       if (emailData.connectionId) {
@@ -45,10 +55,14 @@ export const emailService = {
       
       // Append attachments if any
       if (emailData.attachments && emailData.attachments.length > 0) {
-        emailData.attachments.forEach((attachment, index) => {
-          formData.append(`attachment${index}`, attachment.file);
+        emailData.attachments.forEach((attachment) => {
+          // Use 'attachments' as the field name to match the backend multer configuration
+          formData.append('attachments', attachment.file, attachment.name);
         });
       }
+      
+      // Log the form data keys to help with debugging
+      console.log('Form data keys being sent:', Array.from(formData.keys()));
       
       const response = await api.post('/api/emails/send', formData, {
         headers: {
@@ -59,13 +73,27 @@ export const emailService = {
       return {
         success: true,
         message: 'Email sent successfully',
-        data: response.data,
+        data: response.data
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending email:', error);
+      
+      // Extract error message from axios response if available
+      let errorMessage = 'Failed to send email';
+      
+      if (error.response && error.response.data) {
+        console.error('Server response:', error.response.data);
+        
+        // Use the server's error message if available
+        if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        }
+      }
+      
       return {
         success: false,
-        message: 'Failed to send email',
+        message: errorMessage,
+        error: error.response?.data || error.message
       };
     }
   },

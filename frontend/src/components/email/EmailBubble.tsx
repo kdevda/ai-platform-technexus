@@ -120,11 +120,35 @@ const EmailBubble: React.FC<EmailBubbleProps> = ({
       return;
     }
     
+    // Validate required fields
+    if (!emailData.to) {
+      setError('Recipient (To) is required');
+      return;
+    }
+    
+    if (!emailData.subject) {
+      setError('Subject is required');
+      return;
+    }
+    
+    if (!emailData.body) {
+      setError('Email body is required');
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
     setSuccess(null);
     
     try {
+      // Log what we're sending for debugging
+      console.log('Sending email with data:', {
+        to: emailData.to,
+        subject: emailData.subject,
+        bodyLength: emailData.body.length,
+        hasAttachments: emailData.attachments.length > 0
+      });
+      
       const result = await emailService.sendEmail(emailData);
       
       if (result.success) {
@@ -135,11 +159,12 @@ const EmailBubble: React.FC<EmailBubbleProps> = ({
           setIsOpen(false);
         }, 1500);
       } else {
+        console.error('Email sending failed:', result.error);
         setError(result.message || 'Failed to send email');
       }
     } catch (err) {
-      setError('An unexpected error occurred while sending email');
-      console.error(err);
+      console.error('Exception during email sending:', err);
+      setError('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
