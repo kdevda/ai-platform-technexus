@@ -9,11 +9,22 @@ export const authUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
+    // Log request details (but not the password)
+    console.log(`Login attempt for email: ${email}`);
+    
+    // Validate input
+    if (!email || !password) {
+      console.log('Login failed: Missing email or password');
+      res.status(400).json({ message: 'Email and password are required', details: 'validation_error' });
+      return;
+    }
+
     // Find user in Postgres using the repository
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
-      res.status(401).json({ message: 'Invalid email or password' });
+      console.log(`Login failed: User not found for email: ${email}`);
+      res.status(401).json({ message: 'Invalid email or password', details: 'credentials_error' });
       return;
     }
 
@@ -24,20 +35,36 @@ export const authUser = async (req: Request, res: Response): Promise<void> => {
       // Extract roles from userRoles
       const roles = user.userRoles?.map(ur => ur.role.name) || [];
       
+      // Generate JWT token
+      const token = generateToken(user.id);
+      
+      console.log(`Login successful for user: ${user.id}`);
+      
       res.json({
         _id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
         roles: roles,
-        token: generateToken(user.id),
+        token: token,
       });
     } else {
-      res.status(401).json({ message: 'Invalid email or password' });
+      console.log(`Login failed: Invalid password for email: ${email}`);
+      res.status(401).json({ message: 'Invalid email or password', details: 'credentials_error' });
     }
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
+    // Provide more detailed error message
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace';
+    
+    console.error(`Login error details: ${errorMessage}\n${errorStack}`);
+    
+    res.status(500).json({ 
+      message: 'Server error during login', 
+      details: 'server_error',
+      error: process.env.NODE_ENV === 'development' ? errorMessage : 'Internal server error'
+    });
   }
 };
 
