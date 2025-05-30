@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import ContactFormModal from '@/components/ui/ContactFormModal';
+import CalendlyModal from '@/components/ui/CalendlyModal';
 
 export default function Home() {
   const { state } = useAuth();
@@ -128,13 +129,13 @@ export default function Home() {
 
   return (
     <Layout>
-      {/* Contact Form Modals */}
-      <ContactFormModal 
+      {/* Calendly Modal */}
+      <CalendlyModal 
         isOpen={isScheduleDemoModalOpen} 
         onClose={() => setIsScheduleDemoModalOpen(false)}
-        heading="Schedule a Demo"
       />
       
+      {/* Other Modals */}
       <ContactFormModal 
         isOpen={isGetStartedModalOpen} 
         onClose={() => setIsGetStartedModalOpen(false)}
@@ -611,6 +612,58 @@ export default function Home() {
                 Schedule Demo
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Development Tools Section */}
+      <section className="bg-gray-50 py-16 md:py-24">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Development Tools</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Access tools for development and testing
+            </p>
+          </div>
+          
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold">Development Tools</h2>
+            <div className="mt-4">
+              <a 
+                href="/direct-plaid-test" 
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                Direct Plaid Link Test
+              </a>
+              <p className="text-sm text-gray-600 mt-1">
+                Test Plaid Link without authentication for development purposes
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Developer Resources Section */}
+      <section className="bg-gray-50 py-12 mt-12 border-t border-gray-200">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <h2 className="text-2xl font-bold text-black">Developer Resources</h2>
+          <p className="text-gray-600 mt-2 mb-6">Tools and pages for developers and testers</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link href="/plaid-test" className="block p-6 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-lg mb-2">Plaid Link Test</h3>
+              <p className="text-gray-600 text-sm">Test Plaid Link integration and bank account connections</p>
+            </Link>
+            
+            <Link href="/plaid-transactions" className="block p-6 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-lg mb-2">Plaid Transactions</h3>
+              <p className="text-gray-600 text-sm">View and sync bank transactions using Plaid's Transaction API</p>
+            </Link>
+            
+            <Link href="/direct-plaid-test" className="block p-6 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all">
+              <h3 className="font-semibold text-lg mb-2">Direct Plaid Link</h3>
+              <p className="text-gray-600 text-sm">Direct Plaid Link testing without authentication</p>
+            </Link>
           </div>
         </div>
       </section>

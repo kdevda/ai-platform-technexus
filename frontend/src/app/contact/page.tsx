@@ -31,66 +31,53 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Set loading state
     setFormStatus({
       ...formStatus,
-      loading: true
+      loading: true,
+      error: false,
+      message: ''
     });
     
-    console.log('Submitting contact form:', formData);
-    
     try {
-      // Use the backend API endpoint instead of the Next.js API route
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      console.log('Using backend URL for contact page:', backendUrl);
+      // Send email through our Next.js API route
+      const response = await axios.post('/api/send-email', formData);
       
-
-      const response = await axios.post(`${backendUrl}/api/email/contact`, {
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject || `Contact Form: ${formData.company || formData.name}`,
-        message: `
-          Name: ${formData.name}
-          Email: ${formData.email}
-          ${formData.company ? `Company: ${formData.company}` : ''}
-          Subject: ${formData.subject}
-          
-          Message:
-          ${formData.message}
-        `
+      console.log('Email API response:', response.data);
+      
+      // Display success message
+      setFormStatus({
+        submitted: true,
+        error: false,
+        message: 'Thank you for your message. We will get back to you shortly.',
+        loading: false
       });
       
-      const data = response.data;
-      console.log('Email API response:', data);
-      
-      if (data.success) {
-        // Display success message
-        setFormStatus({
-          submitted: true,
-          error: false,
-          message: 'Thank you for your message. We will get back to you shortly.',
-          loading: false
-        });
-        
-        // Reset form after submission
-        setFormData({
-          name: '',
-          email: '',
-          company: '',
-          subject: '',
-          message: '',
-        });
-      } else {
-        throw new Error(data.error || 'Failed to send message');
-      }
+      // Reset form after submission
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        subject: '',
+        message: '',
+      });
     } catch (error) {
       console.error('Error sending contact form email:', error);
+      
+      let errorMessage = 'There was an error submitting your form. Please try again later.';
+      
+      if (axios.isAxiosError(error) && error.response) {
+        console.error('API response error:', error.response.data);
+        
+        if (error.response.data?.error) {
+          errorMessage += ` (${error.response.data.error})`;
+        }
+      }
       
       // Handle error
       setFormStatus({
         submitted: true,
         error: true,
-        message: error instanceof Error ? error.message : 'There was an error submitting your form. Please try again later.',
+        message: errorMessage,
         loading: false
       });
     }

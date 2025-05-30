@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
-import ContactFormModal from '@/components/ui/ContactFormModal';
+import CalendlyModal from '@/components/ui/CalendlyModal';
 
 const Navbar: React.FC = () => {
   const { state, logout } = useAuth();
@@ -17,10 +17,9 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-black text-white border-b border-gray-800">
-      <ContactFormModal 
+      <CalendlyModal 
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
-        heading="Schedule a Demo"
       />
       
       <div className="container mx-auto px-4 max-w-6xl">
@@ -84,8 +83,8 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link href="/login" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
-                  Login
+                <Link href="/contact" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
+                  Contact
                 </Link>
                 <button
                   onClick={() => setIsContactModalOpen(true)}
@@ -133,8 +132,8 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link href="/login" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
-                  Login
+                <Link href="/contact" className="text-sm uppercase tracking-wider hover:text-gray-300 transition-colors">
+                  Contact
                 </Link>
                 <button
                   onClick={() => setIsContactModalOpen(true)}

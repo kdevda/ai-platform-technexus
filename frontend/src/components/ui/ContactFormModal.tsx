@@ -44,24 +44,8 @@ const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onClose, he
     console.log('Submitting contact form:', formData);
     
     try {
-      // Use the backend API endpoint instead of the Next.js API route
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      console.log('Using backend URL for contact form:', backendUrl);
-      
-      const response = await axios.post(`${backendUrl}/api/email/contact`, {
-        name: formData.name,
-        email: formData.email,
-        subject: `Contact Form: ${formData.company || formData.name}`,
-        message: `
-          Name: ${formData.name}
-          Email: ${formData.email}
-          ${formData.company ? `Company: ${formData.company}` : ''}
-          ${formData.phone ? `Phone: ${formData.phone}` : ''}
-          
-          Message:
-          ${formData.message}
-        `
-      });
+      // Send email through our Next.js API route
+      const response = await axios.post('/api/send-email', formData);
       
       console.log('Email API response:', response.data);
       
