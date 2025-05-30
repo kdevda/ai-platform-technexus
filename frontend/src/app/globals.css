@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @theme {
   --font-sans: var(--font-geist-sans);
@@ -76,16 +78,14 @@ body {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.15s ease-out forwards;
 }
 
 @keyframes pulse {
@@ -99,6 +99,22 @@ body {
 
 .animate-pulse {
   animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Modal animations */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-modalSlideIn {
+  animation: modalSlideIn 0.15s ease-out forwards;
 }
 
 /* Grid background patterns */
